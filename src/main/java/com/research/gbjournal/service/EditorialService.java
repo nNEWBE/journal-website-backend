@@ -11,8 +11,6 @@ import com.research.gbjournal.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,6 +24,7 @@ public class EditorialService {
     private final SubmissionRepository submissionRepository;
     private final UserRepository userRepository;
     private final SubmissionService submissionService;
+    private final SubmissionMailService submissionMailService;
 
     // ===== Get all submissions for editor dashboard =====
 
@@ -76,6 +75,9 @@ public class EditorialService {
         submission.setDecisionDate(Instant.now());
         submissionRepository.save(submission);
 
+        // Async email notification to author — fires on background thread
+        submissionMailService.sendStatusChangeNotification(submission);
+
         log.info("Editorial decision '{}' for submission {}", request.getDecision(), submission.getSubmissionId());
         return submissionService.toResponseDTO(submission);
     }
@@ -90,6 +92,10 @@ public class EditorialService {
         }
         submission.setStatus(Submission.SubmissionStatus.COPYEDITING);
         submissionRepository.save(submission);
+
+        // Notify author of production stage change
+        submissionMailService.sendStatusChangeNotification(submission);
+
         return submissionService.toResponseDTO(submission);
     }
 
@@ -104,6 +110,10 @@ public class EditorialService {
         }
         submission.setStatus(Submission.SubmissionStatus.SCHEDULED);
         submissionRepository.save(submission);
+
+        // Notify author that their article is scheduled
+        submissionMailService.sendStatusChangeNotification(submission);
+
         return submissionService.toResponseDTO(submission);
     }
 

@@ -25,6 +25,7 @@ public class ReviewService {
     private final SubmissionRepository submissionRepository;
     private final UserRepository userRepository;
     private final SubmissionService submissionService;
+    private final SubmissionMailService submissionMailService;
 
     // ===== Reviewer: Get My Assignments =====
 
@@ -123,6 +124,9 @@ public class ReviewService {
                 .build();
 
         reviewAssignmentRepository.save(assignment);
+
+        // Async invitation email to reviewer
+        submissionMailService.sendReviewerInvitation(assignment);
 
         if (submission.getStatus() == Submission.SubmissionStatus.WITH_EDITOR ||
             submission.getStatus() == Submission.SubmissionStatus.SUBMITTED) {
