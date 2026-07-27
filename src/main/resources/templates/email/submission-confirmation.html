@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>Manuscript Received — Gono Bishwabidyalay Journal</title>
+  <style>
+    body { margin:0; padding:0; background:#f0f4f8; font-family:'Segoe UI',Arial,sans-serif; color:#1a202c; }
+    .wrapper { max-width:620px; margin:40px auto; background:#ffffff; border-radius:12px;
+               box-shadow:0 4px 24px rgba(0,0,0,.08); overflow:hidden; }
+    .header { background:linear-gradient(135deg,#1a3c5e 0%,#2d6a4f 100%); padding:36px 40px 28px; text-align:center; }
+    .header img { width:48px; margin-bottom:12px; }
+    .header h1 { margin:0; color:#fff; font-size:22px; font-weight:700; letter-spacing:-.3px; }
+    .header p  { margin:6px 0 0; color:rgba(255,255,255,.75); font-size:13px; }
+    .badge { display:inline-block; margin:20px auto 0; padding:6px 18px; background:rgba(255,255,255,.18);
+             border:1px solid rgba(255,255,255,.35); border-radius:20px; color:#fff; font-size:12px;
+             font-weight:600; letter-spacing:.5px; text-transform:uppercase; }
+    .body  { padding:36px 40px; }
+    .body h2 { margin:0 0 8px; font-size:18px; color:#1a3c5e; }
+    .body p  { margin:0 0 16px; font-size:15px; line-height:1.65; color:#4a5568; }
+    .meta-card { background:#f7fafc; border:1px solid #e2e8f0; border-radius:8px; padding:20px 24px; margin:24px 0; }
+    .meta-card p { margin:0; }
+    .meta-row { display:flex; align-items:baseline; margin-bottom:10px; font-size:14px; }
+    .meta-row:last-child { margin-bottom:0; }
+    .meta-label { min-width:130px; font-weight:600; color:#718096; }
+    .meta-value { color:#2d3748; }
+    .btn { display:block; width:fit-content; margin:28px auto 0; padding:14px 36px;
+           background:linear-gradient(135deg,#1a3c5e,#2d6a4f); color:#fff; text-decoration:none;
+           border-radius:8px; font-size:15px; font-weight:600; letter-spacing:.2px; }
+    .steps { counter-reset:step; margin:24px 0 0; padding:0; list-style:none; }
+    .steps li { display:flex; align-items:flex-start; margin-bottom:14px; font-size:14px; color:#4a5568; }
+    .steps li::before { counter-increment:step; content:counter(step);
+                        min-width:26px; height:26px; background:#1a3c5e; color:#fff;
+                        border-radius:50%; display:flex; align-items:center; justify-content:center;
+                        font-size:12px; font-weight:700; margin-right:12px; flex-shrink:0; }
+    .footer { background:#f7fafc; border-top:1px solid #e2e8f0; padding:20px 40px; text-align:center; }
+    .footer p { margin:0; font-size:12px; color:#a0aec0; line-height:1.6; }
+    .footer a { color:#2d6a4f; text-decoration:none; }
+  </style>
+</head>
+<body>
+<div class="wrapper">
+  <!-- HEADER -->
+  <div class="header">
+    <h1>Gono Bishwabidyalay Journal</h1>
+    <p>Peer-Reviewed Academic Publication</p>
+    <span class="badge">Manuscript Received</span>
+  </div>
+
+  <!-- BODY -->
+  <div class="body">
+    <h2 th:text="'Dear ' + ${authorName} + ','">Dear Author,</h2>
+    <p>
+      Thank you for submitting your manuscript to the <strong>Gono Bishwabidyalay Journal (GBJ)</strong>.
+      We have successfully received your submission and it has been entered into our editorial management system.
+    </p>
+
+    <div class="meta-card">
+      <div class="meta-row">
+        <span class="meta-label">Submission ID</span>
+        <span class="meta-value" th:text="${submissionId}">#GBJ-XXXX-XXX</span>
+      </div>
+      <div class="meta-row">
+        <span class="meta-label">Title</span>
+        <span class="meta-value" th:text="${title}">Manuscript Title</span>
+      </div>
+      <div class="meta-row">
+        <span class="meta-label">Article Type</span>
+        <span class="meta-value" th:text="${articleType}">Research Article</span>
+      </div>
+      <div class="meta-row">
+        <span class="meta-label">Submitted On</span>
+        <span class="meta-value" th:text="${submittedAt}">July 27, 2026</span>
+      </div>
+    </div>
+
+    <p>Your manuscript will now go through the following peer-review process:</p>
+    <ul class="steps">
+      <li>Initial editorial check for scope, formatting, and completeness</li>
+      <li>Assignment to a handling editor</li>
+      <li>Peer review by two or more subject-matter experts</li>
+      <li>Editorial decision communicated to you by email</li>
+    </ul>
+
+    <a th:href="${submissionUrl}" class="btn">Track Your Submission →</a>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <p>
+      Gono Bishwabidyalay · Mirzanagar, Savar, Dhaka 1344, Bangladesh<br>
+      <a th:href="${journalUrl}" th:text="${journalUrl}">http://localhost:3000</a> &bull;
+      <a href="mailto:journal@gonouniversity.edu.bd">journal@gonouniversity.edu.bd</a>
+    </p>
+    <p style="margin-top:8px;">This is an automated message — please do not reply directly to this email.</p>
+  </div>
+</div>
+</body>
+</html>

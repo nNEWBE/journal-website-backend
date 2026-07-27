@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>Review Invitation — Gono Bishwabidyalay Journal</title>
+  <style>
+    body { margin:0; padding:0; background:#f0f4f8; font-family:'Segoe UI',Arial,sans-serif; color:#1a202c; }
+    .wrapper { max-width:620px; margin:40px auto; background:#ffffff; border-radius:12px;
+               box-shadow:0 4px 24px rgba(0,0,0,.08); overflow:hidden; }
+    .header { background:linear-gradient(135deg,#1a3c5e 0%,#553c9a 100%); padding:36px 40px 28px; text-align:center; }
+    .header h1 { margin:0; color:#fff; font-size:22px; font-weight:700; }
+    .header p  { margin:6px 0 0; color:rgba(255,255,255,.75); font-size:13px; }
+    .badge { display:inline-block; margin:20px auto 0; padding:6px 18px;
+             background:rgba(255,255,255,.18); border:1px solid rgba(255,255,255,.35);
+             border-radius:20px; color:#fff; font-size:12px; font-weight:600;
+             letter-spacing:.5px; text-transform:uppercase; }
+    .body  { padding:36px 40px; }
+    .body h2 { margin:0 0 8px; font-size:18px; color:#1a3c5e; }
+    .body p  { margin:0 0 16px; font-size:15px; line-height:1.65; color:#4a5568; }
+    .meta-card { background:#f7fafc; border:1px solid #e2e8f0; border-radius:8px; padding:20px 24px; margin:24px 0; }
+    .meta-row { display:flex; align-items:baseline; margin-bottom:10px; font-size:14px; }
+    .meta-row:last-child { margin-bottom:0; }
+    .meta-label { min-width:130px; font-weight:600; color:#718096; }
+    .meta-value { color:#2d3748; }
+    .cta-group { display:flex; gap:14px; justify-content:center; margin-top:28px; flex-wrap:wrap; }
+    .btn-accept { padding:13px 30px; background:linear-gradient(135deg,#276749,#2d6a4f);
+                  color:#fff; text-decoration:none; border-radius:8px; font-size:15px; font-weight:600; }
+    .btn-decline{ padding:13px 30px; background:#fff; border:2px solid #e2e8f0;
+                  color:#718096; text-decoration:none; border-radius:8px; font-size:15px; font-weight:600; }
+    .footer { background:#f7fafc; border-top:1px solid #e2e8f0; padding:20px 40px; text-align:center; }
+    .footer p { margin:0; font-size:12px; color:#a0aec0; line-height:1.6; }
+    .footer a { color:#2d6a4f; text-decoration:none; }
+  </style>
+</head>
+<body>
+<div class="wrapper">
+  <div class="header">
+    <h1>Gono Bishwabidyalay Journal</h1>
+    <p>Peer-Reviewed Academic Publication</p>
+    <span class="badge">Review Invitation</span>
+  </div>
+
+  <div class="body">
+    <h2 th:text="'Dear ' + ${reviewerName} + ','">Dear Reviewer,</h2>
+    <p>
+      The editorial board of the <strong>Gono Bishwabidyalay Journal</strong> would like to invite you
+      to serve as a peer reviewer for the following manuscript. Your expertise makes you an excellent
+      candidate for this review.
+    </p>
+
+    <div class="meta-card">
+      <div class="meta-row">
+        <span class="meta-label">Manuscript ID</span>
+        <span class="meta-value" th:text="${submissionId}">#GBJ-XXXX-XXX</span>
+      </div>
+      <div class="meta-row">
+        <span class="meta-label">Title</span>
+        <span class="meta-value" th:text="${title}">Manuscript Title</span>
+      </div>
+      <div class="meta-row">
+        <span class="meta-label">Article Type</span>
+        <span class="meta-value" th:text="${articleType}">Research Article</span>
+      </div>
+      <div class="meta-row">
+        <span class="meta-label">Review Due</span>
+        <span class="meta-value" th:text="${dueDate}">August 10, 2026</span>
+      </div>
+    </div>
+
+    <p>
+      Please log in to your reviewer portal and indicate whether you are able to accept this review.
+      If you have a conflict of interest or are unable to complete the review by the due date,
+      please decline so that we can invite another expert promptly.
+    </p>
+
+    <div class="cta-group">
+      <a th:href="${acceptUrl}" class="btn-accept">Accept Review</a>
+      <a th:href="${declineUrl}" class="btn-decline">Decline Review</a>
+    </div>
+  </div>
+
+  <div class="footer">
+    <p>
+      Gono Bishwabidyalay · Mirzanagar, Savar, Dhaka 1344, Bangladesh<br>
+      <a th:href="${journalUrl}" th:text="${journalUrl}">http://localhost:3000</a> &bull;
+      <a href="mailto:journal@gonouniversity.edu.bd">journal@gonouniversity.edu.bd</a>
+    </p>
+    <p style="margin-top:8px;">This is an automated message — please do not reply directly to this email.</p>
+  </div>
+</div>
+</body>
+</html>
