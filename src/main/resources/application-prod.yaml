@@ -1,38 +1,71 @@
 # =============================================
-# PRODUCTION PROFILE — PostgreSQL Database
+# PRODUCTION PROFILE — PostgreSQL + Brevo SMTP
+# Activate with: --spring.profiles.active=prod
 # =============================================
 spring:
   datasource:
-    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:gbjournal}
+    url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/gbjournal}
     driver-class-name: org.postgresql.Driver
-    username: ${DB_USERNAME:postgres}
-    password: ${DB_PASSWORD:secret}
+    username: ${DATABASE_USERNAME:gbjournal}
+    password: ${DATABASE_PASSWORD:changeme}
     hikari:
       maximum-pool-size: 10
       minimum-idle: 2
       connection-timeout: 30000
-      idle-timeout: 600000
-      max-lifetime: 1800000
-
-  h2:
-    console:
-      enabled: false  # Disable H2 console in production
 
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
-      ddl-auto: validate   # Never auto-modify schema in production — use Flyway/Liquibase
+      ddl-auto: validate        # Never auto-create/drop in production
     show-sql: false
-    properties:
-      hibernate:
-        format_sql: false
 
-# Docker Compose disabled in prod (use a real DB server or managed service)
   docker:
     compose:
       enabled: false
 
+  # =============================================
+  # Brevo SMTP — Free 300 emails/day
+  # Required env vars (set in server / container):
+  #   BREVO_SMTP_USER  — your Brevo login email
+  #   BREVO_SMTP_KEY   — your Brevo SMTP key
+  # =============================================
+  mail:
+    host: smtp-relay.brevo.com
+    port: 587
+    username: ${BREVO_SMTP_USER}
+    password: ${BREVO_SMTP_KEY}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+        connection-timeout: 10000
+        timeout: 10000
+        write-timeout: 10000
+
+# =============================================
+# JWT — Use a strong 256-bit secret in prod!
+# =============================================
+jwt:
+  secret: ${JWT_SECRET}
+  access-token-expiration-ms: 900000
+  refresh-token-expiration-ms: 604800000
+
+# =============================================
+# App-Level Configuration
+# =============================================
+app:
+  upload-dir: ${UPLOAD_DIR:/var/gbjournal/uploads/}
+  cors-allowed-origins: ${CORS_ORIGINS:https://journal.gonouniversity.edu.bd}
+  base-url: ${APP_BASE_URL:https://api.gonouniversity.edu.bd}
+  mail:
+    from: no-reply@gonouniversity.edu.bd
+    from-name: "GBJ — Gono Bishwabidyalay Journal"
+    journal-url: ${JOURNAL_URL:https://journal.gonouniversity.edu.bd}
+
 logging:
   level:
-    org.springframework.security: WARN
+    root: WARN
     com.research.gbjournal: INFO

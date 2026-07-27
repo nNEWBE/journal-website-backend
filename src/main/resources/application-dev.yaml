@@ -28,17 +28,17 @@ spring:
       enabled: false
 
   # =============================================
-  # Email / SMTP Configuration (Dev: Mailtrap)
-  # Sign up free at https://mailtrap.io and put
-  # your inbox credentials here, or set env vars:
-  #   MAIL_USERNAME=<inbox username>
-  #   MAIL_PASSWORD=<inbox password>
+  # Email SMTP — Brevo (Free: 300 emails/day)
+  # https://app.brevo.com -> SMTP & API -> Generate SMTP Key
+  # Set env vars before running:
+  #   $env:BREVO_SMTP_USER="your-brevo-login-email@example.com"
+  #   $env:BREVO_SMTP_KEY="your-brevo-smtp-key"
   # =============================================
   mail:
-    host: sandbox.smtp.mailtrap.io
-    port: 2525
-    username: ${MAIL_USERNAME:your-mailtrap-username}
-    password: ${MAIL_PASSWORD:your-mailtrap-password}
+    host: smtp-relay.brevo.com
+    port: 587
+    username: ${BREVO_SMTP_USER:your-brevo-login-email@example.com}
+    password: ${BREVO_SMTP_KEY:your-brevo-smtp-key}
     properties:
       mail:
         smtp:
@@ -46,6 +46,10 @@ spring:
           starttls:
             enable: true
             required: true
+        # Shorter timeouts prevent app hangs when SMTP is unreachable in dev
+        connection-timeout: 5000
+        timeout: 5000
+        write-timeout: 5000
 
 # =============================================
 # JWT Configuration

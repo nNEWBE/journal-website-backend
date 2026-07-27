@@ -1,6 +1,11 @@
 HELP.md
 .gradle
 build/
+# Secret credentials — never commit
+.env
+# Local upload storage
+uploads/
+
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
 !**/src/test/**/build/
@@ -34,4 +39,5 @@ out/
 /.nb-gradle/
 
 ### VS Code ###
-.vscode/
+# .vscode/ is intentionally NOT ignored so launch.json can be shared
+# (do NOT put secrets inside launch.json — use .env instead)

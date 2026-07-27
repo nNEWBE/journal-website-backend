@@ -1,198 +1,175 @@
-# Gono Bishwabidyalay Journal Management Portal - Backend
+# Gono Bishwabidyalay Journal Management — Backend
 
-This is the backend API service for the **Gono Bishwabidyalay Journal Management Portal**. It provides the database persistence, secure REST APIs, role-based access control (RBAC), and editorial workflows required to power the academic publishing platform.
-
----
-
-## 📖 Overview
-
-The backend is built as a robust, secure, and scalable **Spring Boot** application using **Java 25**. It supports the frontend Next.js application by offering APIs for manuscript submission, peer-review tracking, editorial queue management, publication archives, and role governance.
+A secure, production-ready REST API for the **Gono Bishwabidyalay (GBJ) Journal Management System** built with Spring Boot 4.1 and Java 25.
 
 ---
 
-## 🛠️ Tech Stack
-
-- **Language:** Java 25 (LTS)
-- **Framework:** Spring Boot 4.1.0
-- **Build Tool:** Gradle
-- **Security:** Spring Security (Token-based Authentication & Role-Based Access Control)
-- **Database:** PostgreSQL (Production) / H2 (Development Console)
-- **ORM:** Spring Data JPA / Hibernate
-- **Containers:** Docker Compose (for local PostgreSQL database instance)
-- **Utilities:** Lombok, Spring Boot DevTools, Validation API
-- **Testing:** JUnit 5, Spring Boot Starter Test
+## Table of Contents
+- [Tech Stack](#tech-stack)
+- [Getting Started](#getting-started)
+- [Demo Accounts](#demo-accounts)
+- [API Overview](#api-overview)
+- [Documentation](#documentation)
+- [Environment Variables](#environment-variables)
+- [Project Structure](#project-structure)
+- [Security Architecture](#security-architecture)
 
 ---
 
-## 🔑 User Roles & Permissions
+## Tech Stack
 
-The system implements strict Role-Based Access Control (RBAC) supporting the following roles:
-
-*   **Super Admin:** Overall platform administration, role updates, system-level audits, and journal office configuration.
-*   **Admin:** Configures journal site settings, manages issue volumes, updates submission policies, and configures article types.
-*   **Editor:** Triages submitted manuscripts, assigns reviewers, makes final decision proposals, and schedules accepted work for upcoming issues.
-*   **Reviewer:** Evaluates assigned manuscripts, manages invitations, and submits structured review recommendations.
-*   **Author:** Submits new manuscripts, uploads files/PDFs, responds to revisions, and tracks workflow status.
-*   **Visitor:** Anonymous access to public journals, article search, current/archived issues, editorial board details, and public policies.
-
----
-
-## 📂 Project Structure
-
-```text
-journal-management-backend/
-├── compose.yaml                      # Docker Compose file for local PostgreSQL
-├── build.gradle                      # Build and dependency configuration
-├── gradlew & gradlew.bat             # Gradle wrapper scripts
-└── src/
-    ├── main/
-    │   ├── java/com/research/gbjournal/
-    │   │   ├── GbjournalApplication.java  # Main application class
-    │   │   ├── config/               # Security and global configurations (CORS, JWT)
-    │   │   ├── controller/           # REST Controller API endpoints
-    │   │   ├── entity/               # JPA Entities / Database Models
-    │   │   ├── repository/           # Spring Data JPA Repositories
-    │   │   ├── service/              # Business Logic Interfaces and Implementations
-    │   │   └── dto/                  # Data Transfer Objects for API requests/responses
-    │   └── resources/
-    │       ├── application.yaml      # General application configuration
-    │       └── application-dev.yaml  # Local development environment profile
-    └── test/                         # Unit and integration test suites
-```
+| Layer | Technology |
+|---|---|
+| Language | Java 25 (Temurin) |
+| Framework | Spring Boot 4.1.0 |
+| Security | Spring Security 6.5 + JJWT 0.12.6 |
+| Database (dev) | H2 In-Memory |
+| Database (prod) | PostgreSQL |
+| Build | Gradle 9.5 |
+| Email | Spring Mail + Brevo SMTP |
+| Templates | Thymeleaf |
+| Password Hashing | BCrypt (cost 12) |
 
 ---
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
+- **JDK 25** (Temurin) — already in `.jdks/temurin-25.0.3`
+- No Docker required for development
 
-Ensure you have the following installed on your local machine:
-- **JDK 25**
-- **Docker & Docker Compose** (for PostgreSQL database)
-- **Git**
+### 1. Fill in your credentials
 
-### 1. Database Setup
+Open [`.env`](./.env) — it is pre-configured for dev. The only values to replace are the Brevo SMTP credentials:
 
-Spin up the local PostgreSQL database using the provided Docker Compose file:
-
-```bash
-docker compose up -d
+```env
+BREVO_SMTP_USER=your-brevo-login-email@example.com
+BREVO_SMTP_KEY=your-brevo-smtp-key
 ```
 
-This starts a Postgres instance with the parameters configured in `compose.yaml`:
-*   **Host:** `localhost`
-*   **Port:** `5432`
-*   **Database:** `mydatabase`
-*   **User:** `myuser`
-*   **Password:** `secret`
+> See [docs/email-setup.md](./docs/email-setup.md) for step-by-step Brevo account setup.
 
-### 2. Configuration (`application.yaml`)
+### 2. Start the backend
 
-By default, the application is named `gbjournal`. To connect to your database, you can configure your connection credentials inside your `application.yaml` or through active profiles.
-
-Example Configuration:
-```yaml
-spring:
-  application:
-    name: gbjournal
-  datasource:
-    url: jdbc:postgresql://localhost:5432/mydatabase
-    username: myuser
-    password: secret
-    driver-class-name: org.postgresql.Driver
-  jpa:
-    hibernate:
-      ddl-auto: update
-    show-sql: true
-    properties:
-      hibernate:
-        format_sql: true
-  h2:
-    console:
-      enabled: true
-      path: /h2-console
+```powershell
+$env:JAVA_HOME = "C:\Users\Shuvo Debnath\.jdks\temurin-25.0.3"
+$env:Path      = "$env:JAVA_HOME\bin;$env:Path"
+.\gradlew bootRun --args="--spring.profiles.active=dev"
 ```
 
-### 3. Run the Development Server
+The app **automatically loads `.env`** on startup — no scripts needed.
 
-Execute the bootRun task using the Gradle wrapper:
+| Endpoint | URL |
+|---|---|
+| API base | `http://localhost:8080/api/v1` |
+| H2 Console | `http://localhost:8080/h2-console` |
+| H2 JDBC URL | `jdbc:h2:mem:gbjournal_dev` |
+
+---
+
+## Demo Accounts
+
+Seeded automatically on every startup:
+
+| Role | Email | Password |
+|---|---|---|
+| Super Admin | `superadmin@gonouniversity.edu.bd` | `demopass` |
+| Admin | `admin@gonouniversity.edu.bd` | `demopass` |
+| Editor | `editor@gonouniversity.edu.bd` | `demopass` |
+| Reviewer | `reviewer@gonouniversity.edu.bd` | `demopass` |
+| Author | `author@gonouniversity.edu.bd` | `demopass` |
+
+---
+
+## API Overview
+
+| Area | Base Path | Access |
+|---|---|---|
+| Authentication | `/api/v1/auth/**` | Public / Authenticated |
+| Articles | `/api/v1/articles/**` | Public (GET) |
+| Issues | `/api/v1/issues/**` | Public |
+| Submissions | `/api/v1/submissions/**` | AUTHOR+ |
+| Reviewer Tasks | `/api/v1/reviewer/**` | REVIEWER+ |
+| Editorial | `/api/v1/editor/**` | EDITOR+ |
+| Administration | `/api/v1/admin/**` | ADMIN+ |
+| File Downloads | `/api/v1/files/**` | Public |
+| Metadata | `/api/v1/topics`, `/api/v1/article-types`, `/api/v1/editorial-board` | Public |
+
+---
+
+## Documentation
+
+Additional guides are in the [`docs/`](./docs) folder:
+
+| Guide | Description |
+|---|---|
+| [📧 Email Setup](./docs/email-setup.md) | Step-by-step Brevo (free SMTP) setup for dev and production |
+| [🐘 PostgreSQL Setup](./docs/postgresql-setup.md) | Step-by-step guide for local Docker, local install & cloud PostgreSQL |
+| [📖 API Reference](./docs/api-reference.md) | All REST endpoints with request/response examples |
+
+> Copy [`.env.example`](./.env.example) → `.env` and fill in your credentials.
+
+---
+
+## Environment Variables
+
+| Variable | Required | Description |
+|---|---|---|
+| `BREVO_SMTP_USER` | For email | Your Brevo login email |
+| `BREVO_SMTP_KEY` | For email | Brevo SMTP key |
+| `JWT_SECRET` | **Prod only** | 256-bit HMAC secret for JWT signing |
+| `DATABASE_URL` | **Prod only** | PostgreSQL JDBC URL |
+| `DATABASE_USERNAME` | **Prod only** | PostgreSQL username |
+| `DATABASE_PASSWORD` | **Prod only** | PostgreSQL password |
+| `APP_BASE_URL` | **Prod only** | e.g. `https://api.gonouniversity.edu.bd` |
+| `JOURNAL_URL` | **Prod only** | e.g. `https://journal.gonouniversity.edu.bd` |
+| `CORS_ORIGINS` | **Prod only** | Comma-separated allowed frontend origins |
+
+---
+
+## Production Deployment
 
 ```bash
-# On Linux/macOS
-./gradlew bootRun
+# Build the JAR
+./gradlew clean bootJar
 
-# On Windows (PowerShell/CMD)
-./gradlew.bat bootRun
-```
-
-The server will start up on `http://localhost:8080` (by default).
-
-### 4. Running Tests
-
-Run the test suite using:
-
-```bash
-./gradlew test
+# Set environment variables, then run:
+java -jar build/libs/gbjournal-0.0.1-SNAPSHOT.jar --spring.profiles.active=prod
 ```
 
 ---
 
-## 🛰️ Planned REST API Endpoints
+## Project Structure
 
-### Authentication
-*   `POST /api/auth/register` - Register a new user (default Author role).
-*   `POST /api/auth/login` - Authenticate user and retrieve JWT token.
+```
+src/main/java/com/research/gbjournal/
+├── config/          # MailProperties, DataInitializer
+├── controller/      # REST controllers (Auth, Article, Issue, Submission, ...)
+├── dto/             # Request/Response DTOs
+├── entity/          # JPA entities (User, Submission, Article, Issue, ...)
+├── exception/       # GlobalExceptionHandler, custom exceptions
+├── repository/      # Spring Data JPA repositories
+├── security/        # JWT, SecurityConfig, filters, handlers
+└── service/         # Business logic (Auth, Email, Submission, Review, ...)
 
-### Public Article & Issue Discovery
-*   `GET /api/articles` - Retrieve and search articles (filters for keywords, author, topic, issue).
-*   `GET /api/articles/{id}` - Get full metadata, abstract, and sections of an article.
-*   `GET /api/issues/current` - Retrieve table of contents and metadata of the current issue.
-*   `GET /api/issues` - Browse previous volume/issue archives.
+src/main/resources/
+├── templates/email/ # Thymeleaf HTML email templates
+├── application.yaml
+├── application-dev.yaml    # H2 + Brevo SMTP (dev)
+└── application-prod.yaml   # PostgreSQL + Brevo SMTP (prod)
 
-### Manuscript & Submissions (Author)
-*   `POST /api/submissions` - Start/save a new manuscript wizard submission.
-*   `GET /api/submissions/my` - Fetch submissions initiated by the logged-in author.
-*   `POST /api/submissions/{id}/files` - Upload PDF manuscripts or supplementary files.
-*   `POST /api/submissions/{id}/submit` - Finalize manuscript check and submit to editor queue.
-
-### Peer Review (Reviewer)
-*   `GET /api/reviews/assigned` - List peer review invitations and assignments.
-*   `POST /api/reviews/{id}/respond` - Accept or decline a review invitation.
-*   `POST /api/reviews/{id}/submit` - Submit structured reviews and decision recommendations.
-
-### Editorial Queue (Editor)
-*   `GET /api/editor/queue` - Retrieve pending, active, and completed manuscript queues.
-*   `POST /api/editor/assign-reviewer` - Assign peer reviewers to a manuscript.
-*   `POST /api/editor/decision` - Issue editorial decisions (Accept, Revisions, Reject).
-
-### System Settings (Admin / Super Admin)
-*   `PUT /api/admin/policies` - Update submission guidelines, ethical regulations, and reviewer policies.
-*   `POST /api/admin/issues/create` - Create new volume and issue slots.
-*   `PUT /api/admin/users/{id}/roles` - Oversee system-role governance.
-
----
-
-## 🔒 Security & CORS
-
-To connect the Next.js frontend running on `http://localhost:3000` with the backend on `http://localhost:8080`, ensure CORS is configured in `WebMvcConfigurer`.
-
-Example Configuration:
-```java
-@Configuration
-public class WebConfig implements WebMvcConfigurer {
-    @Override
-    public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/api/**")
-                .allowedOrigins("http://localhost:3000")
-                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
-                .allowedHeaders("*")
-                .allowCredentials(true);
-    }
-}
+docs/
+└── email-setup.md   # Step-by-step Brevo email configuration guide
 ```
 
 ---
 
-## 📄 License
+## Security Architecture
 
-This project is configured for Gono Bishwabidyalay. All rights reserved.
+- **Access Tokens** — Short-lived JWTs (15 min), HMAC-SHA256 signed
+- **Refresh Tokens** — Long-lived (7 days), stored in DB with **single-use rotation**
+- **Token Reuse Detection** — Revokes all user sessions if a stolen token is detected
+- **Password Hashing** — BCrypt cost factor 12
+- **RBAC** — Route-level + method-level via `@PreAuthorize`
+- **CORS** — Configured for Next.js frontend origin
+- **File Security** — UUID-based filenames; path traversal guard
