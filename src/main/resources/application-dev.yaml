@@ -27,33 +27,13 @@ spring:
     compose:
       enabled: false
 
-# =============================================
-# JWT Configuration
-# =============================================
-jwt:
-  secret: 3cfa76ef14937c1c0ea519f8fc057a80fcd04a7d34491023a944f4a4c1e6b9f2
-  access-token-expiration-ms: 900000        # 15 minutes
-  refresh-token-expiration-ms: 604800000    # 7 days
-
-# =============================================
-# File Upload Configuration
-# =============================================
-app:
-  upload-dir: uploads/
-  cors-allowed-origins: http://localhost:3000
-  base-url: http://localhost:8080
-
-logging:
-  level:
-    org.springframework.security: DEBUG
-    com.research.gbjournal: DEBUG
-
-# =============================================
-# Email / SMTP Configuration (Dev: Mailtrap)
-# Sign up free at https://mailtrap.io and put
-# your inbox credentials here.
-# =============================================
-spring:
+  # =============================================
+  # Email / SMTP Configuration (Dev: Mailtrap)
+  # Sign up free at https://mailtrap.io and put
+  # your inbox credentials here, or set env vars:
+  #   MAIL_USERNAME=<inbox username>
+  #   MAIL_PASSWORD=<inbox password>
+  # =============================================
   mail:
     host: sandbox.smtp.mailtrap.io
     port: 2525
@@ -67,8 +47,27 @@ spring:
             enable: true
             required: true
 
+# =============================================
+# JWT Configuration
+# =============================================
+jwt:
+  secret: 3cfa76ef14937c1c0ea519f8fc057a80fcd04a7d34491023a944f4a4c1e6b9f2
+  access-token-expiration-ms: 900000        # 15 minutes
+  refresh-token-expiration-ms: 604800000    # 7 days
+
+# =============================================
+# App-Level Configuration
+# =============================================
 app:
+  upload-dir: uploads/
+  cors-allowed-origins: http://localhost:3000
+  base-url: http://localhost:8080
   mail:
     from: no-reply@gonouniversity.edu.bd
     from-name: "GBJ — Gono Bishwabidyalay Journal"
     journal-url: http://localhost:3000
+
+logging:
+  level:
+    org.springframework.security: DEBUG
+    com.research.gbjournal: DEBUG
