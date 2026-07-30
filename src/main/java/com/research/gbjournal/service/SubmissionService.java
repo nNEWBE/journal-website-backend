@@ -21,7 +21,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 
 @Slf4j
 @Service
@@ -110,7 +109,7 @@ public class SubmissionService {
 
     @Transactional
     public SubmissionResponseDTO uploadFile(String authorEmail, Long submissionId,
-                                             MultipartFile file, String fileType) {
+            MultipartFile file, String fileType) {
         Submission submission = getOwnedSubmission(authorEmail, submissionId);
 
         SubmissionFile.FileType type;
@@ -144,7 +143,7 @@ public class SubmissionService {
         Submission submission = getOwnedSubmission(authorEmail, submissionId);
 
         if (submission.getStatus() == Submission.SubmissionStatus.PUBLISHED ||
-            submission.getStatus() == Submission.SubmissionStatus.WITHDRAWN) {
+                submission.getStatus() == Submission.SubmissionStatus.WITHDRAWN) {
             throw new BadRequestException("This submission cannot be withdrawn.");
         }
 
@@ -240,42 +239,39 @@ public class SubmissionService {
                         .department(s.getSubmittingAuthor().getDepartment())
                         .institution(s.getSubmittingAuthor().getInstitution())
                         .build())
-                .assignedEditor(s.getAssignedEditor() == null ? null :
-                        SubmissionResponseDTO.EditorInfo.builder()
+                .assignedEditor(s.getAssignedEditor() == null ? null
+                        : SubmissionResponseDTO.EditorInfo.builder()
                                 .id(s.getAssignedEditor().getId())
                                 .fullName(s.getAssignedEditor().getFullName())
                                 .email(s.getAssignedEditor().getEmail())
                                 .build())
-                .authors(s.getAuthors().stream().map(a ->
-                        SubmissionResponseDTO.CoAuthorDTO.builder()
-                                .id(a.getId())
-                                .name(a.getName())
-                                .email(a.getEmail())
-                                .affiliation(a.getAffiliation())
-                                .orcid(a.getOrcid())
-                                .authorOrder(a.getAuthorOrder())
-                                .corresponding(a.isCorresponding())
-                                .build()).toList())
-                .files(s.getFiles().stream().map(f ->
-                        SubmissionResponseDTO.FileDTO.builder()
-                                .id(f.getId())
-                                .fileType(f.getFileType().name())
-                                .originalFilename(f.getOriginalFilename())
-                                .contentType(f.getContentType())
-                                .sizeBytes(f.getSizeBytes())
-                                .downloadUrl(baseUrl + "/api/v1/files/" + f.getStoredFilename())
-                                .uploadedAt(f.getUploadedAt())
-                                .build()).toList())
-                .reviews(s.getReviews().stream().map(r ->
-                        SubmissionResponseDTO.ReviewDTO.builder()
-                                .id(r.getId())
-                                .reviewerName(r.getReviewer().getFullName())
-                                .status(r.getStatus().name())
-                                .recommendation(r.getRecommendation() != null ? r.getRecommendation().name() : null)
-                                .score(r.getScore())
-                                .dueDate(r.getDueDate())
-                                .reviewSubmittedAt(r.getReviewSubmittedAt())
-                                .build()).toList())
+                .authors(s.getAuthors().stream().map(a -> SubmissionResponseDTO.CoAuthorDTO.builder()
+                        .id(a.getId())
+                        .name(a.getName())
+                        .email(a.getEmail())
+                        .affiliation(a.getAffiliation())
+                        .orcid(a.getOrcid())
+                        .authorOrder(a.getAuthorOrder())
+                        .corresponding(a.isCorresponding())
+                        .build()).toList())
+                .files(s.getFiles().stream().map(f -> SubmissionResponseDTO.FileDTO.builder()
+                        .id(f.getId())
+                        .fileType(f.getFileType().name())
+                        .originalFilename(f.getOriginalFilename())
+                        .contentType(f.getContentType())
+                        .sizeBytes(f.getSizeBytes())
+                        .downloadUrl(baseUrl + "/api/v1/files/" + f.getStoredFilename())
+                        .uploadedAt(f.getUploadedAt())
+                        .build()).toList())
+                .reviews(s.getReviews().stream().map(r -> SubmissionResponseDTO.ReviewDTO.builder()
+                        .id(r.getId())
+                        .reviewerName(r.getReviewer().getFullName())
+                        .status(r.getStatus().name())
+                        .recommendation(r.getRecommendation() != null ? r.getRecommendation().name() : null)
+                        .score(r.getScore())
+                        .dueDate(r.getDueDate())
+                        .reviewSubmittedAt(r.getReviewSubmittedAt())
+                        .build()).toList())
                 .conflictOfInterest(s.getConflictOfInterest())
                 .fundingStatement(s.getFundingStatement())
                 .ethicsStatement(s.getEthicsStatement())

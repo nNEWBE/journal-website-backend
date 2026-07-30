@@ -5,7 +5,6 @@ import com.research.gbjournal.dto.article.ArticleDetailDTO;
 import com.research.gbjournal.entity.Article;
 import com.research.gbjournal.entity.ArticleAuthor;
 import com.research.gbjournal.entity.ArticleKeyword;
-import com.research.gbjournal.entity.ArticleSection;
 import com.research.gbjournal.exception.ResourceNotFoundException;
 import com.research.gbjournal.repository.ArticleRepository;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +26,7 @@ public class ArticleService {
 
     @Transactional(readOnly = true)
     public Page<ArticleDTO> searchArticles(String query, String type, String topic,
-                                            String issueLabel, int page, int size, String sort) {
+            String issueLabel, int page, int size, String sort) {
         String nullableQuery = (query == null || query.isBlank()) ? null : query.trim();
         String nullableType = (type == null || type.isBlank()) ? null : type.trim();
         String nullableTopic = (topic == null || topic.isBlank()) ? null : topic.trim();
@@ -114,13 +113,12 @@ public class ArticleService {
                 .type(a.getType())
                 .topic(a.getTopic())
                 .department(a.getDepartment())
-                .authors(a.getAuthors().stream().map(author ->
-                        ArticleDetailDTO.AuthorInfo.builder()
-                                .name(author.getName())
-                                .affiliation(author.getAffiliation())
-                                .authorOrder(author.getAuthorOrder())
-                                .corresponding(author.isCorresponding())
-                                .build()).toList())
+                .authors(a.getAuthors().stream().map(author -> ArticleDetailDTO.AuthorInfo.builder()
+                        .name(author.getName())
+                        .affiliation(author.getAffiliation())
+                        .authorOrder(author.getAuthorOrder())
+                        .corresponding(author.isCorresponding())
+                        .build()).toList())
                 .abstractText(a.getAbstractText())
                 .issueLabel(a.getIssueLabel())
                 .volumeLabel(a.getVolumeLabel())
@@ -133,12 +131,11 @@ public class ArticleService {
                         .citations(a.getMetrics().getCitations())
                         .build())
                 .keywords(a.getKeywords().stream().map(ArticleKeyword::getKeyword).toList())
-                .sections(a.getSections().stream().map(s ->
-                        ArticleDetailDTO.SectionDTO.builder()
-                                .heading(s.getHeading())
-                                .body(s.getBody())
-                                .sortOrder(s.getSortOrder())
-                                .build()).toList())
+                .sections(a.getSections().stream().map(s -> ArticleDetailDTO.SectionDTO.builder()
+                        .heading(s.getHeading())
+                        .body(s.getBody())
+                        .sortOrder(s.getSortOrder())
+                        .build()).toList())
                 .imageUrl(a.getImageUrl())
                 .pdfUrl(a.getPdfUrl())
                 .openAccess(a.isOpenAccess())

@@ -12,8 +12,10 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 /**
- * Seeds the development database with demo users, board members, issues, articles,
- * and sample submissions on every application startup (since dev uses create-drop).
+ * Seeds the development database with demo users, board members, issues,
+ * articles,
+ * and sample submissions on every application startup (since dev uses
+ * create-drop).
  *
  * The seeded demo password for all accounts is: demopass
  * (matches the frontend's current hardcoded authenticate() function)
@@ -49,76 +51,76 @@ public class DataInitializer implements CommandLineRunner {
     // =========================================
 
     private void seedUsers() {
-        if (userRepository.count() > 0) return;
+        if (userRepository.count() > 0)
+            return;
 
         String encoded = passwordEncoder.encode(DEMO_PASSWORD);
 
         List<User> users = List.of(
-            User.builder()
-                .fullName("Prof. Dr. Laila Rahman")
-                .email("superadmin@gonouniversity.edu.bd")
-                .password(encoded)
-                .role(User.Role.SUPER_ADMIN)
-                .title("Editor-in-Chief & Administrator")
-                .department("Faculty of Health Sciences")
-                .institution("Gono Bishwabidyalay")
-                .country("BD")
-                .enabled(true)
-                .emailVerified(true)
-                .build(),
+                User.builder()
+                        .fullName("Prof. Dr. Laila Rahman")
+                        .email("superadmin@gonouniversity.edu.bd")
+                        .password(encoded)
+                        .role(User.Role.SUPER_ADMIN)
+                        .title("Editor-in-Chief & Administrator")
+                        .department("Faculty of Health Sciences")
+                        .institution("Gono Bishwabidyalay")
+                        .country("BD")
+                        .enabled(true)
+                        .emailVerified(true)
+                        .build(),
 
-            User.builder()
-                .fullName("Md. Jamil Hossain")
-                .email("admin@gonouniversity.edu.bd")
-                .password(encoded)
-                .role(User.Role.ADMIN)
-                .title("System Administrator")
-                .department("Journal Operations")
-                .institution("Gono Bishwabidyalay")
-                .country("BD")
-                .enabled(true)
-                .emailVerified(true)
-                .build(),
+                User.builder()
+                        .fullName("Md. Jamil Hossain")
+                        .email("admin@gonouniversity.edu.bd")
+                        .password(encoded)
+                        .role(User.Role.ADMIN)
+                        .title("System Administrator")
+                        .department("Journal Operations")
+                        .institution("Gono Bishwabidyalay")
+                        .country("BD")
+                        .enabled(true)
+                        .emailVerified(true)
+                        .build(),
 
-            User.builder()
-                .fullName("Prof. Saiful Islam")
-                .email("editor@gonouniversity.edu.bd")
-                .password(encoded)
-                .role(User.Role.EDITOR)
-                .title("Managing Editor")
-                .department("Department of Pharmacy")
-                .institution("Gono Bishwabidyalay")
-                .country("BD")
-                .enabled(true)
-                .emailVerified(true)
-                .build(),
+                User.builder()
+                        .fullName("Prof. Saiful Islam")
+                        .email("editor@gonouniversity.edu.bd")
+                        .password(encoded)
+                        .role(User.Role.EDITOR)
+                        .title("Managing Editor")
+                        .department("Department of Pharmacy")
+                        .institution("Gono Bishwabidyalay")
+                        .country("BD")
+                        .enabled(true)
+                        .emailVerified(true)
+                        .build(),
 
-            User.builder()
-                .fullName("Dr. Salma Khatun")
-                .email("reviewer@gonouniversity.edu.bd")
-                .password(encoded)
-                .role(User.Role.REVIEWER)
-                .title("Peer Reviewer")
-                .department("Department of Microbiology")
-                .institution("Gono Bishwabidyalay")
-                .country("BD")
-                .enabled(true)
-                .emailVerified(true)
-                .build(),
+                User.builder()
+                        .fullName("Dr. Salma Khatun")
+                        .email("reviewer@gonouniversity.edu.bd")
+                        .password(encoded)
+                        .role(User.Role.REVIEWER)
+                        .title("Peer Reviewer")
+                        .department("Department of Microbiology")
+                        .institution("Gono Bishwabidyalay")
+                        .country("BD")
+                        .enabled(true)
+                        .emailVerified(true)
+                        .build(),
 
-            User.builder()
-                .fullName("Ayesha Siddique")
-                .email("author@gonouniversity.edu.bd")
-                .password(encoded)
-                .role(User.Role.AUTHOR)
-                .title("Researcher")
-                .department("Department of Public Health")
-                .institution("Gono Bishwabidyalay")
-                .country("BD")
-                .enabled(true)
-                .emailVerified(true)
-                .build()
-        );
+                User.builder()
+                        .fullName("Ayesha Siddique")
+                        .email("author@gonouniversity.edu.bd")
+                        .password(encoded)
+                        .role(User.Role.AUTHOR)
+                        .title("Researcher")
+                        .department("Department of Public Health")
+                        .institution("Gono Bishwabidyalay")
+                        .country("BD")
+                        .enabled(true)
+                        .emailVerified(true)
+                        .build());
 
         userRepository.saveAll(users);
         log.info("Seeded {} demo users", users.size());
@@ -129,49 +131,49 @@ public class DataInitializer implements CommandLineRunner {
     // =========================================
 
     private void seedBoardMembers() {
-        if (boardMemberRepository.count() > 0) return;
+        if (boardMemberRepository.count() > 0)
+            return;
 
         List<BoardMember> members = List.of(
-            BoardMember.builder()
-                .name("Prof. Dr. Laila Rahman")
-                .role("Editor-in-Chief")
-                .unit("Gono Bishwabidyalay")
-                .expertise("Public health, community medicine")
-                .sortOrder(1)
-                .build(),
+                BoardMember.builder()
+                        .name("Prof. Dr. Laila Rahman")
+                        .role("Editor-in-Chief")
+                        .unit("Gono Bishwabidyalay")
+                        .expertise("Public health, community medicine")
+                        .sortOrder(1)
+                        .build(),
 
-            BoardMember.builder()
-                .name("Prof. Saiful Islam")
-                .role("Managing Editor")
-                .unit("Department of Pharmacy")
-                .expertise("Pharmacy education, antimicrobial stewardship")
-                .sortOrder(2)
-                .build(),
+                BoardMember.builder()
+                        .name("Prof. Saiful Islam")
+                        .role("Managing Editor")
+                        .unit("Department of Pharmacy")
+                        .expertise("Pharmacy education, antimicrobial stewardship")
+                        .sortOrder(2)
+                        .build(),
 
-            BoardMember.builder()
-                .name("Dr. Rehana Akter")
-                .role("Section Editor")
-                .unit("Department of Law")
-                .expertise("Governance, access to justice")
-                .sortOrder(3)
-                .build(),
+                BoardMember.builder()
+                        .name("Dr. Rehana Akter")
+                        .role("Section Editor")
+                        .unit("Department of Law")
+                        .expertise("Governance, access to justice")
+                        .sortOrder(3)
+                        .build(),
 
-            BoardMember.builder()
-                .name("Dr. Mahbub Alam")
-                .role("Section Editor")
-                .unit("Faculty of Agriculture")
-                .expertise("Climate adaptation, rural systems")
-                .sortOrder(4)
-                .build(),
+                BoardMember.builder()
+                        .name("Dr. Mahbub Alam")
+                        .role("Section Editor")
+                        .unit("Faculty of Agriculture")
+                        .expertise("Climate adaptation, rural systems")
+                        .sortOrder(4)
+                        .build(),
 
-            BoardMember.builder()
-                .name("Dr. Nasima Begum")
-                .role("Reviewer Board")
-                .unit("Department of Microbiology")
-                .expertise("Infectious diseases, antimicrobials")
-                .sortOrder(5)
-                .build()
-        );
+                BoardMember.builder()
+                        .name("Dr. Nasima Begum")
+                        .role("Reviewer Board")
+                        .unit("Department of Microbiology")
+                        .expertise("Infectious diseases, antimicrobials")
+                        .sortOrder(5)
+                        .build());
 
         boardMemberRepository.saveAll(members);
         log.info("Seeded {} board members", members.size());
@@ -182,7 +184,8 @@ public class DataInitializer implements CommandLineRunner {
     // =========================================
 
     private void seedIssuesAndArticles() {
-        if (issueRepository.count() > 0) return;
+        if (issueRepository.count() > 0)
+            return;
 
         // ---- Issue Vol 4, Issue 2 (CURRENT) ----
         Issue currentIssue = issueRepository.save(Issue.builder()
@@ -195,7 +198,7 @@ public class DataInitializer implements CommandLineRunner {
                 .articleCount(3)
                 .current(true)
                 .editorNote("This issue presents community-focused research that bridges applied " +
-                            "scholarship with real-world public service in the Bangladeshi context.")
+                        "scholarship with real-world public service in the Bangladeshi context.")
                 .build());
 
         // ---- Issue Vol 4, Issue 1 ----
@@ -207,30 +210,6 @@ public class DataInitializer implements CommandLineRunner {
                 .month("January 2026")
                 .theme("Governance, Learning, and Social Transformation")
                 .articleCount(2)
-                .current(false)
-                .build());
-
-        // ---- Issue Vol 3, Issue 2 ----
-        Issue issue2025_2 = issueRepository.save(Issue.builder()
-                .issueKey("2025-2")
-                .year("2025")
-                .volumeLabel("Volume 3")
-                .issueLabel("Issue 2")
-                .month("July 2025")
-                .theme("Applied Research for Local Development")
-                .articleCount(12)
-                .current(false)
-                .build());
-
-        // ---- Issue Vol 3, Issue 1 ----
-        Issue issue2025_1 = issueRepository.save(Issue.builder()
-                .issueKey("2025-1")
-                .year("2025")
-                .volumeLabel("Volume 3")
-                .issueLabel("Issue 1")
-                .month("January 2025")
-                .theme("Teaching, Practice, and Public Service")
-                .articleCount(10)
                 .current(false)
                 .build());
 
@@ -255,7 +234,7 @@ public class DataInitializer implements CommandLineRunner {
                 .topic("Public Health")
                 .department("Faculty of Health Sciences")
                 .abstractText("This study maps healthcare access, referral barriers, and household-level service " +
-                              "confidence across communities surrounding the Gono Bishwabidyalay catchment area.")
+                        "confidence across communities surrounding the Gono Bishwabidyalay catchment area.")
                 .issueLabel("Issue 2")
                 .volumeLabel("Volume 4")
                 .pages("11-28")
@@ -272,15 +251,16 @@ public class DataInitializer implements CommandLineRunner {
         addAuthors(article, List.of("Dr. Farhana Rahman", "Md. Jamil Hossain", "Nusrat A. Karim"));
         addKeywords(article, List.of("community health", "primary care", "Bangladesh", "Savar"));
         addSections(article, List.of(
-            new String[]{"Abstract", "A community-focused survey and interview program identified practical barriers " +
-                "in transport, appointment literacy, referral follow-up, and health information trust."},
-            new String[]{"Key Points", "Patients valued proximity and known providers, but referral complexity " +
-                "reduced timely care. Mobile reminders and community health volunteers were repeatedly identified."},
-            new String[]{"Methods", "The study combined structured household surveys with semi-structured interviews. " +
-                "Responses were coded by access theme and compared across age, gender, income, and clinic contact."},
-            new String[]{"Conclusion", "University-based health systems can become trusted local bridges when " +
-                "referral support, appointment guidance, and follow-up communication are part of the care journey."}
-        ));
+                new String[] { "Abstract",
+                        "A community-focused survey and interview program identified practical barriers " +
+                                "in transport, appointment literacy, referral follow-up, and health information trust." },
+                new String[] { "Key Points", "Patients valued proximity and known providers, but referral complexity " +
+                        "reduced timely care. Mobile reminders and community health volunteers were repeatedly identified." },
+                new String[] { "Methods",
+                        "The study combined structured household surveys with semi-structured interviews. " +
+                                "Responses were coded by access theme and compared across age, gender, income, and clinic contact." },
+                new String[] { "Conclusion", "University-based health systems can become trusted local bridges when " +
+                        "referral support, appointment guidance, and follow-up communication are part of the care journey." }));
         articleRepository.save(article);
     }
 
@@ -293,7 +273,7 @@ public class DataInitializer implements CommandLineRunner {
                 .topic("Pharmacy")
                 .department("Department of Pharmacy")
                 .abstractText("A review of stewardship education, dispensing governance, and clinical collaboration " +
-                              "models for pharmacy students and teaching pharmacies.")
+                        "models for pharmacy students and teaching pharmacies.")
                 .issueLabel("Issue 2")
                 .volumeLabel("Volume 4")
                 .pages("29-44")
@@ -310,13 +290,13 @@ public class DataInitializer implements CommandLineRunner {
         addAuthors(article, List.of("Prof. Saiful Islam", "Tania Sultana"));
         addKeywords(article, List.of("pharmacy", "antimicrobial stewardship", "education"));
         addSections(article, List.of(
-            new String[]{"Abstract", "Teaching pharmacies can support antimicrobial stewardship by combining " +
-                "curriculum, dispensing audits, and physician-pharmacist collaboration."},
-            new String[]{"Practice Implications", "The most feasible early interventions are student-led counseling " +
-                "checklists, prescription review simulations, and supervised community awareness activities."},
-            new String[]{"Conclusion", "Stewardship should be treated as an applied professional habit, " +
-                "not a late-stage theoretical topic."}
-        ));
+                new String[] { "Abstract", "Teaching pharmacies can support antimicrobial stewardship by combining " +
+                        "curriculum, dispensing audits, and physician-pharmacist collaboration." },
+                new String[] { "Practice Implications",
+                        "The most feasible early interventions are student-led counseling " +
+                                "checklists, prescription review simulations, and supervised community awareness activities." },
+                new String[] { "Conclusion", "Stewardship should be treated as an applied professional habit, " +
+                        "not a late-stage theoretical topic." }));
         articleRepository.save(article);
     }
 
@@ -329,7 +309,7 @@ public class DataInitializer implements CommandLineRunner {
                 .topic("Agriculture")
                 .department("Faculty of Agriculture")
                 .abstractText("A field case study documents practical adaptation strategies used by smallholder " +
-                              "farming communities under changing rainfall patterns.")
+                        "farming communities under changing rainfall patterns.")
                 .issueLabel("Issue 2")
                 .volumeLabel("Volume 4")
                 .pages("45-59")
@@ -346,13 +326,14 @@ public class DataInitializer implements CommandLineRunner {
         addAuthors(article, List.of("Dr. Mahbub Alam", "Sharmin Jahan"));
         addKeywords(article, List.of("climate", "agriculture", "adaptation"));
         addSections(article, List.of(
-            new String[]{"Abstract", "Farmers combine crop diversification, local seed exchange, water retention, " +
-                "and cooperative labor to reduce seasonal uncertainty."},
-            new String[]{"Field Observations", "Participants emphasized practical risk-sharing, short-cycle crops, " +
-                "and the value of local knowledge networks in deciding when to plant or delay."},
-            new String[]{"Conclusion", "Climate resilience depends on both agronomic technique and the social " +
-                "infrastructure that helps farmers act on time."}
-        ));
+                new String[] { "Abstract",
+                        "Farmers combine crop diversification, local seed exchange, water retention, " +
+                                "and cooperative labor to reduce seasonal uncertainty." },
+                new String[] { "Field Observations",
+                        "Participants emphasized practical risk-sharing, short-cycle crops, " +
+                                "and the value of local knowledge networks in deciding when to plant or delay." },
+                new String[] { "Conclusion", "Climate resilience depends on both agronomic technique and the social " +
+                        "infrastructure that helps farmers act on time." }));
         articleRepository.save(article);
     }
 
@@ -365,7 +346,7 @@ public class DataInitializer implements CommandLineRunner {
                 .topic("Law and Governance")
                 .department("Department of Law")
                 .abstractText("This perspective argues for structured legal aid clinics as both a pedagogical model " +
-                              "and a public-interest service pathway.")
+                        "and a public-interest service pathway.")
                 .issueLabel("Issue 1")
                 .volumeLabel("Volume 4")
                 .pages("71-82")
@@ -380,13 +361,14 @@ public class DataInitializer implements CommandLineRunner {
         addAuthors(article, List.of("Dr. Rehana Akter"));
         addKeywords(article, List.of("law clinic", "governance", "access to justice"));
         addSections(article, List.of(
-            new String[]{"Abstract", "Legal aid clinics can translate classroom learning into supervised public service. " +
-                "The model requires confidentiality rules, referral protocols, and careful case supervision."},
-            new String[]{"Governance Model", "A clinic charter, faculty supervision board, student ethics agreement, " +
-                "and external partner network create the minimum structure for responsible operation."},
-            new String[]{"Conclusion", "A university clinic can become a trusted access point when education, " +
-                "ethics, and public service are designed together."}
-        ));
+                new String[] { "Abstract",
+                        "Legal aid clinics can translate classroom learning into supervised public service. " +
+                                "The model requires confidentiality rules, referral protocols, and careful case supervision." },
+                new String[] { "Governance Model",
+                        "A clinic charter, faculty supervision board, student ethics agreement, " +
+                                "and external partner network create the minimum structure for responsible operation." },
+                new String[] { "Conclusion", "A university clinic can become a trusted access point when education, " +
+                        "ethics, and public service are designed together." }));
         articleRepository.save(article);
     }
 
@@ -399,7 +381,7 @@ public class DataInitializer implements CommandLineRunner {
                 .topic("Technology")
                 .department("Center for Teaching and Learning")
                 .abstractText("A cross-sectional study of student use of AI tools, perceived learning benefit, " +
-                              "and uncertainty around academic integrity expectations.")
+                        "and uncertainty around academic integrity expectations.")
                 .issueLabel("Issue 1")
                 .volumeLabel("Volume 4")
                 .pages("83-101")
@@ -416,13 +398,14 @@ public class DataInitializer implements CommandLineRunner {
         addAuthors(article, List.of("Md. Rafiq Hasan", "Samia Noor", "Dr. Arup Chandra"));
         addKeywords(article, List.of("AI", "higher education", "academic integrity"));
         addSections(article, List.of(
-            new String[]{"Abstract", "Students reported high experimentation with AI tools but uneven confidence " +
-                "in citation, disclosure, and acceptable use. Clear policy examples were preferred over general warnings."},
-            new String[]{"Findings", "The strongest predictor of responsible use was not technical confidence but " +
-                "whether instructors provided task-specific boundaries."},
-            new String[]{"Conclusion", "Academic integrity policy should be course-visible, example-driven, " +
-                "and paired with learning design rather than punishment alone."}
-        ));
+                new String[] { "Abstract", "Students reported high experimentation with AI tools but uneven confidence "
+                        +
+                        "in citation, disclosure, and acceptable use. Clear policy examples were preferred over general warnings." },
+                new String[] { "Findings",
+                        "The strongest predictor of responsible use was not technical confidence but " +
+                                "whether instructors provided task-specific boundaries." },
+                new String[] { "Conclusion", "Academic integrity policy should be course-visible, example-driven, " +
+                        "and paired with learning design rather than punishment alone." }));
         articleRepository.save(article);
     }
 
@@ -431,13 +414,15 @@ public class DataInitializer implements CommandLineRunner {
     // =========================================
 
     private void seedSubmissions() {
-        if (submissionRepository.count() > 0) return;
+        if (submissionRepository.count() > 0)
+            return;
 
         User author = userRepository.findByEmailIgnoreCase("author@gonouniversity.edu.bd").orElse(null);
         User editor = userRepository.findByEmailIgnoreCase("editor@gonouniversity.edu.bd").orElse(null);
         User reviewer = userRepository.findByEmailIgnoreCase("reviewer@gonouniversity.edu.bd").orElse(null);
 
-        if (author == null || editor == null || reviewer == null) return;
+        if (author == null || editor == null || reviewer == null)
+            return;
 
         // Submission 1 — Under Review
         Submission s1 = submissionRepository.save(Submission.builder()
@@ -446,7 +431,7 @@ public class DataInitializer implements CommandLineRunner {
                 .type("Research Article")
                 .topic("Public Health")
                 .abstractText("A cross-sectional survey of mental health service attitudes among first-year " +
-                              "students at Gono Bishwabidyalay.")
+                        "students at Gono Bishwabidyalay.")
                 .keywords("mental health, university students, service confidence")
                 .status(Submission.SubmissionStatus.UNDER_REVIEW)
                 .submittingAuthor(author)
@@ -470,7 +455,7 @@ public class DataInitializer implements CommandLineRunner {
                 .type("Short Communication")
                 .topic("Veterinary Sciences")
                 .abstractText("An exploratory study of teleconsultation adoption among peri-urban farm owners " +
-                              "near Savar, Bangladesh.")
+                        "near Savar, Bangladesh.")
                 .keywords("veterinary, teleconsultation, peri-urban")
                 .status(Submission.SubmissionStatus.REVISION_REQUESTED)
                 .submittingAuthor(author)
@@ -488,7 +473,7 @@ public class DataInitializer implements CommandLineRunner {
                 .type("Review Article")
                 .topic("Public Health")
                 .abstractText("A literature review of traditional medicine practices and their integration into " +
-                              "primary healthcare in rural Bangladesh.")
+                        "primary healthcare in rural Bangladesh.")
                 .status(Submission.SubmissionStatus.DRAFT)
                 .submittingAuthor(author)
                 .copyrightAgreed(false)

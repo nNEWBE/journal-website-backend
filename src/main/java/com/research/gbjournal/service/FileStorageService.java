@@ -1,9 +1,7 @@
 package com.research.gbjournal.service;
 
-import com.research.gbjournal.entity.SubmissionFile;
 import com.research.gbjournal.exception.BadRequestException;
 import com.research.gbjournal.exception.ResourceNotFoundException;
-import com.research.gbjournal.repository.SubmissionFileRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,13 +24,11 @@ public class FileStorageService {
     @Value("${app.upload-dir:uploads/}")
     private String uploadDir;
 
-    private final SubmissionFileRepository submissionFileRepository;
-
     /**
      * Safely store an uploaded file using a UUID-based filename.
      *
-     * @param file        the multipart file from the HTTP request
-     * @param subDir      sub-directory within the upload dir (e.g., "submissions")
+     * @param file   the multipart file from the HTTP request
+     * @param subDir sub-directory within the upload dir (e.g., "submissions")
      * @return the UUID-based stored filename (not the original name)
      */
     public String store(MultipartFile file, String subDir) {
@@ -102,7 +98,8 @@ public class FileStorageService {
 
     private String getExtension(String filename) {
         int dotIndex = filename.lastIndexOf('.');
-        if (dotIndex < 0 || dotIndex == filename.length() - 1) return "";
+        if (dotIndex < 0 || dotIndex == filename.length() - 1)
+            return "";
         return filename.substring(dotIndex + 1).toLowerCase();
     }
 }

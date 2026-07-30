@@ -9,12 +9,9 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.Instant;
-import java.util.Collection;
-import java.util.List;
 
 @Entity
-@Table(name = "users",
-        uniqueConstraints = @UniqueConstraint(columnNames = "email"))
+@Table(name = "users", uniqueConstraints = @UniqueConstraint(columnNames = "email"))
 @Getter
 @Setter
 @NoArgsConstructor
