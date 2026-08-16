@@ -2,10 +2,13 @@ package com.research.gbjournal.service;
 
 import com.research.gbjournal.dto.editorial.EditorialDecisionRequest;
 import com.research.gbjournal.dto.submission.SubmissionResponseDTO;
+import com.research.gbjournal.entity.Issue;
 import com.research.gbjournal.entity.Submission;
 import com.research.gbjournal.entity.User;
 import com.research.gbjournal.exception.BadRequestException;
 import com.research.gbjournal.exception.ResourceNotFoundException;
+import com.research.gbjournal.repository.ArticleRepository;
+import com.research.gbjournal.repository.IssueRepository;
 import com.research.gbjournal.repository.SubmissionRepository;
 import com.research.gbjournal.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -23,6 +27,8 @@ public class EditorialService {
 
     private final SubmissionRepository submissionRepository;
     private final UserRepository userRepository;
+    private final ArticleRepository articleRepository;
+    private final IssueRepository issueRepository;
     private final SubmissionService submissionService;
     private final SubmissionMailService submissionMailService;
 
@@ -117,7 +123,142 @@ public class EditorialService {
         return submissionService.toResponseDTO(submission);
     }
 
-    // ===== Helper =====
+    // ===== Get Single Submission =====
+
+    @Transactional(readOnly = true)
+    public SubmissionResponseDTO getSubmissionById(Long submissionId) {
+        Submission submission = getSubmission(submissionId);
+        return submissionService.toResponseDTO(submission);
+    }
+
+    // ===== Available Reviewers List =====
+
+    @Transactional(readOnly = true)
+    public List<com.research.gbjournal.dto.auth.AuthResponse.UserInfo> getAvailableReviewers() {
+        return userRepository.findAll().stream()
+                .filter(u -> u.getRole() == User.Role.REVIEWER
+                        || u.getRole() == User.Role.EDITOR
+                        || u.getRole() == User.Role.ADMIN
+                        || u.getRole() == User.Role.SUPER_ADMIN)
+                .map(u -> com.research.gbjournal.dto.auth.AuthResponse.UserInfo.builder()
+                        .id(u.getId())
+                        .fullName(u.getFullName())
+                        .email(u.getEmail())
+                        .role(u.getRole().name().toLowerCase().replace('_', '-'))
+                        .title(u.getTitle())
+                        .department(u.getDepartment())
+                        .institution(u.getInstitution())
+                        .avatarUrl(u.getAvatarUrl())
+                        .emailVerified(u.isEmailVerified())
+                        .build())
+                .toList();
+    }
+
+    // ===== Publish Submission as Article =====
+
+    @Transactional
+    public SubmissionResponseDTO publishSubmission(Long submissionId, Long issueId, String doi, String pages) {
+        Submission submission = getSubmission(submissionId);
+        Issue issue = issueRepository.findById(issueId)
+                .orElseThrow(() -> new ResourceNotFoundException("Issue", "id", issueId));
+
+        submission.setStatus(Submission.SubmissionStatus.PUBLISHED);
+        submissionRepository.save(submission);
+
+        String slug = generateSlug(submission.getTitle());
+        long articleCount = articleRepository.count() + 1;
+        String articleId = String.format("ART-2026-%03d", articleCount);
+
+        com.research.gbjournal.entity.Article article = com.research.gbjournal.entity.Article.builder()
+                .articleId(articleId)
+                .slug(slug)
+                .title(submission.getTitle())
+                .type(submission.getType() != null ? submission.getType() : "Research Article")
+                .topic(submission.getTopic() != null ? submission.getTopic() : "General Medicine")
+                .department(submission.getSubmittingAuthor() != null ? submission.getSubmittingAuthor().getDepartment() : "General Research")
+                .abstractText(submission.getAbstractText())
+                .issue(issue)
+                .issueLabel(issue.getIssueLabel())
+                .volumeLabel(issue.getVolumeLabel())
+                .pages(pages != null && !pages.isBlank() ? pages : "1-15")
+                .doi(doi != null && !doi.isBlank() ? doi : "10.5555/gbj.2026." + String.format("%03d", articleCount))
+                .publishedAt(issue.getMonth())
+                .openAccess(true)
+                .pdfAvailable(true)
+                .build();
+
+        // Authors
+        List<com.research.gbjournal.entity.ArticleAuthor> authors = new java.util.ArrayList<>();
+        if (submission.getAuthors() != null && !submission.getAuthors().isEmpty()) {
+            for (var subAuthor : submission.getAuthors()) {
+                authors.add(com.research.gbjournal.entity.ArticleAuthor.builder()
+                        .article(article)
+                        .name(subAuthor.getName())
+                        .affiliation(subAuthor.getAffiliation())
+                        .authorOrder(subAuthor.getAuthorOrder())
+                        .corresponding(subAuthor.isCorresponding())
+                        .build());
+            }
+        } else if (submission.getSubmittingAuthor() != null) {
+            authors.add(com.research.gbjournal.entity.ArticleAuthor.builder()
+                    .article(article)
+                    .name(submission.getSubmittingAuthor().getFullName())
+                    .affiliation(submission.getSubmittingAuthor().getDepartment())
+                    .authorOrder(1)
+                    .corresponding(true)
+                    .build());
+        }
+        article.setAuthors(authors);
+
+        // Keywords
+        if (submission.getKeywords() != null && !submission.getKeywords().isBlank()) {
+            List<com.research.gbjournal.entity.ArticleKeyword> keywords = new java.util.ArrayList<>();
+            for (String kw : submission.getKeywords().split(",")) {
+                if (!kw.trim().isEmpty()) {
+                    keywords.add(com.research.gbjournal.entity.ArticleKeyword.builder()
+                            .article(article)
+                            .keyword(kw.trim())
+                            .build());
+                }
+            }
+            article.setKeywords(keywords);
+        }
+
+        // Sections
+        List<com.research.gbjournal.entity.ArticleSection> sections = new java.util.ArrayList<>();
+        sections.add(com.research.gbjournal.entity.ArticleSection.builder()
+                .article(article)
+                .heading("Abstract")
+                .body(submission.getAbstractText())
+                .sortOrder(1)
+                .build());
+        sections.add(com.research.gbjournal.entity.ArticleSection.builder()
+                .article(article)
+                .heading("Conclusion")
+                .body("The findings provide significant insights and practical guidance in this academic field.")
+                .sortOrder(2)
+                .build());
+        article.setSections(sections);
+
+        articleRepository.save(article);
+        issue.setArticleCount(issue.getArticleCount() + 1);
+        issueRepository.save(issue);
+
+        submissionMailService.sendStatusChangeNotification(submission);
+        log.info("Submission {} published as article {} in issue {}", submission.getSubmissionId(), article.getArticleId(), issue.getIssueKey());
+
+        return submissionService.toResponseDTO(submission);
+    }
+
+    // ===== Helpers =====
+
+    private String generateSlug(String title) {
+        String base = title.toLowerCase().replaceAll("[^a-z0-9\\s-]", "").replaceAll("\\s+", "-");
+        if (base.length() > 80) {
+            base = base.substring(0, 80);
+        }
+        return base + "-" + System.currentTimeMillis() % 10000;
+    }
 
     private Submission getSubmission(Long id) {
         return submissionRepository.findById(id)

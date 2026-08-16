@@ -35,7 +35,7 @@ public class IssueService {
     public List<IssueDTO> getAllIssues() {
         return issueRepository.findAllByOrderByYearDescIssueLabelDesc()
                 .stream()
-                .map(this::toSummaryDTO)
+                .map(iss -> toSummaryDTO(iss))
                 .toList();
     }
 
@@ -60,12 +60,54 @@ public class IssueService {
         return toSummaryDTO(issue);
     }
 
+    @Transactional
+    public IssueDTO createIssue(IssueDTO dto) {
+        if (dto.isCurrent()) {
+            issueRepository.clearCurrentIssue();
+        }
+        Issue issue = Issue.builder()
+                .issueKey(dto.getIssueKey())
+                .year(dto.getYear())
+                .volumeLabel(dto.getVolumeLabel())
+                .issueLabel(dto.getIssueLabel())
+                .month(dto.getMonth())
+                .theme(dto.getTheme())
+                .articleCount(dto.getArticleCount())
+                .current(dto.isCurrent())
+                .coverImageUrl(dto.getCoverImageUrl())
+                .editorNote(dto.getEditorNote())
+                .build();
+        issueRepository.save(issue);
+        return toSummaryDTO(issue);
+    }
+
+    @Transactional
+    public IssueDTO updateIssue(Long issueId, IssueDTO dto) {
+        Issue issue = issueRepository.findById(issueId)
+                .orElseThrow(() -> new ResourceNotFoundException("Issue", "id", issueId));
+        if (dto.isCurrent() && !issue.isCurrent()) {
+            issueRepository.clearCurrentIssue();
+        }
+        issue.setYear(dto.getYear());
+        issue.setVolumeLabel(dto.getVolumeLabel());
+        issue.setIssueLabel(dto.getIssueLabel());
+        issue.setMonth(dto.getMonth());
+        issue.setTheme(dto.getTheme());
+        issue.setCurrent(dto.isCurrent());
+        issue.setCoverImageUrl(dto.getCoverImageUrl());
+        issue.setEditorNote(dto.getEditorNote());
+        issueRepository.save(issue);
+        return toSummaryDTO(issue);
+    }
+
     // ===== Mappers =====
 
     private IssueDTO toSummaryDTO(Issue issue) {
-        List<ArticleDTO> articles = issue.getArticles().stream()
-                .map(articleService::toDTO)
-                .toList();
+        List<ArticleDTO> articles = issue.getArticles() != null
+                ? issue.getArticles().stream()
+                        .map(art -> articleService.toDTO(art))
+                        .toList()
+                : List.of();
 
         return IssueDTO.builder()
                 .id(issue.getId())
@@ -84,12 +126,14 @@ public class IssueService {
     }
 
     private IssueDTO toDetailedDTO(Issue issue) {
-        List<ArticleDTO> articles = issue.getArticles().stream()
-                .map(articleService::toDTO)
-                .toList();
+        List<ArticleDTO> articles = issue.getArticles() != null
+                ? issue.getArticles().stream()
+                        .map(art -> articleService.toDTO(art))
+                        .toList()
+                : List.of();
 
         Map<String, List<ArticleDTO>> byType = articles.stream()
-                .collect(Collectors.groupingBy(ArticleDTO::getType));
+                .collect(Collectors.groupingBy(art -> art.getType() != null ? art.getType() : "General"));
 
         return IssueDTO.builder()
                 .id(issue.getId())

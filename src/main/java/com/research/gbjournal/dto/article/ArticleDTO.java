@@ -36,4 +36,24 @@ public class ArticleDTO {
         private int downloads;
         private int citations;
     }
+
+    public String getAbstract() {
+        return abstractText;
+    }
+
+    public String getIssue() {
+        return issueLabel;
+    }
+
+    public String getVolume() {
+        return volumeLabel;
+    }
+
+    public String getImage() {
+        return imageUrl;
+    }
+
+    public String getPdf() {
+        return imageUrl != null ? imageUrl : "";
+    }
 }

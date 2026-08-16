@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.Instant;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -34,8 +35,13 @@ public class EditorController {
     /** GET /api/v1/editor/submissions/{id} */
     @GetMapping("/submissions/{id}")
     public ResponseEntity<SubmissionResponseDTO> getSubmission(@PathVariable Long id) {
-        return ResponseEntity.ok(editorialService.listSubmissions(null, null, 0, 1)
-                .stream().findFirst().orElse(null)); // placeholder — see service
+        return ResponseEntity.ok(editorialService.getSubmissionById(id));
+    }
+
+    /** GET /api/v1/editor/reviewers — Available reviewers to invite */
+    @GetMapping("/reviewers")
+    public ResponseEntity<List<com.research.gbjournal.dto.auth.AuthResponse.UserInfo>> getReviewers() {
+        return ResponseEntity.ok(editorialService.getAvailableReviewers());
     }
 
     /** POST /api/v1/editor/submissions/{id}/assign-editor */
@@ -74,5 +80,15 @@ public class EditorController {
     @PostMapping("/submissions/{id}/schedule")
     public ResponseEntity<SubmissionResponseDTO> scheduleForIssue(@PathVariable Long id) {
         return ResponseEntity.ok(editorialService.scheduleForIssue(id));
+    }
+
+    /** POST /api/v1/editor/submissions/{id}/publish */
+    @PostMapping("/submissions/{id}/publish")
+    public ResponseEntity<SubmissionResponseDTO> publishSubmission(
+            @PathVariable Long id,
+            @RequestParam Long issueId,
+            @RequestParam(required = false) String doi,
+            @RequestParam(required = false) String pages) {
+        return ResponseEntity.ok(editorialService.publishSubmission(id, issueId, doi, pages));
     }
 }

@@ -41,16 +41,12 @@ public interface SubmissionRepository extends JpaRepository<Submission, Long> {
            "ORDER BY s.updatedAt DESC")
     Page<Submission> findAllActiveByOrderByUpdatedAtDesc(Pageable pageable);
 
-    /**
-     * Filter by optional status (enum name string) and optional article type.
-     * Uses Spring Data method naming for status to avoid JPQL CAST issues.
-     */
     @Query("SELECT s FROM Submission s WHERE " +
-           "(:status IS NULL OR s.status = :#{T(com.research.gbjournal.entity.Submission.SubmissionStatus).valueOf(#status)}) " +
+           "(:status IS NULL OR s.status = :status) " +
            "AND (:type IS NULL OR s.type = :type) " +
            "ORDER BY s.updatedAt DESC")
     Page<Submission> findByStatusAndType(
-            @Param("status") String status,
+            @Param("status") Submission.SubmissionStatus status,
             @Param("type") String type,
             Pageable pageable);
 }

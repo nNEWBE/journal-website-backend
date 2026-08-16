@@ -3,8 +3,6 @@ package com.research.gbjournal.service;
 import com.research.gbjournal.dto.article.ArticleDTO;
 import com.research.gbjournal.dto.article.ArticleDetailDTO;
 import com.research.gbjournal.entity.Article;
-import com.research.gbjournal.entity.ArticleAuthor;
-import com.research.gbjournal.entity.ArticleKeyword;
 import com.research.gbjournal.exception.ResourceNotFoundException;
 import com.research.gbjournal.repository.ArticleRepository;
 import lombok.RequiredArgsConstructor;
@@ -36,7 +34,7 @@ public class ArticleService {
         PageRequest pageable = PageRequest.of(page, size, sortOrder);
 
         return articleRepository.searchArticles(nullableQuery, nullableType, nullableTopic, nullableIssue, pageable)
-                .map(this::toDTO);
+                .map(art -> toDTO(art));
     }
 
     // ===== Article Detail =====
@@ -77,6 +75,22 @@ public class ArticleService {
     // ===== Mappers =====
 
     public ArticleDTO toDTO(Article a) {
+        List<String> authorNames = a.getAuthors() != null
+                ? a.getAuthors().stream().map(author -> author.getName()).toList()
+                : List.of();
+
+        List<String> keywordList = a.getKeywords() != null
+                ? a.getKeywords().stream().map(keyword -> keyword.getKeyword()).toList()
+                : List.of();
+
+        ArticleDTO.MetricsDTO metricsDTO = a.getMetrics() != null
+                ? ArticleDTO.MetricsDTO.builder()
+                        .views(a.getMetrics().getViews())
+                        .downloads(a.getMetrics().getDownloads())
+                        .citations(a.getMetrics().getCitations())
+                        .build()
+                : ArticleDTO.MetricsDTO.builder().build();
+
         return ArticleDTO.builder()
                 .id(a.getId())
                 .articleId(a.getArticleId())
@@ -85,19 +99,15 @@ public class ArticleService {
                 .type(a.getType())
                 .topic(a.getTopic())
                 .department(a.getDepartment())
-                .authors(a.getAuthors().stream().map(ArticleAuthor::getName).toList())
+                .authors(authorNames)
                 .abstractText(a.getAbstractText())
                 .issueLabel(a.getIssueLabel())
                 .volumeLabel(a.getVolumeLabel())
                 .pages(a.getPages())
                 .doi(a.getDoi())
                 .publishedAt(a.getPublishedAt())
-                .metrics(ArticleDTO.MetricsDTO.builder()
-                        .views(a.getMetrics().getViews())
-                        .downloads(a.getMetrics().getDownloads())
-                        .citations(a.getMetrics().getCitations())
-                        .build())
-                .keywords(a.getKeywords().stream().map(ArticleKeyword::getKeyword).toList())
+                .metrics(metricsDTO)
+                .keywords(keywordList)
                 .imageUrl(a.getImageUrl())
                 .openAccess(a.isOpenAccess())
                 .pdfAvailable(a.isPdfAvailable())
@@ -105,6 +115,35 @@ public class ArticleService {
     }
 
     public ArticleDetailDTO toDetailDTO(Article a) {
+        List<ArticleDetailDTO.AuthorInfo> authorList = a.getAuthors() != null
+                ? a.getAuthors().stream().map(author -> ArticleDetailDTO.AuthorInfo.builder()
+                        .name(author.getName())
+                        .affiliation(author.getAffiliation())
+                        .authorOrder(author.getAuthorOrder())
+                        .corresponding(author.isCorresponding())
+                        .build()).toList()
+                : List.of();
+
+        List<String> keywordList = a.getKeywords() != null
+                ? a.getKeywords().stream().map(keyword -> keyword.getKeyword()).toList()
+                : List.of();
+
+        List<ArticleDetailDTO.SectionDTO> sectionList = a.getSections() != null
+                ? a.getSections().stream().map(s -> ArticleDetailDTO.SectionDTO.builder()
+                        .heading(s.getHeading())
+                        .body(s.getBody())
+                        .sortOrder(s.getSortOrder())
+                        .build()).toList()
+                : List.of();
+
+        ArticleDTO.MetricsDTO metricsDTO = a.getMetrics() != null
+                ? ArticleDTO.MetricsDTO.builder()
+                        .views(a.getMetrics().getViews())
+                        .downloads(a.getMetrics().getDownloads())
+                        .citations(a.getMetrics().getCitations())
+                        .build()
+                : ArticleDTO.MetricsDTO.builder().build();
+
         return ArticleDetailDTO.builder()
                 .id(a.getId())
                 .articleId(a.getArticleId())
@@ -113,29 +152,16 @@ public class ArticleService {
                 .type(a.getType())
                 .topic(a.getTopic())
                 .department(a.getDepartment())
-                .authors(a.getAuthors().stream().map(author -> ArticleDetailDTO.AuthorInfo.builder()
-                        .name(author.getName())
-                        .affiliation(author.getAffiliation())
-                        .authorOrder(author.getAuthorOrder())
-                        .corresponding(author.isCorresponding())
-                        .build()).toList())
+                .authors(authorList)
                 .abstractText(a.getAbstractText())
                 .issueLabel(a.getIssueLabel())
                 .volumeLabel(a.getVolumeLabel())
                 .pages(a.getPages())
                 .doi(a.getDoi())
                 .publishedAt(a.getPublishedAt())
-                .metrics(ArticleDTO.MetricsDTO.builder()
-                        .views(a.getMetrics().getViews())
-                        .downloads(a.getMetrics().getDownloads())
-                        .citations(a.getMetrics().getCitations())
-                        .build())
-                .keywords(a.getKeywords().stream().map(ArticleKeyword::getKeyword).toList())
-                .sections(a.getSections().stream().map(s -> ArticleDetailDTO.SectionDTO.builder()
-                        .heading(s.getHeading())
-                        .body(s.getBody())
-                        .sortOrder(s.getSortOrder())
-                        .build()).toList())
+                .metrics(metricsDTO)
+                .keywords(keywordList)
+                .sections(sectionList)
                 .imageUrl(a.getImageUrl())
                 .pdfUrl(a.getPdfUrl())
                 .openAccess(a.isOpenAccess())

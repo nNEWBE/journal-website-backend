@@ -25,5 +25,13 @@ public class AuthResponse {
         private String institution;
         private String avatarUrl;
         private boolean emailVerified;
+
+        public String getName() {
+            return fullName;
+        }
+
+        public String getAvatar() {
+            return avatarUrl;
+        }
     }
 }

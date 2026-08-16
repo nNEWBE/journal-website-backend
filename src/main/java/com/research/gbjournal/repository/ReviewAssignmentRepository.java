@@ -30,4 +30,6 @@ public interface ReviewAssignmentRepository extends JpaRepository<ReviewAssignme
 
     @Query("SELECT COUNT(r) FROM ReviewAssignment r WHERE r.status IN ('INVITED', 'ACCEPTED')")
     long countActiveReviewers();
+
+    List<ReviewAssignment> findBySubmissionIdAndReviewer(Long submissionId, User reviewer);
 }

@@ -85,10 +85,47 @@ public class SubmissionResponseDTO {
     public static class ReviewDTO {
         private Long id;
         private String reviewerName;
+        private String reviewerEmail;
         private String status;
         private String recommendation;
         private Integer score;
         private Instant dueDate;
         private Instant reviewSubmittedAt;
+    }
+
+    public String getAuthor() {
+        return submittingAuthor != null ? submittingAuthor.getFullName() : "";
+    }
+
+    public String getEditor() {
+        return assignedEditor != null ? assignedEditor.getFullName() : "Unassigned";
+    }
+
+    public List<String> getReviewers() {
+        if (reviews == null || reviews.isEmpty()) {
+            return List.of();
+        }
+        return reviews.stream()
+                .map(r -> r.getReviewerName() != null ? r.getReviewerName() : "Reviewer")
+                .toList();
+    }
+
+    public String getUpdated() {
+        return updatedAt != null ? updatedAt.toString() : (createdAt != null ? createdAt.toString() : "");
+    }
+
+    public String getDue() {
+        if (reviews != null && !reviews.isEmpty()) {
+            for (ReviewDTO r : reviews) {
+                if (r.getDueDate() != null) {
+                    return r.getDueDate().toString();
+                }
+            }
+        }
+        return "14 days";
+    }
+
+    public int getScore() {
+        return reviewScore;
     }
 }

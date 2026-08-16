@@ -479,7 +479,39 @@ public class DataInitializer implements CommandLineRunner {
                 .copyrightAgreed(false)
                 .build());
 
-        log.info("Seeded 3 sample submissions");
+        // Submission 4 — Accepted / Copyediting
+        submissionRepository.save(Submission.builder()
+                .submissionId("GBJ-2026-102")
+                .title("Pharmacy dispensing practices and cold-chain integrity during monsoon flooding")
+                .type("Research Article")
+                .topic("Pharmacy")
+                .abstractText("A multi-district investigation into pharmaceutical supply chain resilience and medicine quality retention under acute monsoon conditions.")
+                .keywords("pharmacy, supply chain, monsoon, disaster preparedness")
+                .status(Submission.SubmissionStatus.COPYEDITING)
+                .submittingAuthor(author)
+                .assignedEditor(editor)
+                .copyrightAgreed(true)
+                .submittedAt(java.time.Instant.now().minusSeconds(86400 * 20))
+                .decisionDate(java.time.Instant.now().minusSeconds(86400 * 4))
+                .build());
+
+        // Submission 5 — Scheduled
+        submissionRepository.save(Submission.builder()
+                .submissionId("GBJ-2026-101")
+                .title("Community-led micro-sanitation initiatives in riverine deltas")
+                .type("Case Study")
+                .topic("Social Sciences")
+                .abstractText("Case evaluations of indigenous collective actions and water quality monitoring in deltaic communities.")
+                .keywords("sanitation, water quality, community governance")
+                .status(Submission.SubmissionStatus.SCHEDULED)
+                .submittingAuthor(author)
+                .assignedEditor(editor)
+                .copyrightAgreed(true)
+                .submittedAt(java.time.Instant.now().minusSeconds(86400 * 30))
+                .decisionDate(java.time.Instant.now().minusSeconds(86400 * 8))
+                .build());
+
+        log.info("Seeded 5 sample submissions covering full workflow");
     }
 
     // =========================================

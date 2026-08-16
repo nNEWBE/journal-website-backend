@@ -105,8 +105,11 @@ public class ReviewService {
         User reviewer = userRepository.findById(reviewerId)
                 .orElseThrow(() -> new ResourceNotFoundException("User", "id", reviewerId));
 
-        if (reviewer.getRole() != User.Role.REVIEWER) {
-            throw new BadRequestException("User is not a reviewer.");
+        if (reviewer.getRole() != User.Role.REVIEWER
+                && reviewer.getRole() != User.Role.EDITOR
+                && reviewer.getRole() != User.Role.ADMIN
+                && reviewer.getRole() != User.Role.SUPER_ADMIN) {
+            throw new BadRequestException("User cannot be assigned as a reviewer.");
         }
 
         // Prevent duplicate active assignments
@@ -144,13 +147,11 @@ public class ReviewService {
                 .orElseThrow(() -> new ResourceNotFoundException("User", "email", email));
     }
 
-    private ReviewAssignment getAssignmentOwnedByReviewer(String reviewerEmail, Long assignmentId) {
+    private ReviewAssignment getAssignmentOwnedByReviewer(String reviewerEmail, Long id) {
         User reviewer = getReviewer(reviewerEmail);
-        ReviewAssignment assignment = reviewAssignmentRepository.findById(assignmentId)
-                .orElseThrow(() -> new ResourceNotFoundException("ReviewAssignment", "id", assignmentId));
-        if (!assignment.getReviewer().getId().equals(reviewer.getId())) {
-            throw new BadRequestException("You are not authorized to access this review assignment.");
-        }
-        return assignment;
+        return reviewAssignmentRepository.findById(id)
+                .filter(ra -> ra.getReviewer().getId().equals(reviewer.getId()))
+                .or(() -> reviewAssignmentRepository.findBySubmissionIdAndReviewer(id, reviewer).stream().findFirst())
+                .orElseThrow(() -> new ResourceNotFoundException("Review assignment not found for reviewer " + reviewerEmail));
     }
 }

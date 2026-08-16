@@ -84,6 +84,72 @@ public class SubmissionService {
         return toResponseDTO(submission);
     }
 
+    // ===== Update Existing Draft =====
+
+    @Transactional
+    public SubmissionResponseDTO updateDraft(String authorEmail, Long submissionId, SubmissionCreateRequest request) {
+        Submission submission = getOwnedSubmission(authorEmail, submissionId);
+
+        if (submission.getStatus() != Submission.SubmissionStatus.DRAFT &&
+            submission.getStatus() != Submission.SubmissionStatus.REVISION_REQUESTED) {
+            throw new BadRequestException("Only DRAFT or REVISION_REQUESTED manuscripts can be edited directly.");
+        }
+
+        submission.setTitle(request.getTitle());
+        submission.setRunningTitle(request.getRunningTitle());
+        submission.setType(request.getType());
+        submission.setAbstractText(request.getAbstractText());
+        submission.setKeywords(request.getKeywords());
+        submission.setTopic(request.getTopic());
+        submission.setCoverLetter(request.getCoverLetter());
+        submission.setConflictOfInterest(request.getConflictOfInterest());
+        submission.setFundingStatement(request.getFundingStatement());
+        submission.setEthicsStatement(request.getEthicsStatement());
+        submission.setDataAvailability(request.getDataAvailability());
+        submission.setAiDeclaration(request.getAiDeclaration());
+        submission.setCopyrightAgreed(request.isCopyrightAgreed());
+
+        if (request.getAuthors() != null) {
+            submission.getAuthors().clear();
+            for (var coAuthorReq : request.getAuthors()) {
+                submission.getAuthors().add(SubmissionAuthor.builder()
+                        .submission(submission)
+                        .name(coAuthorReq.getName())
+                        .email(coAuthorReq.getEmail())
+                        .affiliation(coAuthorReq.getAffiliation())
+                        .orcid(coAuthorReq.getOrcid())
+                        .authorOrder(coAuthorReq.getAuthorOrder())
+                        .corresponding(coAuthorReq.isCorresponding())
+                        .build());
+            }
+        }
+
+        submissionRepository.save(submission);
+        log.info("Draft updated: {} by {}", submission.getSubmissionId(), authorEmail);
+        return toResponseDTO(submission);
+    }
+
+    // ===== Submit Revision =====
+
+    @Transactional
+    public SubmissionResponseDTO submitRevision(String authorEmail, Long submissionId, String revisionNotes) {
+        Submission submission = getOwnedSubmission(authorEmail, submissionId);
+
+        if (submission.getStatus() != Submission.SubmissionStatus.REVISION_REQUESTED &&
+            submission.getStatus() != Submission.SubmissionStatus.DRAFT) {
+            throw new BadRequestException("Submission is not in REVISION_REQUESTED status.");
+        }
+
+        submission.setStatus(Submission.SubmissionStatus.UNDER_REVIEW);
+        if (revisionNotes != null && !revisionNotes.isBlank()) {
+            submission.setCoverLetter((submission.getCoverLetter() != null ? submission.getCoverLetter() + "\n\n[Revision Notes]: " : "[Revision Notes]: ") + revisionNotes);
+        }
+        submissionRepository.save(submission);
+
+        log.info("Revision submitted: {} by {}", submission.getSubmissionId(), authorEmail);
+        return toResponseDTO(submission);
+    }
+
     // ===== Submit (move from DRAFT -> SUBMITTED) =====
 
     @Transactional
@@ -163,7 +229,7 @@ public class SubmissionService {
         User author = userRepository.findByEmailIgnoreCase(authorEmail)
                 .orElseThrow(() -> new ResourceNotFoundException("User", "email", authorEmail));
         return submissionRepository.findBySubmittingAuthorOrderByUpdatedAtDesc(author)
-                .stream().map(this::toResponseDTO).toList();
+                .stream().map(sub -> toResponseDTO(sub)).toList();
     }
 
     // ===== Get Single Submission =====
@@ -193,10 +259,16 @@ public class SubmissionService {
     @Transactional(readOnly = true)
     public Page<SubmissionResponseDTO> getAllSubmissions(String status, String type, int page, int size) {
         PageRequest pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "updatedAt"));
-        String nullableStatus = (status == null || status.isBlank()) ? null : status.trim().toUpperCase();
+        Submission.SubmissionStatus statusEnum = null;
+        if (status != null && !status.isBlank()) {
+            try {
+                statusEnum = Submission.SubmissionStatus.valueOf(status.trim().toUpperCase());
+            } catch (IllegalArgumentException ignored) {
+            }
+        }
         String nullableType = (type == null || type.isBlank()) ? null : type.trim();
-        return submissionRepository.findByStatusAndType(nullableStatus, nullableType, pageable)
-                .map(this::toResponseDTO);
+        return submissionRepository.findByStatusAndType(statusEnum, nullableType, pageable)
+                .map(sub -> toResponseDTO(sub));
     }
 
     // ===== Helpers =====
@@ -266,6 +338,7 @@ public class SubmissionService {
                 .reviews(s.getReviews().stream().map(r -> SubmissionResponseDTO.ReviewDTO.builder()
                         .id(r.getId())
                         .reviewerName(r.getReviewer().getFullName())
+                        .reviewerEmail(r.getReviewer().getEmail())
                         .status(r.getStatus().name())
                         .recommendation(r.getRecommendation() != null ? r.getRecommendation().name() : null)
                         .score(r.getScore())

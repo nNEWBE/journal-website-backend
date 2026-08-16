@@ -31,6 +31,25 @@ public class SubmissionController {
                 .body(submissionService.createOrUpdateDraft(userDetails.getUsername(), request));
     }
 
+    /** PUT /api/v1/submissions/{id} — Update an existing draft */
+    @PutMapping("/{id}")
+    public ResponseEntity<SubmissionResponseDTO> updateDraft(
+            @AuthenticationPrincipal UserDetails userDetails,
+            @PathVariable Long id,
+            @Valid @RequestBody SubmissionCreateRequest request) {
+        return ResponseEntity.ok(submissionService.updateDraft(userDetails.getUsername(), id, request));
+    }
+
+    /** POST /api/v1/submissions/{id}/revisions — Submit revised manuscript */
+    @PostMapping("/{id}/revisions")
+    public ResponseEntity<SubmissionResponseDTO> submitRevision(
+            @AuthenticationPrincipal UserDetails userDetails,
+            @PathVariable Long id,
+            @RequestBody(required = false) java.util.Map<String, String> body) {
+        String notes = body != null ? body.get("notes") : "";
+        return ResponseEntity.ok(submissionService.submitRevision(userDetails.getUsername(), id, notes));
+    }
+
     /** GET /api/v1/submissions/my — List my submissions (author) */
     @GetMapping("/my")
     public ResponseEntity<List<SubmissionResponseDTO>> mySubmissions(
