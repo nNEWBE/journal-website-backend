@@ -1,22 +1,17 @@
 # =============================================
-# DEVELOPMENT PROFILE — H2 In-Memory Database
+# DEVELOPMENT PROFILE — Local PostgreSQL Database
 # =============================================
 spring:
   datasource:
-    url: jdbc:h2:mem:gbjournal_dev;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
-    driver-class-name: org.h2.Driver
-    username: sa
-    password: ""
-
-  h2:
-    console:
-      enabled: true
-      path: /h2-console
+    url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/gbjournal}
+    driver-class-name: org.postgresql.Driver
+    username: ${DATABASE_USERNAME:postgres}
+    password: ${DATABASE_PASSWORD:shuvo1234}
 
   jpa:
     open-in-view: false
     hibernate:
-      ddl-auto: create-drop   # Schema is wiped and recreated on every restart
+      ddl-auto: update        # Creates tables and preserves seed data
     show-sql: true
     properties:
       hibernate:
