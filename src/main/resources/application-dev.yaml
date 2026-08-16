@@ -14,7 +14,7 @@ spring:
       path: /h2-console
 
   jpa:
-    database-platform: org.hibernate.dialect.H2Dialect
+    open-in-view: false
     hibernate:
       ddl-auto: create-drop   # Schema is wiped and recreated on every restart
     show-sql: true

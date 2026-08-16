@@ -14,7 +14,7 @@ spring:
       connection-timeout: 30000
 
   jpa:
-    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    open-in-view: false
     hibernate:
       ddl-auto: update        # Automatically create/update tables on cloud deploy
     show-sql: false
