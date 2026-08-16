@@ -90,6 +90,7 @@ public class SecurityConfig {
 
                 // Public article & issue discovery (read-only GET)
                 .requestMatchers(HttpMethod.GET,
+                    "/api/v1/health",
                     "/api/v1/articles",
                     "/api/v1/articles/**",
                     "/api/v1/issues",
