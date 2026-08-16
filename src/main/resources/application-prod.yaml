@@ -68,7 +68,7 @@ cloudinary:
 app:
   upload-dir: ${UPLOAD_DIR:/var/gbjournal/uploads/}
   cors-allowed-origins: ${CORS_ORIGINS:https://journal.gonouniversity.edu.bd}
-  base-url: ${APP_BASE_URL:https://api.gonouniversity.edu.bd}
+  base-url: ${APP_BASE_URL:https://journal-website-backend-idj1.onrender.com}
   mail:
     from: no-reply@gonouniversity.edu.bd
     from-name: "GBJ — Gono Bishwabidyalay Journal"
