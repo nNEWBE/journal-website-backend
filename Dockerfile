@@ -7,15 +7,15 @@ COPY gradlew .
 COPY gradle gradle
 COPY build.gradle settings.gradle ./
 
-# Fix line endings and permissions on gradlew
-RUN chmod +x gradlew
+# Fix line endings (CRLF -> LF) and permissions on gradlew
+RUN sed -i 's/\r$//' gradlew && chmod +x gradlew
 
 # Download dependencies
 RUN ./gradlew dependencies --no-daemon || true
 
 # Copy source code and build production jar
 COPY src src
-RUN ./gradlew bootJar --no-daemon -x test
+RUN ./gradlew bootJar --no-daemon --stacktrace -x test
 
 # Runtime Stage
 FROM eclipse-temurin:21-jre-jammy
