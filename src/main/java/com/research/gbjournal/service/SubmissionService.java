@@ -5,7 +5,6 @@ import com.research.gbjournal.dto.submission.SubmissionResponseDTO;
 import com.research.gbjournal.entity.*;
 import com.research.gbjournal.exception.BadRequestException;
 import com.research.gbjournal.exception.ResourceNotFoundException;
-import com.research.gbjournal.repository.SubmissionFileRepository;
 import com.research.gbjournal.repository.SubmissionRepository;
 import com.research.gbjournal.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -28,7 +27,6 @@ import java.util.List;
 public class SubmissionService {
 
     private final SubmissionRepository submissionRepository;
-    private final SubmissionFileRepository submissionFileRepository;
     private final UserRepository userRepository;
     private final FileStorageService fileStorageService;
     private final SubmissionMailService submissionMailService;
@@ -91,7 +89,7 @@ public class SubmissionService {
         Submission submission = getOwnedSubmission(authorEmail, submissionId);
 
         if (submission.getStatus() != Submission.SubmissionStatus.DRAFT &&
-            submission.getStatus() != Submission.SubmissionStatus.REVISION_REQUESTED) {
+                submission.getStatus() != Submission.SubmissionStatus.REVISION_REQUESTED) {
             throw new BadRequestException("Only DRAFT or REVISION_REQUESTED manuscripts can be edited directly.");
         }
 
@@ -136,13 +134,15 @@ public class SubmissionService {
         Submission submission = getOwnedSubmission(authorEmail, submissionId);
 
         if (submission.getStatus() != Submission.SubmissionStatus.REVISION_REQUESTED &&
-            submission.getStatus() != Submission.SubmissionStatus.DRAFT) {
+                submission.getStatus() != Submission.SubmissionStatus.DRAFT) {
             throw new BadRequestException("Submission is not in REVISION_REQUESTED status.");
         }
 
         submission.setStatus(Submission.SubmissionStatus.UNDER_REVIEW);
         if (revisionNotes != null && !revisionNotes.isBlank()) {
-            submission.setCoverLetter((submission.getCoverLetter() != null ? submission.getCoverLetter() + "\n\n[Revision Notes]: " : "[Revision Notes]: ") + revisionNotes);
+            submission.setCoverLetter(
+                    (submission.getCoverLetter() != null ? submission.getCoverLetter() + "\n\n[Revision Notes]: "
+                            : "[Revision Notes]: ") + revisionNotes);
         }
         submissionRepository.save(submission);
 

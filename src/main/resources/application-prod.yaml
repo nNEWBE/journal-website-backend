@@ -16,7 +16,7 @@ spring:
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
-      ddl-auto: validate        # Never auto-create/drop in production
+      ddl-auto: update        # Automatically create/update tables on cloud deploy
     show-sql: false
 
   docker:
@@ -52,6 +52,15 @@ jwt:
   secret: ${JWT_SECRET}
   access-token-expiration-ms: 900000
   refresh-token-expiration-ms: 604800000
+
+# =============================================
+# Cloudinary Image Storage
+# =============================================
+cloudinary:
+  cloud-name: ${CLOUDINARY_CLOUD_NAME}
+  api-key: ${CLOUDINARY_API_KEY}
+  api-secret: ${CLOUDINARY_API_SECRET}
+  folder: ${CLOUDINARY_FOLDER:gbjournal}
 
 # =============================================
 # App-Level Configuration

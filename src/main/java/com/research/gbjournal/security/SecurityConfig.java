@@ -105,6 +105,9 @@ public class SecurityConfig {
                     "/api/v1/auth/logout",
                     "/api/v1/auth/profile").authenticated()
 
+                // File upload — any authenticated user
+                .requestMatchers(HttpMethod.POST, "/api/v1/files/upload-image").authenticated()
+
                 // Author — any authenticated user can submit manuscripts
                 .requestMatchers("/api/v1/submissions/**").authenticated()
 

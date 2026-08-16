@@ -26,6 +26,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-mail'
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 	implementation 'io.github.cdimascio:dotenv-java:3.2.0'             // auto-load .env file
+	implementation 'com.cloudinary:cloudinary-http5:2.0.0'             // Cloudinary image upload SDK
 
 	// JWT — JJWT 0.12.x (modern fluent API)
 	implementation 'io.jsonwebtoken:jjwt-api:0.12.6'
