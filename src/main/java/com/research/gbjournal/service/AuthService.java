@@ -134,7 +134,13 @@ public class AuthService {
         if (StringUtils.hasText(request.getCountry()))        user.setCountry(request.getCountry());
         if (StringUtils.hasText(request.getOrcid()))          user.setOrcid(request.getOrcid());
         if (StringUtils.hasText(request.getResearchInterests())) user.setResearchInterests(request.getResearchInterests());
-        if (request.getAvatarUrl() != null)                  user.setAvatarUrl(request.getAvatarUrl());
+        if (request.getAvatarUrl() != null) {
+            String oldAvatarUrl = user.getAvatarUrl();
+            if (StringUtils.hasText(oldAvatarUrl) && !oldAvatarUrl.equals(request.getAvatarUrl())) {
+                cloudinaryService.deleteByUrl(oldAvatarUrl);
+            }
+            user.setAvatarUrl(request.getAvatarUrl());
+        }
 
         userRepository.save(user);
         return mapUserInfo(user);
@@ -162,9 +168,15 @@ public class AuthService {
         User user = userRepository.findByEmailIgnoreCase(email)
                 .orElseThrow(() -> new ResourceNotFoundException("User", "email", email));
 
+        String oldAvatarUrl = user.getAvatarUrl();
+
         java.util.Map<String, Object> uploadResult = cloudinaryService.uploadImage(file, "gbjournal/avatars");
         String secureUrl = (String) uploadResult.get("secure_url");
         if (StringUtils.hasText(secureUrl)) {
+            // Remove previous avatar from Cloudinary if it exists
+            if (StringUtils.hasText(oldAvatarUrl) && !oldAvatarUrl.equals(secureUrl)) {
+                cloudinaryService.deleteByUrl(oldAvatarUrl);
+            }
             user.setAvatarUrl(secureUrl);
             userRepository.save(user);
             log.info("Updated avatar in Cloudinary for user: {}, url: {}", email, secureUrl);
