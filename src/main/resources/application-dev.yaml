@@ -61,8 +61,8 @@ spring:
 # =============================================
 jwt:
   secret: ${JWT_SECRET}
-  access-token-expiration-ms: 900000        # 15 minutes
-  refresh-token-expiration-ms: 604800000    # 7 days
+  access-token-expiration-ms: 86400000       # 24 hours (1 day)
+  refresh-token-expiration-ms: 2592000000    # 30 days
 
 # =============================================
 # Cloudinary Image Storage
