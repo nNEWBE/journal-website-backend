@@ -116,4 +116,62 @@ public class CloudinaryService {
             throw new BadRequestException("Cloudinary delete error: " + ex.getMessage());
         }
     }
+
+    /**
+     * Safely delete an existing asset from Cloudinary using its full URL.
+     * Silently logs if the URL is not a Cloudinary asset or if deletion fails.
+     */
+    public void deleteByUrl(String url) {
+        if (url == null || !url.contains("cloudinary.com")) {
+            return;
+        }
+
+        String publicId = extractPublicIdFromUrl(url);
+        if (publicId == null || publicId.isBlank()) {
+            return;
+        }
+
+        try {
+            @SuppressWarnings("unchecked")
+            Map<String, Object> result = (Map<String, Object>) cloudinary.uploader().destroy(
+                    publicId, ObjectUtils.emptyMap()
+            );
+            log.info("Deleted previous Cloudinary avatar: publicId={}, result={}", publicId, result);
+        } catch (Exception ex) {
+            log.warn("Could not delete old avatar from Cloudinary (publicId={}): {}", publicId, ex.getMessage());
+        }
+    }
+
+    /**
+     * Extracts public_id from a Cloudinary image URL.
+     * E.g. https://res.cloudinary.com/demo/image/upload/v12345/gbjournal/avatars/user123.jpg -> gbjournal/avatars/user123
+     */
+    public String extractPublicIdFromUrl(String url) {
+        if (url == null || !url.contains("/upload/")) {
+            return null;
+        }
+
+        try {
+            String afterUpload = url.substring(url.indexOf("/upload/") + "/upload/".length());
+            // Strip version if present (e.g. v1700000000/)
+            if (afterUpload.matches("^v\\d+/.*")) {
+                afterUpload = afterUpload.replaceFirst("^v\\d+/", "");
+            }
+
+            // Strip query params if any
+            if (afterUpload.contains("?")) {
+                afterUpload = afterUpload.substring(0, afterUpload.indexOf("?"));
+            }
+
+            // Strip extension (.jpg, .png, etc.)
+            int lastDot = afterUpload.lastIndexOf('.');
+            if (lastDot > 0) {
+                return afterUpload.substring(0, lastDot);
+            }
+            return afterUpload;
+        } catch (Exception ex) {
+            log.warn("Failed to extract public_id from URL: {}", url);
+            return null;
+        }
+    }
 }

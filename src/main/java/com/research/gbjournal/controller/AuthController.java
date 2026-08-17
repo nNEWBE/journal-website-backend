@@ -60,4 +60,21 @@ public class AuthController {
             @Valid @RequestBody UpdateProfileRequest request) {
         return ResponseEntity.ok(authService.updateProfile(userDetails.getUsername(), request));
     }
+
+    /** POST /api/v1/auth/avatar */
+    @PostMapping(value = "/avatar", consumes = org.springframework.http.MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<AuthResponse.UserInfo> uploadAvatar(
+            @AuthenticationPrincipal UserDetails userDetails,
+            @RequestParam("file") org.springframework.web.multipart.MultipartFile file) {
+        return ResponseEntity.ok(authService.uploadAvatar(userDetails.getUsername(), file));
+    }
+
+    /** POST /api/v1/auth/change-password */
+    @PostMapping("/change-password")
+    public ResponseEntity<Map<String, String>> changePassword(
+            @AuthenticationPrincipal UserDetails userDetails,
+            @Valid @RequestBody com.research.gbjournal.dto.auth.ChangePasswordRequest request) {
+        authService.changePassword(userDetails.getUsername(), request);
+        return ResponseEntity.ok(Map.of("message", "Password changed successfully."));
+    }
 }

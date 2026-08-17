@@ -104,7 +104,11 @@ public class SecurityConfig {
                 .requestMatchers(
                     "/api/v1/auth/me",
                     "/api/v1/auth/logout",
-                    "/api/v1/auth/profile").authenticated()
+                    "/api/v1/auth/profile",
+                    "/api/v1/auth/change-password").authenticated()
+
+                // Avatar upload — POST multipart/form-data
+                .requestMatchers(HttpMethod.POST, "/api/v1/auth/avatar").authenticated()
 
                 // File upload — any authenticated user
                 .requestMatchers(HttpMethod.POST, "/api/v1/files/upload-image").authenticated()

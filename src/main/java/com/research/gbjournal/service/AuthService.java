@@ -30,6 +30,7 @@ public class AuthService {
     private final JwtProperties jwtProperties;
     private final AuthenticationManager authenticationManager;
     private final RefreshTokenService refreshTokenService;
+    private final CloudinaryService cloudinaryService;
 
     // ===== Login =====
 
@@ -133,10 +134,42 @@ public class AuthService {
         if (StringUtils.hasText(request.getCountry()))        user.setCountry(request.getCountry());
         if (StringUtils.hasText(request.getOrcid()))          user.setOrcid(request.getOrcid());
         if (StringUtils.hasText(request.getResearchInterests())) user.setResearchInterests(request.getResearchInterests());
-        if (StringUtils.hasText(request.getTitle()))          user.setTitle(request.getTitle());
-        if (StringUtils.hasText(request.getAvatarUrl()))      user.setAvatarUrl(request.getAvatarUrl());
+        if (request.getAvatarUrl() != null)                  user.setAvatarUrl(request.getAvatarUrl());
 
         userRepository.save(user);
+        return mapUserInfo(user);
+    }
+
+    // ===== Change Password =====
+
+    @Transactional
+    public void changePassword(String email, com.research.gbjournal.dto.auth.ChangePasswordRequest request) {
+        User user = userRepository.findByEmailIgnoreCase(email)
+                .orElseThrow(() -> new ResourceNotFoundException("User", "email", email));
+
+        if (!passwordEncoder.matches(request.getCurrentPassword(), user.getPassword())) {
+            throw new BadRequestException("Current password does not match.");
+        }
+
+        user.setPassword(passwordEncoder.encode(request.getNewPassword()));
+        userRepository.save(user);
+    }
+
+    // ===== Upload Avatar to Cloudinary =====
+
+    @Transactional
+    public AuthResponse.UserInfo uploadAvatar(String email, org.springframework.web.multipart.MultipartFile file) {
+        User user = userRepository.findByEmailIgnoreCase(email)
+                .orElseThrow(() -> new ResourceNotFoundException("User", "email", email));
+
+        java.util.Map<String, Object> uploadResult = cloudinaryService.uploadImage(file, "gbjournal/avatars");
+        String secureUrl = (String) uploadResult.get("secure_url");
+        if (StringUtils.hasText(secureUrl)) {
+            user.setAvatarUrl(secureUrl);
+            userRepository.save(user);
+            log.info("Updated avatar in Cloudinary for user: {}, url: {}", email, secureUrl);
+        }
+
         return mapUserInfo(user);
     }
 
