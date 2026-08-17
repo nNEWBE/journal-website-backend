@@ -31,6 +31,7 @@ public class AuthService {
     private final AuthenticationManager authenticationManager;
     private final RefreshTokenService refreshTokenService;
     private final CloudinaryService cloudinaryService;
+    private final EmailService emailService;
 
     // ===== Login =====
 
@@ -86,6 +87,26 @@ public class AuthService {
         RefreshToken refreshToken = refreshTokenService.createRefreshToken(user);
 
         log.info("New user registered: {}", email);
+
+        // Dispatch Welcome Email asynchronously
+        try {
+            java.util.Map<String, Object> emailVars = new java.util.HashMap<>();
+            emailVars.put("fullName", user.getFullName());
+            emailVars.put("email", user.getEmail());
+            emailVars.put("role", user.getRole().name().replace('_', ' '));
+            emailVars.put("institution", user.getInstitution() != null ? user.getInstitution() : "");
+            emailVars.put("orcid", user.getOrcid() != null ? user.getOrcid() : "");
+            emailVars.put("registeredAt", java.time.LocalDate.now().toString());
+            emailService.sendHtml(
+                    user.getEmail(),
+                    "Welcome to Gono Bishwabidyalay Journal — Your Academic Account is Ready",
+                    "email/account-welcome",
+                    emailVars
+            );
+        } catch (Exception ex) {
+            log.warn("Failed to dispatch welcome email to {}: {}", user.getEmail(), ex.getMessage());
+        }
+
         return buildAuthResponse(accessToken, refreshToken.getToken(), user);
     }
 

@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>Welcome to Gono Bishwabidyalay Journal</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #f1f5f9;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      color: #0f172a;
+      -webkit-font-smoothing: antialiased;
+    }
+    .wrapper {
+      max-width: 620px;
+      margin: 36px auto;
+      background: #ffffff;
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.07), 0 1px 3px rgba(0, 0, 0, 0.04);
+      overflow: hidden;
+      border: 1px solid #e2e8f0;
+    }
+    .header {
+      background: linear-gradient(135deg, #070e24 0%, #0d2352 50%, #1e3a8a 100%);
+      padding: 40px 36px 32px;
+      text-align: center;
+      position: relative;
+    }
+    .header-logo {
+      display: inline-block;
+      background: #ffffff;
+      padding: 8px 14px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      margin-bottom: 16px;
+    }
+    .header-logo span {
+      font-family: Georgia, serif;
+      font-size: 16px;
+      font-weight: 900;
+      color: #070e24;
+      letter-spacing: 0.5px;
+    }
+    .header h1 {
+      margin: 0;
+      color: #ffffff;
+      font-family: Georgia, serif;
+      font-size: 24px;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+      line-height: 1.25;
+    }
+    .header p {
+      margin: 8px 0 0;
+      color: #93c5fd;
+      font-size: 13px;
+      letter-spacing: 0.2px;
+    }
+    .badge {
+      display: inline-block;
+      margin-top: 18px;
+      padding: 5px 16px;
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      border-radius: 9999px;
+      color: #fef08a;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+    }
+    .content {
+      padding: 36px 36px 28px;
+    }
+    .greeting {
+      font-family: Georgia, serif;
+      font-size: 20px;
+      font-weight: 700;
+      color: #0f172a;
+      margin: 0 0 14px;
+    }
+    .lead-text {
+      font-size: 15px;
+      line-height: 1.65;
+      color: #334155;
+      margin: 0 0 24px;
+    }
+    .meta-box {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 22px 24px;
+      margin: 0 0 28px;
+    }
+    .meta-box-title {
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: #64748b;
+      margin: 0 0 16px;
+      border-bottom: 1px solid #e2e8f0;
+      padding-bottom: 8px;
+    }
+    .meta-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 6px 0;
+      font-size: 13.5px;
+    }
+    .meta-label {
+      font-weight: 600;
+      color: #64748b;
+    }
+    .meta-value {
+      font-weight: 600;
+      color: #0f172a;
+      text-align: right;
+    }
+    .role-pill {
+      display: inline-block;
+      padding: 2px 10px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      background: #dbeafe;
+      color: #1e40af;
+      border: 1px solid #bfdbfe;
+    }
+    .password-notice {
+      background: #fffbeb;
+      border: 1px solid #fde68a;
+      border-radius: 10px;
+      padding: 14px 18px;
+      margin: 0 0 24px;
+      font-size: 13.5px;
+      color: #92400e;
+      line-height: 1.5;
+    }
+    .features-grid {
+      margin: 28px 0;
+    }
+    .feature-item {
+      display: flex;
+      align-items: flex-start;
+      margin-bottom: 14px;
+      font-size: 14px;
+      color: #334155;
+      line-height: 1.5;
+    }
+    .feature-icon {
+      width: 24px;
+      height: 24px;
+      background: #e0f2fe;
+      color: #0284c7;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 12px;
+      margin-right: 12px;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+    .btn-container {
+      text-align: center;
+      margin: 32px 0 24px;
+    }
+    .btn-primary {
+      display: inline-block;
+      padding: 14px 36px;
+      background: linear-gradient(135deg, #1e3a8a 0%, #0f172a 100%);
+      color: #ffffff !important;
+      text-decoration: none;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0.3px;
+      box-shadow: 0 4px 14px rgba(30, 58, 138, 0.35);
+    }
+    .security-note {
+      font-size: 12px;
+      color: #64748b;
+      line-height: 1.6;
+      border-top: 1px solid #f1f5f9;
+      padding-top: 18px;
+      margin-top: 24px;
+    }
+    .footer {
+      background: #f8fafc;
+      border-top: 1px solid #e2e8f0;
+      padding: 24px 36px;
+      text-align: center;
+    }
+    .footer p {
+      margin: 0;
+      font-size: 12px;
+      color: #94a3b8;
+      line-height: 1.6;
+    }
+    .footer a {
+      color: #2563eb;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+<div class="wrapper">
+  <!-- HEADER -->
+  <div class="header">
+    <div class="header-logo">
+      <span>GB JOURNAL</span>
+    </div>
+    <h1>Gono Bishwabidyalay Journal</h1>
+    <p>Peer-Reviewed Multidisciplinary Research &amp; Academic Publication</p>
+    <span class="badge">Academic Account Ready</span>
+  </div>
+
+  <!-- BODY CONTENT -->
+  <div class="content">
+    <h2 class="greeting" th:text="'Dear ' + ${fullName} + ','">Dear Scholar,</h2>
+    <p class="lead-text">
+      Welcome to the <strong>Gono Bishwabidyalay Journal (GBJ)</strong> research ecosystem. Your academic scholar account has been successfully created. You can now submit manuscripts, track peer review milestones, and collaborate directly with the editorial desk.
+    </p>
+
+    <!-- ACCOUNT SUMMARY CARD -->
+    <div class="meta-box">
+      <div class="meta-box-title">Account Credentials Summary</div>
+      <div class="meta-row">
+        <span class="meta-label">Full Name</span>
+        <span class="meta-value" th:text="${fullName}">Scholar Name</span>
+      </div>
+      <div class="meta-row">
+        <span class="meta-label">Login Email</span>
+        <span class="meta-value" th:text="${email}">scholar@university.edu</span>
+      </div>
+      <div class="meta-row">
+        <span class="meta-label">Assigned Role</span>
+        <span class="meta-value">
+          <span class="role-pill" th:text="${role}">AUTHOR</span>
+        </span>
+      </div>
+      <div class="meta-row" th:if="${institution != null and !institution.isEmpty()}">
+        <span class="meta-label">Affiliation</span>
+        <span class="meta-value" th:text="${institution}">Gono University</span>
+      </div>
+      <div class="meta-row" th:if="${orcid != null and !orcid.isEmpty()}">
+        <span class="meta-label">ORCID iD</span>
+        <span class="meta-value" th:text="${orcid}">0000-0000-0000-0000</span>
+      </div>
+      <div class="meta-row">
+        <span class="meta-label">Registration Date</span>
+        <span class="meta-value" th:text="${registeredAt}">2026-08-17</span>
+      </div>
+    </div>
+
+    <!-- TEMPORARY PASSWORD NOTICE (IF ADMIN INVITED) -->
+    <div class="password-notice" th:if="${tempPassword != null and !tempPassword.isEmpty()}">
+      <strong>Temporary Login Password:</strong> <code th:text="${tempPassword}" style="background: rgba(0,0,0,0.06); padding: 2px 6px; border-radius: 4px; font-weight: bold;">TempPass123!</code><br>
+      Please sign in and change your password in your profile settings immediately.
+    </div>
+
+    <!-- SCHOLAR CAPABILITIES -->
+    <p style="font-weight: 700; font-size: 14px; color: #0f172a; margin-bottom: 12px;">What you can do next:</p>
+    <div class="features-grid">
+      <div class="feature-item">
+        <div class="feature-icon">1</div>
+        <div><strong>Submit Manuscripts:</strong> Upload original research, reviews, and clinical papers with structured metadata.</div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon">2</div>
+        <div><strong>Track Peer Reviews:</strong> Monitor editorial screening, reviewer assessments, and decision letters in real-time.</div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon">3</div>
+        <div><strong>Global Academic Reach:</strong> Benefit from DOI registration, Open Access distribution, and international citation indexing.</div>
+      </div>
+    </div>
+
+    <!-- PRIMARY CALL TO ACTION -->
+    <div class="btn-container">
+      <a th:href="${dashboardUrl != null ? dashboardUrl : (journalUrl + '/login')}" class="btn-primary">Go to Research Workspace →</a>
+    </div>
+
+    <!-- SECURITY & SUPPORT -->
+    <div class="security-note">
+      <strong>Security &amp; Privacy Notice:</strong> Never share your login credentials with anyone. If you did not create this account or believe this was done in error, please contact the editorial office immediately at <a href="mailto:journal@gonouniversity.edu.bd" style="color: #2563eb; text-decoration: none;">journal@gonouniversity.edu.bd</a>.
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <p>
+      <strong>Gono Bishwabidyalay Journal of Science &amp; Technology</strong><br>
+      Mirzanagar, Savar, Dhaka 1344, Bangladesh<br>
+      <a th:href="${journalUrl}" th:text="${journalUrl}">https://gbjournal.org</a> &bull;
+      <a href="mailto:journal@gonouniversity.edu.bd">journal@gonouniversity.edu.bd</a>
+    </p>
+    <p style="margin-top: 10px; font-size: 11px;">&copy; 2026 Gono Bishwabidyalay. All rights reserved.</p>
+  </div>
+</div>
+</body>
+</html>

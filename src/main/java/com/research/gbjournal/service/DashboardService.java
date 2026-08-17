@@ -89,14 +89,17 @@ public class DashboardService {
         // Dispatch welcome invitation email asynchronously
         try {
             Map<String, Object> vars = new HashMap<>();
-            vars.put("authorName", saved.getFullName());
+            vars.put("fullName", saved.getFullName());
             vars.put("email", saved.getEmail());
             vars.put("tempPassword", rawPassword);
-            vars.put("role", saved.getRole().name());
+            vars.put("role", saved.getRole().name().replace('_', ' '));
+            vars.put("institution", saved.getInstitution() != null ? saved.getInstitution() : "");
+            vars.put("orcid", saved.getOrcid() != null ? saved.getOrcid() : "");
+            vars.put("registeredAt", java.time.LocalDate.now().toString());
             emailService.sendHtml(
                     saved.getEmail(),
-                    "Welcome to Gono Bishwabidyalay Journal Portal",
-                    "email/reviewer-invitation",
+                    "Welcome to Gono Bishwabidyalay Journal Portal — Account Created",
+                    "email/account-welcome",
                     vars
             );
         } catch (Exception ex) {

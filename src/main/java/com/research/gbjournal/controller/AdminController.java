@@ -33,6 +33,7 @@ public class AdminController {
     private final IssueService issueService;
     private final BoardMemberService boardMemberService;
     private final SubmissionService submissionService;
+    private final com.research.gbjournal.service.PageContentService pageContentService;
 
     /** GET /api/v1/admin/stats */
     @GetMapping("/stats")
@@ -164,6 +165,60 @@ public class AdminController {
     public ResponseEntity<Map<String, String>> deleteBoardMember(@PathVariable Long id) {
         boardMemberService.deleteMember(id);
         return ResponseEntity.ok(Map.of("message", "Board member removed successfully."));
+    }
+
+    // ===== Page Content & CMS Endpoints =====
+
+    /** GET /api/v1/admin/content/{pageKey} — List all sections for page (including drafts) */
+    @GetMapping("/content/{pageKey}")
+    public ResponseEntity<List<com.research.gbjournal.dto.content.PageContentDTO>> getAdminPageContent(@PathVariable String pageKey) {
+        return ResponseEntity.ok(pageContentService.getAdminPageContent(pageKey));
+    }
+
+    /** GET /api/v1/admin/content/all — List all site content grouped */
+    @GetMapping("/content/all")
+    public ResponseEntity<Map<String, List<com.research.gbjournal.dto.content.PageContentDTO>>> getAdminAllContent() {
+        return ResponseEntity.ok(pageContentService.getAllPagesContent());
+    }
+
+    /** PUT /api/v1/admin/content/{pageKey}/{sectionKey} — Update section */
+    @PutMapping("/content/{pageKey}/{sectionKey}")
+    public ResponseEntity<com.research.gbjournal.dto.content.PageContentDTO> updateSection(
+            @PathVariable String pageKey,
+            @PathVariable String sectionKey,
+            @RequestBody com.research.gbjournal.dto.content.PageContentDTO dto,
+            @AuthenticationPrincipal UserDetails userDetails) {
+        String adminEmail = userDetails != null ? userDetails.getUsername() : "admin@gbjournal.org";
+        return ResponseEntity.ok(pageContentService.updateSection(pageKey, sectionKey, dto, adminEmail));
+    }
+
+    /** POST /api/v1/admin/content/sections — Create new section */
+    @PostMapping("/content/sections")
+    public ResponseEntity<com.research.gbjournal.dto.content.PageContentDTO> createSection(
+            @RequestBody com.research.gbjournal.dto.content.PageContentDTO dto,
+            @AuthenticationPrincipal UserDetails userDetails) {
+        String adminEmail = userDetails != null ? userDetails.getUsername() : "admin@gbjournal.org";
+        return ResponseEntity.status(HttpStatus.CREATED).body(pageContentService.createSection(dto, adminEmail));
+    }
+
+    /** DELETE /api/v1/admin/content/sections/{id} — Delete section */
+    @DeleteMapping("/content/sections/{id}")
+    public ResponseEntity<Map<String, String>> deleteSection(
+            @PathVariable Long id,
+            @AuthenticationPrincipal UserDetails userDetails) {
+        String adminEmail = userDetails != null ? userDetails.getUsername() : "admin@gbjournal.org";
+        pageContentService.deleteSection(id, adminEmail);
+        return ResponseEntity.ok(Map.of("message", "Section removed successfully."));
+    }
+
+    /** POST /api/v1/admin/content/reset-defaults — Reset page or all content to defaults */
+    @PostMapping("/content/reset-defaults")
+    public ResponseEntity<Map<String, String>> resetDefaults(
+            @RequestParam(required = false) String pageKey,
+            @AuthenticationPrincipal UserDetails userDetails) {
+        String adminEmail = userDetails != null ? userDetails.getUsername() : "admin@gbjournal.org";
+        pageContentService.resetDefaults(pageKey, adminEmail);
+        return ResponseEntity.ok(Map.of("message", "Default content restored successfully."));
     }
 }
 
