@@ -25,6 +25,7 @@ public class AuthResponse {
         private String institution;
         private String avatarUrl;
         private boolean emailVerified;
+        private boolean enabled;
 
         public String getName() {
             return fullName;
