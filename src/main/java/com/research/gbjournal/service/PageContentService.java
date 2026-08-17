@@ -133,6 +133,7 @@ public class PageContentService {
 
     private void seedDefaultAcademicContent() {
         log.info("Seeding default academic page contents...");
+        seedPageDefaults("home");
         seedPageDefaults("about");
         seedPageDefaults("authors");
         seedPageDefaults("policies");
@@ -217,21 +218,36 @@ public class PageContentService {
                         .displayOrder(3).published(true).lastUpdatedBy("system").build());
                 break;
 
+            case "home":
             case "announcements":
                 list.add(PageContent.builder()
-                        .pageKey("announcements").sectionKey("call-for-papers")
+                        .pageKey(pageKey.toLowerCase()).sectionKey("hero-main")
+                        .title("Gono Bishwabidyalay Journal of Science and Technology")
+                        .subtitle("A Premier Multidisciplinary Double-Blind Peer-Reviewed Research Publication.")
+                        .content("Disseminating breakthrough scientific discoveries, evidence-based health solutions, clinical pharmaceutical innovations, and engineering advances from global and regional academic communities.")
+                        .metaJson("{\"badge\":\"Official Biannual Journal\",\"issnPrint\":\"2073-8447\",\"issnOnline\":\"2790-2188\",\"primaryCtaText\":\"Submit Manuscript\",\"secondaryCtaText\":\"Explore Latest Issue\"}")
+                        .displayOrder(1).published(true).lastUpdatedBy("system").build());
+                list.add(PageContent.builder()
+                        .pageKey(pageKey.toLowerCase()).sectionKey("call-for-papers")
                         .title("Call for Papers — Upcoming Issue (Vol. 14, No. 2)")
                         .subtitle("Submission Deadline: October 31, 2026 | Fast-Track Review Available")
                         .content("The Editorial Board invites high-quality original research papers, reviews, and clinical studies for the upcoming biannual issue. Authors are requested to submit manuscripts online through the Research Workspace portal.")
                         .metaJson("{\"badge\":\"Active Call\",\"deadline\":\"October 31, 2026\",\"targetVolume\":\"Volume 14, Issue 2\",\"fastTrack\":\"Available\"}")
-                        .displayOrder(1).published(true).lastUpdatedBy("system").build());
+                        .displayOrder(2).published(true).lastUpdatedBy("system").build());
                 list.add(PageContent.builder()
-                        .pageKey("announcements").sectionKey("journal-stats")
-                        .title("Journal Performance Benchmarks")
+                        .pageKey(pageKey.toLowerCase()).sectionKey("journal-stats")
+                        .title("Journal Performance & Fast-Track Benchmarks")
                         .subtitle("Transparent editorial milestones and turnaround metrics.")
                         .content("GB Journal maintains strict turnaround benchmarks: 18 days average first decision, 42 days average review completion, and 34% overall acceptance rate.")
                         .metaJson("{\"turnaroundDays\":\"18 Days\",\"acceptanceRate\":\"34%\",\"reviewersActive\":\"140+\",\"indexedArticles\":\"380+\"}")
-                        .displayOrder(2).published(true).lastUpdatedBy("system").build());
+                        .displayOrder(3).published(true).lastUpdatedBy("system").build());
+                list.add(PageContent.builder()
+                        .pageKey(pageKey.toLowerCase()).sectionKey("scope-tracks")
+                        .title("Multidisciplinary Scope & Key Research Domains")
+                        .subtitle("Covering Pharmacy, Allied Health, Basic Sciences, Engineering & Public Innovation.")
+                        .content("We welcome high-rigor manuscripts across 5 specialized subject tracks: Pharmaceutical Sciences, Biomedical & Health Technology, Applied Chemistry & Physics, Computer Science & Systems Engineering, and Community Health Development.")
+                        .metaJson("{\"tracks\":[\"Pharmaceutical Sciences\",\"Biomedical & Allied Health\",\"Computer Science & AI\",\"Physical & Chemical Sciences\",\"Social Development\"]}")
+                        .displayOrder(4).published(true).lastUpdatedBy("system").build());
                 break;
 
             case "contact":
