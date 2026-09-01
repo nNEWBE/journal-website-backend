@@ -123,6 +123,41 @@ public class DashboardService {
     }
 
     @Transactional
+    public AuthResponse.UserInfo updateUser(Long userId, com.research.gbjournal.dto.admin.UpdateUserRequest req) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User", "id", userId));
+
+        if (req.getFullName() != null && !req.getFullName().isBlank()) {
+            user.setFullName(req.getFullName().trim());
+        }
+        if (req.getTitle() != null) {
+            user.setTitle(req.getTitle().trim());
+        }
+        if (req.getDepartment() != null) {
+            user.setDepartment(req.getDepartment().trim());
+        }
+        if (req.getInstitution() != null) {
+            user.setInstitution(req.getInstitution().trim());
+        }
+        if (req.getOrcid() != null) {
+            user.setOrcid(req.getOrcid().trim());
+        }
+        if (req.getRole() != null && !req.getRole().isBlank()) {
+            String formattedRole = req.getRole().toUpperCase().replace('-', '_');
+            user.setRole(User.Role.valueOf(formattedRole));
+        }
+        if (req.getEnabled() != null) {
+            user.setEnabled(req.getEnabled());
+        }
+        if (req.getPassword() != null && !req.getPassword().isBlank()) {
+            user.setPassword(passwordEncoder.encode(req.getPassword().trim()));
+        }
+
+        userRepository.save(user);
+        return toUserInfo(user);
+    }
+
+    @Transactional
     public AuthResponse.UserInfo updateUserRole(Long userId, String roleStr) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User", "id", userId));

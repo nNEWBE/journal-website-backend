@@ -53,6 +53,14 @@ public class AdminController {
         return ResponseEntity.status(HttpStatus.CREATED).body(dashboardService.createUser(req));
     }
 
+    /** PUT /api/v1/admin/users/{id} — Update user profile & role */
+    @PutMapping("/users/{id}")
+    public ResponseEntity<AuthResponse.UserInfo> updateUser(
+            @PathVariable Long id,
+            @RequestBody com.research.gbjournal.dto.admin.UpdateUserRequest req) {
+        return ResponseEntity.ok(dashboardService.updateUser(id, req));
+    }
+
     /** PUT /api/v1/admin/users/{id}/role — Update user role */
     @PutMapping("/users/{id}/role")
     public ResponseEntity<AuthResponse.UserInfo> updateUserRole(
