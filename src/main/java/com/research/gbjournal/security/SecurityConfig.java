@@ -87,6 +87,8 @@ public class SecurityConfig {
 
                 // Public article & issue discovery (read-only GET)
                 .requestMatchers(HttpMethod.GET,
+                    "/",
+                    "/error",
                     "/api/v1/health",
                     "/api/v1/articles",
                     "/api/v1/articles/**",
@@ -95,6 +97,7 @@ public class SecurityConfig {
                     "/api/v1/editorial-board",
                     "/api/v1/topics",
                     "/api/v1/article-types",
+                    "/api/v1/pages/**",
                     "/api/v1/files/**").permitAll()
 
                 // Profile & authenticated user actions
