@@ -1,12 +1,13 @@
 # =============================================
-# DEVELOPMENT PROFILE — Local PostgreSQL Database
+# DEVELOPMENT PROFILE — PostgreSQL Database
+# All credentials & configs are loaded strictly from .env
 # =============================================
 spring:
   datasource:
-    url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/gbjournal}
+    url: ${DATABASE_URL}
     driver-class-name: org.postgresql.Driver
-    username: ${DATABASE_USERNAME:postgres}
-    password: ${DATABASE_PASSWORD:shuvo1234}
+    username: ${DATABASE_USERNAME}
+    password: ${DATABASE_PASSWORD}
 
   jpa:
     open-in-view: false
@@ -17,7 +18,7 @@ spring:
       hibernate:
         format_sql: true
 
-  # Disable Docker Compose for dev (no Docker needed)
+  # Disable Docker Compose for dev
   docker:
     compose:
       enabled: false
@@ -33,17 +34,13 @@ spring:
       file-size-threshold: 2KB
 
   # =============================================
-  # Email SMTP — Brevo (Free: 300 emails/day)
-  # https://app.brevo.com -> SMTP & API -> Generate SMTP Key
-  # Set env vars before running:
-  #   $env:BREVO_SMTP_USER="your-brevo-login-email@example.com"
-  #   $env:BREVO_SMTP_KEY="your-brevo-smtp-key"
+  # Email SMTP Configuration (Loaded from .env)
   # =============================================
   mail:
-    host: smtp-relay.brevo.com
-    port: 587
-    username: ${BREVO_SMTP_USER:}
-    password: ${BREVO_SMTP_KEY:}
+    host: ${SMTP_HOST}
+    port: ${SMTP_PORT}
+    username: ${SMTP_USERNAME}
+    password: ${SMTP_PASSWORD}
     properties:
       mail:
         smtp:
@@ -51,7 +48,6 @@ spring:
           starttls:
             enable: true
             required: true
-        # Shorter timeouts prevent app hangs when SMTP is unreachable in dev
         connection-timeout: 5000
         timeout: 5000
         write-timeout: 5000
@@ -65,25 +61,25 @@ jwt:
   refresh-token-expiration-ms: 2592000000    # 30 days
 
 # =============================================
-# Cloudinary Image Storage
+# Cloudinary Image Storage (Loaded from .env)
 # =============================================
 cloudinary:
-  cloud-name: ${CLOUDINARY_CLOUD_NAME:}
-  api-key: ${CLOUDINARY_API_KEY:}
-  api-secret: ${CLOUDINARY_API_SECRET:}
-  folder: gbjournal
+  cloud-name: ${CLOUDINARY_CLOUD_NAME}
+  api-key: ${CLOUDINARY_API_KEY}
+  api-secret: ${CLOUDINARY_API_SECRET}
+  folder: ${CLOUDINARY_FOLDER}
 
 # =============================================
-# App-Level Configuration
+# App-Level Configuration (Loaded from .env)
 # =============================================
 app:
-  upload-dir: uploads/
-  cors-allowed-origins: http://localhost:3000
-  base-url: http://localhost:8080
+  upload-dir: ${UPLOAD_DIR}
+  cors-allowed-origins: ${CORS_ORIGINS}
+  base-url: ${APP_BASE_URL}
   mail:
-    from: no-reply@gonouniversity.edu.bd
-    from-name: "GBJ — Gono Bishwabidyalay Journal"
-    journal-url: http://localhost:3000
+    from: ${MAIL_FROM}
+    from-name: ${MAIL_FROM_NAME}
+    journal-url: ${JOURNAL_URL}
 
 logging:
   level:

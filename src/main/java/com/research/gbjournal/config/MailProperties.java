@@ -12,12 +12,12 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties(prefix = "app.mail")
 public class MailProperties {
 
-    /** Sender address shown to recipients, e.g. no-reply@gonouniversity.edu.bd */
-    private String from = "no-reply@gonouniversity.edu.bd";
+    /** Sender address shown to recipients, loaded from MAIL_FROM environment variable */
+    private String from;
 
-    /** Display name shown in e-mail clients */
-    private String fromName = "GBJ — Gono Bishwabidyalay Journal";
+    /** Display name shown in e-mail clients, loaded from MAIL_FROM_NAME */
+    private String fromName;
 
-    /** Public URL of the frontend journal website */
-    private String journalUrl = "http://localhost:3000";
+    /** Public URL of the frontend journal website, loaded from JOURNAL_URL */
+    private String journalUrl;
 }

@@ -57,21 +57,28 @@ public class EmailService {
                     MimeMessageHelper.MULTIPART_MODE_NO,
                     StandardCharsets.UTF_8.name());
 
-            helper.setFrom(mailProperties.getFrom(), mailProperties.getFromName());
+            String fromAddress = (mailProperties.getFrom() != null && !mailProperties.getFrom().isBlank())
+                    ? mailProperties.getFrom().trim()
+                    : "no-reply@localhost";
+            String fromName = (mailProperties.getFromName() != null && !mailProperties.getFromName().isBlank())
+                    ? mailProperties.getFromName().trim()
+                    : "Journal System";
+
+            helper.setFrom(fromAddress, fromName);
             helper.setTo(to);
             helper.setSubject(subject);
             helper.setText(htmlContent, true); // true = HTML
 
             mailSender.send(message);
-            log.info("Email sent to {} — subject: {}", to, subject);
+            log.info("Email successfully sent to {} — subject: '{}'", to, subject);
 
         } catch (MailException ex) {
-            // SMTP connection issue, auth failure, etc. — log but don't crash the application
-            log.warn("Failed to send email to {} ({}): {}", to, subject, ex.getMessage());
+            // SMTP connection issue, auth failure, invalid credentials — log clearly
+            log.warn("SMTP delivery failed for recipient '{}' (Subject: '{}'). Error: {}", to, subject, ex.getMessage());
         } catch (MessagingException ex) {
-            log.warn("Failed to build email message for {}: {}", to, ex.getMessage());
+            log.warn("Failed to construct email message for recipient '{}': {}", to, ex.getMessage());
         } catch (Exception ex) {
-            log.error("Unexpected error while sending email to {}: {}", to, ex.getMessage(), ex);
+            log.error("Unexpected error while dispatching email to '{}': {}", to, ex.getMessage(), ex);
         }
     }
 }

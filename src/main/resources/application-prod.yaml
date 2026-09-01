@@ -1,13 +1,13 @@
 # =============================================
-# PRODUCTION PROFILE — PostgreSQL + Brevo SMTP
-# Activate with: --spring.profiles.active=prod
+# PRODUCTION PROFILE — PostgreSQL + SMTP
+# All credentials provided via environment variables
 # =============================================
 spring:
   datasource:
-    url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/gbjournal}
+    url: ${DATABASE_URL}
     driver-class-name: org.postgresql.Driver
-    username: ${DATABASE_USERNAME:gbjournal}
-    password: ${DATABASE_PASSWORD:changeme}
+    username: ${DATABASE_USERNAME}
+    password: ${DATABASE_PASSWORD}
     hikari:
       maximum-pool-size: 10
       minimum-idle: 2
@@ -24,16 +24,13 @@ spring:
       enabled: false
 
   # =============================================
-  # Brevo SMTP — Free 300 emails/day
-  # Required env vars (set in server / container):
-  #   BREVO_SMTP_USER  — your Brevo login email
-  #   BREVO_SMTP_KEY   — your Brevo SMTP key
+  # Email SMTP Configuration (Loaded from environment)
   # =============================================
   mail:
-    host: smtp-relay.brevo.com
-    port: 587
-    username: ${BREVO_SMTP_USER}
-    password: ${BREVO_SMTP_KEY}
+    host: ${SMTP_HOST}
+    port: ${SMTP_PORT}
+    username: ${SMTP_USERNAME}
+    password: ${SMTP_PASSWORD}
     properties:
       mail:
         smtp:
@@ -46,7 +43,7 @@ spring:
         write-timeout: 10000
 
 # =============================================
-# JWT — Use a strong 256-bit secret in prod!
+# JWT Configuration
 # =============================================
 jwt:
   secret: ${JWT_SECRET}
@@ -60,19 +57,19 @@ cloudinary:
   cloud-name: ${CLOUDINARY_CLOUD_NAME}
   api-key: ${CLOUDINARY_API_KEY}
   api-secret: ${CLOUDINARY_API_SECRET}
-  folder: ${CLOUDINARY_FOLDER:gbjournal}
+  folder: ${CLOUDINARY_FOLDER}
 
 # =============================================
 # App-Level Configuration
 # =============================================
 app:
-  upload-dir: ${UPLOAD_DIR:/var/gbjournal/uploads/}
-  cors-allowed-origins: ${CORS_ORIGINS:https://journal.gonouniversity.edu.bd}
-  base-url: ${APP_BASE_URL:https://journal-website-backend-idj1.onrender.com}
+  upload-dir: ${UPLOAD_DIR}
+  cors-allowed-origins: ${CORS_ORIGINS}
+  base-url: ${APP_BASE_URL}
   mail:
-    from: no-reply@gonouniversity.edu.bd
-    from-name: "GBJ — Gono Bishwabidyalay Journal"
-    journal-url: ${JOURNAL_URL:https://journal.gonouniversity.edu.bd}
+    from: ${MAIL_FROM}
+    from-name: ${MAIL_FROM_NAME}
+    journal-url: ${JOURNAL_URL}
 
 logging:
   level:

@@ -4,17 +4,31 @@ This guide provides step-by-step instructions for configuring and connecting a *
 
 ---
 
-## 📋 Prerequisites & Architecture
+## 📋 Architecture & Supported PostgreSQL Options
 
-By default:
-- **Dev Profile (`application-dev.yaml`)**: Uses H2 in-memory database (`jdbc:h2:mem:gbjournal_dev`). No installation required.
-- **Prod Profile (`application-prod.yaml`)**: Configured for PostgreSQL (`org.postgresql.Driver`).
+The backend is configured exclusively for **PostgreSQL** (No H2 database is used in any environment).
 
-You can easily switch your dev environment to use a real PostgreSQL database by following Option A (Docker) or Option B (Local Installation) below.
+You can connect to either:
+1. **Neon Cloud PostgreSQL (Recommended)** — Instant setup with no local installation required.
+2. **Local PostgreSQL** — Installed via PostgreSQL installer for Windows or Docker.
 
 ---
 
-## Option A: Run PostgreSQL via Docker (Fastest for Local Dev)
+## Option A: Neon Cloud PostgreSQL (Instant & Cloud-Hosted)
+
+1. Sign up for free at **[Neon.tech](https://neon.tech)** and create a database named `gbjournal`.
+2. Copy your connection details from the Neon console.
+3. Put them in your `.env` file:
+
+```env
+DATABASE_URL=jdbc:postgresql://ep-your-project-12345.us-east-2.aws.neon.tech/neondb?sslmode=require
+DATABASE_USERNAME=your-neon-user
+DATABASE_PASSWORD=your-neon-password
+```
+
+---
+
+## Option B: Run PostgreSQL via Docker (Local)
 
 If you have Docker Desktop installed:
 
@@ -22,35 +36,16 @@ If you have Docker Desktop installed:
 Run the following command in PowerShell/Terminal:
 
 ```powershell
-docker run --name gbjournal-postgres -e POSTGRES_DB=gbjournal -e POSTGRES_USER=gbjournal -e POSTGRES_PASSWORD=secretpass -p 5432:5432 -d postgres:16-alpine
+docker run --name gbjournal-postgres -e POSTGRES_DB=gbjournal -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=shuvo1234 -p 5432:5432 -d postgres:16-alpine
 ```
 
 ### Step 2 — Update `.env` File
-Open your `.env` file in the backend root directory and set the PostgreSQL variables:
+Open your `.env` file in the backend root directory and set:
 
 ```env
-# --- Database (PostgreSQL) ---
 DATABASE_URL=jdbc:postgresql://localhost:5432/gbjournal
-DATABASE_USERNAME=gbjournal
-DATABASE_PASSWORD=secretpass
-```
-
-### Step 3 — Enable PostgreSQL in `application-dev.yaml`
-If you want to use PostgreSQL instead of H2 in dev mode, update `src/main/resources/application-dev.yaml`:
-
-```yaml
-spring:
-  datasource:
-    url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/gbjournal}
-    driver-class-name: org.postgresql.Driver
-    username: ${DATABASE_USERNAME:gbjournal}
-    password: ${DATABASE_PASSWORD:secretpass}
-
-  jpa:
-    database-platform: org.hibernate.dialect.PostgreSQLDialect
-    hibernate:
-      ddl-auto: update   # Automatically creates/updates tables on startup
-    show-sql: true
+DATABASE_USERNAME=postgres
+DATABASE_PASSWORD=shuvo1234
 ```
 
 ---

@@ -23,8 +23,7 @@ A secure, production-ready REST API for the **Gono Bishwabidyalay (GBJ) Journal 
 | Language | Java 25 (Temurin) |
 | Framework | Spring Boot 4.1.0 |
 | Security | Spring Security 6.5 + JJWT 0.12.6 |
-| Database (dev) | H2 In-Memory |
-| Database (prod) | PostgreSQL |
+| Database | PostgreSQL / Neon PostgreSQL |
 | Build | Gradle 9.5 |
 | Email | Spring Mail + Brevo SMTP |
 | Templates | Thymeleaf |
@@ -35,35 +34,37 @@ A secure, production-ready REST API for the **Gono Bishwabidyalay (GBJ) Journal 
 ## Getting Started
 
 ### Prerequisites
-- **JDK 25** (Temurin) — already in `.jdks/temurin-25.0.3`
-- No Docker required for development
+- **JDK 25** (Temurin)
+- **PostgreSQL Database** (Local PostgreSQL or free cloud [Neon PostgreSQL](https://neon.tech))
 
 ### 1. Fill in your credentials
 
-Open [`.env`](./.env) — it is pre-configured for dev. The only values to replace are the Brevo SMTP credentials:
+Open [`.env`](./.env) and verify your PostgreSQL credentials:
 
 ```env
-BREVO_SMTP_USER=your-brevo-login-email@example.com
-BREVO_SMTP_KEY=your-brevo-smtp-key
-```
+# Local PostgreSQL:
+DATABASE_URL=jdbc:postgresql://localhost:5432/gbjournal
+DATABASE_USERNAME=postgres
+DATABASE_PASSWORD=your-password
 
-> See [docs/email-setup.md](./docs/email-setup.md) for step-by-step Brevo account setup.
+# Or Neon Cloud PostgreSQL:
+# DATABASE_URL=jdbc:postgresql://ep-xyz.us-east-2.aws.neon.tech/neondb?sslmode=require
+# DATABASE_USERNAME=your-neon-user
+# DATABASE_PASSWORD=your-neon-pass
+```
 
 ### 2. Start the backend
 
 ```powershell
-$env:JAVA_HOME = "C:\Users\Shuvo Debnath\.jdks\temurin-25.0.3"
-$env:Path      = "$env:JAVA_HOME\bin;$env:Path"
-.\gradlew bootRun --args="--spring.profiles.active=dev"
+.\gradlew.bat bootRun --args="--spring.profiles.active=dev"
 ```
 
-The app **automatically loads `.env`** on startup — no scripts needed.
+The app **automatically loads `.env`** on startup.
 
 | Endpoint | URL |
 |---|---|
 | API base | `http://localhost:8080/api/v1` |
-| H2 Console | `http://localhost:8080/h2-console` |
-| H2 JDBC URL | `jdbc:h2:mem:gbjournal_dev` |
+| Health Check | `http://localhost:8080/api/v1/health` |
 
 ---
 
@@ -155,8 +156,8 @@ src/main/java/com/research/gbjournal/
 src/main/resources/
 ├── templates/email/ # Thymeleaf HTML email templates
 ├── application.yaml
-├── application-dev.yaml    # H2 + Brevo SMTP (dev)
-└── application-prod.yaml   # PostgreSQL + Brevo SMTP (prod)
+├── application-dev.yaml    # PostgreSQL (Local / Neon) + Brevo SMTP (dev)
+└── application-prod.yaml   # PostgreSQL (Cloud / Neon) + Brevo SMTP (prod)
 
 docs/
 └── email-setup.md   # Step-by-step Brevo email configuration guide

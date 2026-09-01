@@ -33,7 +33,7 @@ public class SecurityConfig {
     private final AuthEntryPointJwt authEntryPointJwt;
     private final AccessDeniedHandlerJwt accessDeniedHandlerJwt;
 
-    @Value("${app.cors-allowed-origins:http://localhost:3000}")
+    @Value("${app.cors-allowed-origins}")
     private String corsAllowedOrigins;
 
     // ===== Password Encoder =====
@@ -85,9 +85,6 @@ public class SecurityConfig {
                     "/api/v1/auth/register",
                     "/api/v1/auth/refresh").permitAll()
 
-                // H2 console (dev only — safe because it runs in-memory)
-                .requestMatchers("/h2-console/**").permitAll()
-
                 // Public article & issue discovery (read-only GET)
                 .requestMatchers(HttpMethod.GET,
                     "/api/v1/health",
@@ -135,29 +132,39 @@ public class SecurityConfig {
             .authenticationProvider(authenticationProvider())
 
             // Place JWT filter before the default username/password filter
-            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-
-            // Allow H2 console iframes — dev only; same-origin policy
-            .headers(headers ->
-                headers.frameOptions(frameOptions -> frameOptions.sameOrigin()));
+            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
 
-    // ===== CORS =====
-
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(List.of(corsAllowedOrigins.split(",")));
-        config.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
+
+        List<String> origins = new java.util.ArrayList<>();
+        if (corsAllowedOrigins != null && !corsAllowedOrigins.trim().isEmpty()) {
+            for (String origin : corsAllowedOrigins.split(",")) {
+                if (origin != null) {
+                    String trimmed = origin.trim();
+                    if (!trimmed.isEmpty()) {
+                        origins.add(trimmed);
+                    }
+                }
+            }
+        }
+        if (origins.isEmpty()) {
+            origins.add("http://localhost:3000");
+        }
+
+        config.setAllowedOrigins(origins);
+        config.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS", "HEAD"));
         config.setAllowedHeaders(List.of("*"));
-        config.setExposedHeaders(List.of("Authorization", "X-Refresh-Token"));
+        config.setExposedHeaders(List.of("Authorization", "X-Refresh-Token", "Content-Disposition"));
         config.setAllowCredentials(true);
         config.setMaxAge(3600L);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/api/**", config);
+        source.registerCorsConfiguration("/**", config);
         return source;
     }
 }
