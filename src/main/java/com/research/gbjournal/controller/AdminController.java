@@ -1,6 +1,5 @@
 package com.research.gbjournal.controller;
 
-import com.research.gbjournal.dto.admin.AuditLogDTO;
 import com.research.gbjournal.dto.admin.CreateUserRequest;
 import com.research.gbjournal.dto.admin.DashboardStatsDTO;
 import com.research.gbjournal.dto.admin.SendMailRequest;
@@ -132,11 +131,7 @@ public class AdminController {
         return ResponseEntity.ok(templates);
     }
 
-    /** GET /api/v1/admin/audit-logs — System activity logs */
-    @GetMapping("/audit-logs")
-    public ResponseEntity<List<AuditLogDTO>> getAuditLogs() {
-        return ResponseEntity.ok(dashboardService.getAuditLogs());
-    }
+
 
     /** POST /api/v1/admin/issues — Create a new issue */
     @PostMapping("/issues")

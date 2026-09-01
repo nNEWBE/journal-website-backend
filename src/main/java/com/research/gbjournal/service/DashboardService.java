@@ -1,6 +1,5 @@
 package com.research.gbjournal.service;
 
-import com.research.gbjournal.dto.admin.AuditLogDTO;
 import com.research.gbjournal.dto.admin.CreateUserRequest;
 import com.research.gbjournal.dto.admin.DashboardStatsDTO;
 import com.research.gbjournal.dto.admin.SendMailRequest;
@@ -15,7 +14,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.Instant;
 import java.util.*;
 
 @Slf4j
@@ -60,7 +58,7 @@ public class DashboardService {
 
         String rawPassword = req.getPassword() != null && !req.getPassword().isBlank()
                 ? req.getPassword()
-                : "GBJournal@" + (int)(Math.random() * 9000 + 1000);
+                : "GBJournal@" + (int) (Math.random() * 9000 + 1000);
 
         String roleStr = req.getRole() != null ? req.getRole().toUpperCase().replace('-', '_') : "AUTHOR";
         User.Role role;
@@ -100,8 +98,7 @@ public class DashboardService {
                     saved.getEmail(),
                     "Welcome to Gono Bishwabidyalay Journal Portal — Account Created",
                     "email/account-welcome",
-                    vars
-            );
+                    vars);
         } catch (Exception ex) {
             log.warn("Failed to dispatch welcome email to {}: {}", saved.getEmail(), ex.getMessage());
         }
@@ -183,7 +180,8 @@ public class DashboardService {
         if ("INDIVIDUAL".equalsIgnoreCase(req.getAudience()) && req.getRecipientEmail() != null) {
             String[] parts = req.getRecipientEmail().split("[,;]");
             for (String p : parts) {
-                if (!p.trim().isEmpty()) recipients.add(p.trim());
+                if (!p.trim().isEmpty())
+                    recipients.add(p.trim());
             }
         } else if ("ALL_AUTHORS".equalsIgnoreCase(req.getAudience())) {
             recipients = userRepository.findAll().stream()
@@ -197,7 +195,8 @@ public class DashboardService {
                     .toList();
         } else if ("ALL_EDITORS".equalsIgnoreCase(req.getAudience())) {
             recipients = userRepository.findAll().stream()
-                    .filter(u -> u != null && (u.getRole() == User.Role.EDITOR || u.getRole() == User.Role.ADMIN || u.getRole() == User.Role.SUPER_ADMIN) && u.getEmail() != null)
+                    .filter(u -> u != null && (u.getRole() == User.Role.EDITOR || u.getRole() == User.Role.ADMIN
+                            || u.getRole() == User.Role.SUPER_ADMIN) && u.getEmail() != null)
                     .map(u -> u.getEmail())
                     .toList();
         } else if ("ALL_USERS".equalsIgnoreCase(req.getAudience())) {
@@ -227,48 +226,7 @@ public class DashboardService {
                 "success", true,
                 "sentCount", sentCount,
                 "audience", req.getAudience(),
-                "subject", req.getSubject()
-        );
-    }
-
-    @Transactional(readOnly = true)
-    public List<AuditLogDTO> getAuditLogs() {
-        List<AuditLogDTO> logs = new ArrayList<>();
-        long userCount = userRepository.count();
-        long subCount = submissionRepository.count();
-        long issueCount = issueRepository.count();
-
-        logs.add(AuditLogDTO.builder()
-                .id("AUD-01")
-                .eventType("SYSTEM_METRIC")
-                .description("Total registered academic scholars: " + userCount)
-                .actor("System")
-                .target("Users Repository")
-                .timestamp(Instant.now().minusSeconds(120))
-                .level("INFO")
-                .build());
-
-        logs.add(AuditLogDTO.builder()
-                .id("AUD-02")
-                .eventType("PIPELINE_METRIC")
-                .description("Active manuscript submission pipeline loaded (" + subCount + " manuscripts indexed)")
-                .actor("System")
-                .target("Manuscript Pipeline")
-                .timestamp(Instant.now().minusSeconds(300))
-                .level("SUCCESS")
-                .build());
-
-        logs.add(AuditLogDTO.builder()
-                .id("AUD-03")
-                .eventType("PUBLISHING_METRIC")
-                .description("Published Journal Volume & Issues: " + issueCount + " volumes active")
-                .actor("Editorial Board")
-                .target("Issue Archive")
-                .timestamp(Instant.now().minusSeconds(600))
-                .level("INFO")
-                .build());
-
-        return logs;
+                "subject", req.getSubject());
     }
 
     private AuthResponse.UserInfo toUserInfo(User u) {
@@ -286,4 +244,3 @@ public class DashboardService {
                 .build();
     }
 }
-
