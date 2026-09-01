@@ -32,8 +32,14 @@ public class DataSourceConfig {
         String dbUser = username;
         String dbPass = password;
 
+        if (databaseUrl == null || databaseUrl.trim().isEmpty()) {
+            throw new IllegalStateException(
+                "DATABASE_URL is not configured! Please add 'DATABASE_URL' to your Render Dashboard Environment Variables (e.g. from Neon PostgreSQL or Render PostgreSQL)."
+            );
+        }
+
         // Support Render / Heroku / Neon format (e.g. postgres://user:pass@host:port/db)
-        if (databaseUrl != null && (databaseUrl.startsWith("postgres://") || databaseUrl.startsWith("postgresql://"))) {
+        if (databaseUrl.startsWith("postgres://") || databaseUrl.startsWith("postgresql://")) {
             try {
                 URI dbUri = new URI(databaseUrl);
                 String host = dbUri.getHost();
