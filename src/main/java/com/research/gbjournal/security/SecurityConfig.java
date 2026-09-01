@@ -33,7 +33,7 @@ public class SecurityConfig {
     private final AuthEntryPointJwt authEntryPointJwt;
     private final AccessDeniedHandlerJwt accessDeniedHandlerJwt;
 
-    @Value("${app.cors-allowed-origins}")
+    @Value("${app.cors-allowed-origins:}")
     private String corsAllowedOrigins;
 
     // ===== Password Encoder =====
