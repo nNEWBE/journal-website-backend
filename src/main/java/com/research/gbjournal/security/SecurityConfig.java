@@ -98,6 +98,9 @@ public class SecurityConfig {
                     "/api/v1/topics",
                     "/api/v1/article-types",
                     "/api/v1/pages/**",
+                    "/api/v1/content/**",
+                    "/api/v1/navigation",
+                    "/api/v1/navigation/**",
                     "/api/v1/files/**").permitAll()
 
                 // Profile & authenticated user actions
