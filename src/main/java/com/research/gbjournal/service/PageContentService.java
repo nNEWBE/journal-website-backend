@@ -38,8 +38,9 @@ public class PageContentService {
     }
 
     /** Public lookup: get published sections for a page */
-    @Transactional(readOnly = true)
+    @Transactional
     public List<PageContentDTO> getPublishedPageContent(String pageKey) {
+        seedPageDefaults(pageKey.toLowerCase());
         List<PageContent> list = pageContentRepository.findByPageKeyAndPublishedTrueOrderByDisplayOrderAsc(pageKey.toLowerCase());
         if (list.isEmpty()) {
             // If nothing in database, return seeded defaults on the fly
@@ -49,8 +50,9 @@ public class PageContentService {
     }
 
     /** Admin lookup: get all sections for a page (including drafts) */
-    @Transactional(readOnly = true)
+    @Transactional
     public List<PageContentDTO> getAdminPageContent(String pageKey) {
+        seedPageDefaults(pageKey.toLowerCase());
         List<PageContent> list = pageContentRepository.findByPageKeyOrderByDisplayOrderAsc(pageKey.toLowerCase());
         return list.stream().map(this::toDTO).toList();
     }
@@ -229,35 +231,95 @@ public class PageContentService {
                 break;
 
             case "home":
-            case "announcements":
                 list.add(PageContent.builder()
-                        .pageKey(pageKey.toLowerCase()).sectionKey("hero-main")
+                        .pageKey("home").sectionKey("hero-main")
                         .title("Gono Bishwabidyalay Journal of Science and Technology")
                         .subtitle("A Premier Multidisciplinary Double-Blind Peer-Reviewed Research Publication.")
                         .content("Disseminating breakthrough scientific discoveries, evidence-based health solutions, clinical pharmaceutical innovations, and engineering advances from global and regional academic communities.")
                         .metaJson("{\"badge\":\"Official Biannual Journal\",\"issnPrint\":\"2073-8447\",\"issnOnline\":\"2790-2188\",\"primaryCtaText\":\"Submit Manuscript\",\"secondaryCtaText\":\"Explore Latest Issue\"}")
                         .displayOrder(1).published(true).lastUpdatedBy("system").build());
+
                 list.add(PageContent.builder()
-                        .pageKey(pageKey.toLowerCase()).sectionKey("call-for-papers")
+                        .pageKey("home").sectionKey("latest-research")
+                        .title("Latest Research")
+                        .subtitle("Recent breakthroughs and peer-reviewed scholarly papers from our global community.")
+                        .content("Curated collection of recently accepted and published peer-reviewed manuscripts.")
+                        .metaJson("{\"viewAllText\":\"View all articles\",\"selectedArticleIds\":[\"la-01\",\"la-02\",\"la-03\",\"la-04\"]}")
+                        .displayOrder(2).published(true).lastUpdatedBy("system").build());
+
+                list.add(PageContent.builder()
+                        .pageKey("home").sectionKey("current-issue")
+                        .title("Current Issue")
+                        .subtitle("May 2025")
+                        .content("This issue features high-impact original research papers, clinical evaluations, and breakthrough methodologies across molecular sciences and allied health.")
+                        .metaJson("{\"journalName\":\"Nexus Journal of Molecular Sciences\",\"volumeIssue\":\"Vol. 12, No. 4\",\"publicationDate\":\"May 15, 2025\",\"issnPrint\":\"2073-8447\",\"issnOnline\":\"2790-2188\",\"featuredPaperTitle\":\"Machine learning-guided discovery of allosteric inhibitors targeting emergent viral polymerases\",\"browseHref\":\"/issues/current\",\"pdfHref\":\"/pdfs/current-issue.pdf\"}")
+                        .displayOrder(3).published(true).lastUpdatedBy("system").build());
+
+                list.add(PageContent.builder()
+                        .pageKey("home").sectionKey("most-read")
+                        .title("Most Read Research")
+                        .subtitle("Highly cited and trending papers across all disciplines in the GB Journal repository.")
+                        .content("Ranked list of the most viewed and cited scholarly articles over the past academic quarter.")
+                        .metaJson("{\"articleCount\":\"5\",\"selectedArticleIds\":[\"community-healthcare-access-savar\",\"pharmacy-practice-antimicrobial-stewardship\",\"climate-resilient-agriculture-manifolds\",\"legal-aid-university-clinic\",\"ai-assisted-learning-private-universities\"]}")
+                        .displayOrder(4).published(true).lastUpdatedBy("system").build());
+
+                list.add(PageContent.builder()
+                        .pageKey("home").sectionKey("explore-topics")
+                        .title("Explore by Topic")
+                        .subtitle("Discover peer-reviewed scholarship organized by discipline and research frontier.")
+                        .content("Browse peer-reviewed manuscripts across our core academic faculties and research disciplines.")
+                        .metaJson("{\"tracks\":[\"Artificial Intelligence\",\"Medicine\",\"Engineering\",\"Climate Science\",\"Data Science\",\"Social Research\",\"Pharmacy\",\"Biomedical Technology\"]}")
+                        .displayOrder(5).published(true).lastUpdatedBy("system").build());
+
+                list.add(PageContent.builder()
+                        .pageKey("home").sectionKey("featured-journals")
+                        .title("Featured Focus Areas & Journals")
+                        .subtitle("Specialized peer-reviewed journal collections and interdisciplinary research tracks.")
+                        .content("Explore specialized biannual series published under the GB Journal academic press.")
+                        .metaJson("{\"category\":\"Multidisciplinary Series\"}")
+                        .displayOrder(6).published(true).lastUpdatedBy("system").build());
+
+                list.add(PageContent.builder()
+                        .pageKey("home").sectionKey("call-for-papers")
+                        .title("Calls for Papers & Special Issues")
+                        .subtitle("Thematic submissions currently inviting high-impact manuscripts.")
+                        .content("The Editorial Board invites high-quality original research papers, reviews, and clinical studies for the upcoming biannual issue. Authors are requested to submit manuscripts online through the Research Workspace portal.")
+                        .metaJson("{\"badge\":\"Active Call\",\"deadline\":\"October 31, 2026\",\"targetVolume\":\"Volume 14, Issue 2\",\"fastTrack\":\"Available\"}")
+                        .displayOrder(7).published(true).lastUpdatedBy("system").build());
+
+                list.add(PageContent.builder()
+                        .pageKey("home").sectionKey("research-community")
+                        .title("From Our Research Community")
+                        .subtitle("Interviews, spotlights, and academic symposia connecting authors and reviewers.")
+                        .content("Explore perspectives, researcher spotlights, and multimedia highlights from our contributing faculty and scholars.")
+                        .metaJson("{\"spotlightAuthor\":\"Dr. Aisha Rahman, PhD\",\"symposium\":\"Annual Research Symposium 2026\"}")
+                        .displayOrder(8).published(true).lastUpdatedBy("system").build());
+
+                list.add(PageContent.builder()
+                        .pageKey("home").sectionKey("home-faq")
+                        .title("Frequently Asked Questions")
+                        .subtitle("Essential information for authors, reviewers, and institutions regarding submission and indexing.")
+                        .content("Answers to the most common questions regarding peer review, APCs, submission requirements, and publication timelines.")
+                        .metaJson("{\"faqs\":[{\"q\":\"What types of manuscripts does GB Journal accept?\",\"a\":\"GB Journal welcomes original research articles, comprehensive review papers, clinical case studies, technical notes, and scholarly commentaries across multidisciplinary fields.\"},{\"q\":\"How does the double-blind peer review process operate?\",\"a\":\"Author identities and reviewer identities are completely concealed from each other to safeguard academic objectivity.\"},{\"q\":\"What is the typical turnaround timeline from submission to decision?\",\"a\":\"Initial editorial desk screening is conducted within 3 to 5 business days, and comprehensive peer review spans 4 to 6 weeks.\"},{\"q\":\"Are there publication charges or Article Processing Charges (APCs)?\",\"a\":\"GB Journal is committed to open scholarship with generous waiver programs available for researchers and students.\"}]}")
+                        .displayOrder(9).published(true).lastUpdatedBy("system").build());
+
+                list.add(PageContent.builder()
+                        .pageKey("home").sectionKey("journal-stats")
+                        .title("Advancing knowledge. Driving impact.")
+                        .subtitle("Transparent editorial milestones and turnaround metrics.")
+                        .content("GB Journal maintains strict turnaround benchmarks: 18 days average first decision, 42 days average review completion, and 34% overall acceptance rate.")
+                        .metaJson("{\"articlesPublished\":\"12,486+\",\"globalReaders\":\"85,000+\",\"acceptanceRate\":\"34%\",\"turnaroundDays\":\"18 Days\",\"reviewersActive\":\"140+\",\"indexedArticles\":\"380+\",\"newsletterTitle\":\"Stay informed with GB Journal research alerts\",\"newsletterSubtitle\":\"Receive curated research highlights, call-for-papers announcements, and table-of-contents notifications.\"}")
+                        .displayOrder(10).published(true).lastUpdatedBy("system").build());
+                break;
+
+            case "announcements":
+                list.add(PageContent.builder()
+                        .pageKey("announcements").sectionKey("call-for-papers")
                         .title("Call for Papers — Upcoming Issue (Vol. 14, No. 2)")
                         .subtitle("Submission Deadline: October 31, 2026 | Fast-Track Review Available")
                         .content("The Editorial Board invites high-quality original research papers, reviews, and clinical studies for the upcoming biannual issue. Authors are requested to submit manuscripts online through the Research Workspace portal.")
                         .metaJson("{\"badge\":\"Active Call\",\"deadline\":\"October 31, 2026\",\"targetVolume\":\"Volume 14, Issue 2\",\"fastTrack\":\"Available\"}")
-                        .displayOrder(2).published(true).lastUpdatedBy("system").build());
-                list.add(PageContent.builder()
-                        .pageKey(pageKey.toLowerCase()).sectionKey("journal-stats")
-                        .title("Journal Performance & Fast-Track Benchmarks")
-                        .subtitle("Transparent editorial milestones and turnaround metrics.")
-                        .content("GB Journal maintains strict turnaround benchmarks: 18 days average first decision, 42 days average review completion, and 34% overall acceptance rate.")
-                        .metaJson("{\"turnaroundDays\":\"18 Days\",\"acceptanceRate\":\"34%\",\"reviewersActive\":\"140+\",\"indexedArticles\":\"380+\"}")
-                        .displayOrder(3).published(true).lastUpdatedBy("system").build());
-                list.add(PageContent.builder()
-                        .pageKey(pageKey.toLowerCase()).sectionKey("scope-tracks")
-                        .title("Multidisciplinary Scope & Key Research Domains")
-                        .subtitle("Covering Pharmacy, Allied Health, Basic Sciences, Engineering & Public Innovation.")
-                        .content("We welcome high-rigor manuscripts across 5 specialized subject tracks: Pharmaceutical Sciences, Biomedical & Health Technology, Applied Chemistry & Physics, Computer Science & Systems Engineering, and Community Health Development.")
-                        .metaJson("{\"tracks\":[\"Pharmaceutical Sciences\",\"Biomedical & Allied Health\",\"Computer Science & AI\",\"Physical & Chemical Sciences\",\"Social Development\"]}")
-                        .displayOrder(4).published(true).lastUpdatedBy("system").build());
+                        .displayOrder(1).published(true).lastUpdatedBy("system").build());
                 break;
 
             case "contact":
