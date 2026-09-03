@@ -20,15 +20,15 @@ public interface ArticleRepository extends JpaRepository<Article, Long> {
 
         @Query("""
                         SELECT a FROM Article a
-                        WHERE (:query IS NULL OR
-                               LOWER(a.title) LIKE LOWER(CONCAT('%', :query, '%')) OR
-                               LOWER(a.abstractText) LIKE LOWER(CONCAT('%', :query, '%')))
+                        WHERE (:pattern IS NULL OR
+                               LOWER(a.title) LIKE :pattern OR
+                               LOWER(a.abstractText) LIKE :pattern)
                           AND (:type IS NULL OR a.type = :type)
                           AND (:topic IS NULL OR a.topic = :topic)
                           AND (:issueLabel IS NULL OR a.issueLabel = :issueLabel)
                         """)
         Page<Article> searchArticles(
-                        @Param("query") String query,
+                        @Param("pattern") String pattern,
                         @Param("type") String type,
                         @Param("topic") String topic,
                         @Param("issueLabel") String issueLabel,

@@ -34,11 +34,9 @@ public class PageContent {
     @Column(length = 500)
     private String subtitle;
 
-    @Lob
     @Column(columnDefinition = "TEXT")
     private String content; // Markdown / HTML formatted text
 
-    @Lob
     @Column(name = "meta_json", columnDefinition = "TEXT")
     private String metaJson; // Structured JSON for checklists, badges, stats, accordions
 

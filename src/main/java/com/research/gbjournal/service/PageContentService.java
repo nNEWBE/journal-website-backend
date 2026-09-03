@@ -24,6 +24,16 @@ public class PageContentService {
     public void init() {
         if (pageContentRepository.count() == 0) {
             seedDefaultAcademicContent();
+        } else {
+            // Detect and heal legacy numeric OIDs saved by previous @Lob Hibernate mapping
+            boolean hasLegacyOids = pageContentRepository.findAll().stream()
+                    .anyMatch(pc -> pc.getContent() != null && pc.getContent().matches("^\\d{4,8}$"));
+            if (hasLegacyOids) {
+                log.info("Detected legacy OID references in page_contents. Re-seeding clean default content...");
+                pageContentRepository.deleteAll();
+                seedDefaultAcademicContent();
+                log.info("Re-seeding complete.");
+            }
         }
     }
 
@@ -258,6 +268,74 @@ public class PageContentService {
                         .content("Gono Bishwabidyalay Journal Editorial Office\nAdministrative Building, 2nd Floor\nMirzanagar, Savar, Dhaka 1344, Bangladesh\nEmail: journal@gonouniversity.edu.bd | Phone: +880-2-7792225\nWorking Hours: Sunday – Thursday (09:00 AM – 05:00 PM BST)")
                         .metaJson("{\"email\":\"journal@gonouniversity.edu.bd\",\"phone\":\"+880-2-7792225\",\"location\":\"Mirzanagar, Savar, Dhaka 1344\",\"office\":\"Administrative Building, Room 204\"}")
                         .displayOrder(1).published(true).lastUpdatedBy("system").build());
+                break;
+
+            case "editorial-board":
+                list.add(PageContent.builder()
+                        .pageKey("editorial-board").sectionKey("governance-charter")
+                        .title("Editorial Governance & Academic Independence")
+                        .subtitle("COPE-aligned editorial leadership and merit-driven decision framework.")
+                        .content("The Editorial Board of Gono Bishwabidyalay Journal operates under strict academic independence. Acceptance or rejection of scholarly manuscripts is determined exclusively by rigorous peer review assessment and scientific merit, completely free from commercial, institutional, or political influence.")
+                        .metaJson("{\"standards\":\"COPE Compliant\",\"oversight\":\"Double-Blind\",\"tenure\":\"3 Years\"}")
+                        .displayOrder(1).published(true).lastUpdatedBy("system").build());
+                list.add(PageContent.builder()
+                        .pageKey("editorial-board").sectionKey("advisory-council")
+                        .title("International Advisory Council & Section Chairs")
+                        .subtitle("Distinguished senior scientists and academic mentors across key faculties.")
+                        .content("Our advisory council provides strategic orientation on journal indexing, ethical frameworks, and emerging interdisciplinary research domains spanning Pharmacy, Public Health, Physical Sciences, and Computing Technologies.")
+                        .metaJson("{\"disciplines\":[\"Pharmacy & Pharmacology\",\"Biomedical Sciences\",\"Computer Science & AI\",\"Physical Sciences\",\"Community Health\"]}")
+                        .displayOrder(2).published(true).lastUpdatedBy("system").build());
+                break;
+
+            case "reviewers":
+                list.add(PageContent.builder()
+                        .pageKey("reviewers").sectionKey("peer-review-protocol")
+                        .title("Double-Blind Evaluation Protocol & Rubric")
+                        .subtitle("Standardized evaluation guidelines for invited domain specialists.")
+                        .content("Reviewers evaluate submissions based on methodological rigor, novelty, ethical compliance, literature integration, and clarity of findings. GB Journal maintains structured 4-week review turnaround windows to ensure timely decisions.")
+                        .metaJson("{\"turnaround\":\"28 Days\",\"rubricStages\":[\"Originality\",\"Methodology\",\"Data Validity\",\"Ethics & Clarity\"],\"blindMode\":\"Double-Blind\"}")
+                        .displayOrder(1).published(true).lastUpdatedBy("system").build());
+                list.add(PageContent.builder()
+                        .pageKey("reviewers").sectionKey("reviewer-benefits")
+                        .title("Reviewer Recognition & Academic Acknowledgement")
+                        .subtitle("Honoring the vital contribution of our peer review community.")
+                        .content("Every reviewer who completes timely evaluations receives verified digital review certificates, annual recognition in the journal volume index, and fast-track submission privileges for their own future manuscripts.")
+                        .metaJson("{\"certificate\":\"Official Digital Certificate\",\"indexing\":\"Annual Volume Acknowledgement\",\"priority\":\"Fast-Track Handling\"}")
+                        .displayOrder(2).published(true).lastUpdatedBy("system").build());
+                break;
+
+            case "issues":
+                list.add(PageContent.builder()
+                        .pageKey("issues").sectionKey("publication-schedule")
+                        .title("Biannual Publication Cadence & Special Volumes")
+                        .subtitle("Regular releases scheduled every June and December.")
+                        .content("GB Journal publishes two formal issues per annual volume. In addition, the editorial board coordinates special thematic issues addressing breakthrough regional and global scientific developments.")
+                        .metaJson("{\"frequency\":\"Biannual (June & December)\",\"format\":\"Open Access Full-Text PDF & Online HTML\",\"indexingDeposit\":\"CrossRef & Repositories\"}")
+                        .displayOrder(1).published(true).lastUpdatedBy("system").build());
+                list.add(PageContent.builder()
+                        .pageKey("issues").sectionKey("digital-archiving")
+                        .title("Permanent Digital Preservation & Archiving")
+                        .subtitle("Long-term scholarly preservation across national and institutional repositories.")
+                        .content("All issues are permanently preserved with registered DOIs and deposited in institutional digital archives and national scientific databases to ensure uninterrupted scholarly access for global researchers.")
+                        .metaJson("{\"doiProvider\":\"CrossRef\",\"license\":\"CC BY 4.0\",\"preservation\":\"Institutional Digital Clock\"}")
+                        .displayOrder(2).published(true).lastUpdatedBy("system").build());
+                break;
+
+            case "articles":
+                list.add(PageContent.builder()
+                        .pageKey("articles").sectionKey("repository-scope")
+                        .title("Peer-Reviewed Research Repository & Discovery")
+                        .subtitle("Immediate full-text open access to high-impact scholarly discoveries.")
+                        .content("Browse, search, and download original research manuscripts, comprehensive reviews, and short communications published in the Gono Bishwabidyalay Journal of Science and Technology with zero paywalls.")
+                        .metaJson("{\"access\":\"Diamond Open Access\",\"downloadFormat\":\"High-Res PDF\",\"citationFormats\":[\"RIS\",\"BibTeX\",\"APA\"]}")
+                        .displayOrder(1).published(true).lastUpdatedBy("system").build());
+                list.add(PageContent.builder()
+                        .pageKey("articles").sectionKey("citation-metrics")
+                        .title("Real-Time Reader Metrics & Impact Analytics")
+                        .subtitle("Transparent tracking of article downloads, views, and academic citations.")
+                        .content("Each published manuscript features live download counters, view metrics, and CrossRef citation tracking to measure real-world academic impact and dissemination velocity.")
+                        .metaJson("{\"metrics\":[\"Abstract Views\",\"PDF Downloads\",\"Citation Counts\",\"Altmetric Velocity\"]}")
+                        .displayOrder(2).published(true).lastUpdatedBy("system").build());
                 break;
         }
         return list;

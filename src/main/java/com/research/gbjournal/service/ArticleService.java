@@ -33,7 +33,9 @@ public class ArticleService {
         Sort sortOrder = buildSort(sort);
         PageRequest pageable = PageRequest.of(page, size, sortOrder);
 
-        return articleRepository.searchArticles(nullableQuery, nullableType, nullableTopic, nullableIssue, pageable)
+        String pattern = (nullableQuery != null) ? "%" + nullableQuery.toLowerCase() + "%" : null;
+
+        return articleRepository.searchArticles(pattern, nullableType, nullableTopic, nullableIssue, pageable)
                 .map(art -> toDTO(art));
     }
 
