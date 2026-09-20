@@ -72,6 +72,9 @@ public class SecurityConfig {
             // Stateless sessions — never create HttpSession
             .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 
+            // Allow inline frames/previews
+            .headers(headers -> headers.frameOptions(frame -> frame.disable()))
+
             // Custom JSON error responses
             .exceptionHandling(ex -> ex
                 .authenticationEntryPoint(authEntryPointJwt)
@@ -85,7 +88,7 @@ public class SecurityConfig {
                     "/api/v1/auth/register",
                     "/api/v1/auth/refresh").permitAll()
 
-                // Public article & issue discovery (read-only GET)
+                // Public article & issue discovery (read-only GET & HEAD)
                 .requestMatchers(HttpMethod.GET,
                     "/",
                     "/error",
@@ -102,6 +105,15 @@ public class SecurityConfig {
                     "/api/v1/content/**",
                     "/api/v1/navigation",
                     "/api/v1/navigation/**",
+                    "/api/v1/files/**").permitAll()
+                .requestMatchers(HttpMethod.HEAD,
+                    "/",
+                    "/error",
+                    "/api/v1/health",
+                    "/api/v1/articles",
+                    "/api/v1/articles/**",
+                    "/api/v1/issues",
+                    "/api/v1/issues/**",
                     "/api/v1/files/**").permitAll()
 
                 // Profile & authenticated user actions

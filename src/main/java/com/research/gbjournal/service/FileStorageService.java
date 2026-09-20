@@ -125,6 +125,20 @@ public class FileStorageService {
 
             Resource resource = new UrlResource(filePath.toUri());
             if (!resource.exists() || !resource.isReadable()) {
+                // Fallback 1: check direct uploadDir without subDir
+                Path directPath = Paths.get(uploadDir).toAbsolutePath().normalize().resolve(storedFilename).normalize();
+                Resource directResource = new UrlResource(directPath.toUri());
+                if (directResource.exists() && directResource.isReadable()) {
+                    return directResource;
+                }
+                // Fallback 2: search inside uploadDir subdirectories recursively
+                try (var stream = Files.walk(Paths.get(uploadDir).toAbsolutePath().normalize(), 4)) {
+                    var found = stream.filter(p -> p.getFileName().toString().equals(storedFilename)).findFirst();
+                    if (found.isPresent()) {
+                        return new UrlResource(found.get().toUri());
+                    }
+                } catch (Exception ignored) {}
+
                 throw new ResourceNotFoundException("File not found: " + storedFilename);
             }
             return resource;

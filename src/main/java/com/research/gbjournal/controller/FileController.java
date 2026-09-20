@@ -40,9 +40,10 @@ public class FileController {
 
     /**
      * GET /api/v1/files/{storedFilename}
-     * Serves a stored submission file.
+     * Serves a stored submission file for inline preview or download.
      */
     @GetMapping("/{storedFilename}")
+    @org.springframework.transaction.annotation.Transactional(readOnly = true)
     public ResponseEntity<Resource> serveFile(@PathVariable String storedFilename) {
         SubmissionFile metadata = submissionFileRepository.findByStoredFilename(storedFilename)
                 .orElseThrow(() -> new ResourceNotFoundException("File not found."));
@@ -51,14 +52,19 @@ public class FileController {
         String subDir = "submissions/" + metadata.getSubmission().getSubmissionId();
         Resource resource = fileStorageService.loadAsResource(subDir, storedFilename);
 
-        String contentType = metadata.getContentType() != null
-                ? metadata.getContentType()
-                : MediaType.APPLICATION_OCTET_STREAM_VALUE;
+        String contentType = metadata.getContentType();
+        if (contentType == null || contentType.isBlank() || contentType.equals(MediaType.APPLICATION_OCTET_STREAM_VALUE)) {
+            if (metadata.getOriginalFilename() != null && metadata.getOriginalFilename().toLowerCase().endsWith(".pdf")) {
+                contentType = MediaType.APPLICATION_PDF_VALUE;
+            } else {
+                contentType = MediaType.APPLICATION_OCTET_STREAM_VALUE;
+            }
+        }
 
         return ResponseEntity.ok()
                 .contentType(MediaType.parseMediaType(contentType))
                 .header(HttpHeaders.CONTENT_DISPOSITION,
-                        "attachment; filename=\"" + metadata.getOriginalFilename() + "\"")
+                        "inline; filename=\"" + metadata.getOriginalFilename() + "\"")
                 .body(resource);
     }
 }
