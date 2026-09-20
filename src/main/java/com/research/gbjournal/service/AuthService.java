@@ -11,7 +11,6 @@ import com.research.gbjournal.security.JwtProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -103,8 +102,7 @@ public class AuthService {
                     user.getEmail(),
                     "Welcome to Gono Bishwabidyalay Journal — Your Academic Account is Ready",
                     "email/account-welcome",
-                    emailVars
-            );
+                    emailVars);
         } catch (Exception ex) {
             log.warn("Failed to dispatch welcome email to {}: {}", user.getEmail(), ex.getMessage());
         }
@@ -151,12 +149,18 @@ public class AuthService {
         User user = userRepository.findByEmailIgnoreCase(email)
                 .orElseThrow(() -> new ResourceNotFoundException("User", "email", email));
 
-        if (StringUtils.hasText(request.getFullName()))       user.setFullName(request.getFullName().trim());
-        if (StringUtils.hasText(request.getInstitution()))    user.setInstitution(request.getInstitution());
-        if (StringUtils.hasText(request.getDepartment()))     user.setDepartment(request.getDepartment());
-        if (StringUtils.hasText(request.getCountry()))        user.setCountry(request.getCountry());
-        if (StringUtils.hasText(request.getOrcid()))          user.setOrcid(request.getOrcid());
-        if (StringUtils.hasText(request.getResearchInterests())) user.setResearchInterests(request.getResearchInterests());
+        if (StringUtils.hasText(request.getFullName()))
+            user.setFullName(request.getFullName().trim());
+        if (StringUtils.hasText(request.getInstitution()))
+            user.setInstitution(request.getInstitution());
+        if (StringUtils.hasText(request.getDepartment()))
+            user.setDepartment(request.getDepartment());
+        if (StringUtils.hasText(request.getCountry()))
+            user.setCountry(request.getCountry());
+        if (StringUtils.hasText(request.getOrcid()))
+            user.setOrcid(request.getOrcid());
+        if (StringUtils.hasText(request.getResearchInterests()))
+            user.setResearchInterests(request.getResearchInterests());
         if (request.getAvatarUrl() != null) {
             String oldAvatarUrl = user.getAvatarUrl();
             if (StringUtils.hasText(oldAvatarUrl) && !oldAvatarUrl.equals(request.getAvatarUrl())) {
