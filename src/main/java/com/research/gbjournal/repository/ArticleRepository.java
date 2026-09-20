@@ -42,6 +42,18 @@ public interface ArticleRepository extends JpaRepository<Article, Long> {
         @Query("UPDATE Article a SET a.metrics.downloads = a.metrics.downloads + 1 WHERE a.id = :id")
         void incrementDownloads(@Param("id") Long id);
 
+        @Modifying
+        @Query("UPDATE Article a SET a.metrics.views = 0, a.metrics.downloads = 0, a.metrics.citations = 0 WHERE a.id = :id")
+        void resetMetrics(@Param("id") Long id);
+
+        @Modifying
+        @Query("UPDATE Article a SET a.metrics.views = 0, a.metrics.downloads = 0, a.metrics.citations = 0")
+        void resetAllMetrics();
+
+        @Modifying
+        @Query("UPDATE Article a SET a.metrics.views = :views, a.metrics.downloads = :downloads, a.metrics.citations = :citations WHERE a.id = :id")
+        void updateMetrics(@Param("id") Long id, @Param("views") int views, @Param("downloads") int downloads, @Param("citations") int citations);
+
         @Query("SELECT DISTINCT a.type FROM Article a ORDER BY a.type")
         java.util.List<String> findAllArticleTypes();
 

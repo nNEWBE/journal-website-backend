@@ -82,6 +82,7 @@ public class DashboardService {
                 .department(req.getDepartment())
                 .institution(req.getInstitution() != null ? req.getInstitution() : "Gono Bishwabidyalay")
                 .orcid(req.getOrcid())
+                .avatarUrl(req.getAvatarUrl() != null && !req.getAvatarUrl().isBlank() ? req.getAvatarUrl().trim() : null)
                 .emailVerified(true)
                 .enabled(true)
                 .build();
@@ -145,6 +146,9 @@ public class DashboardService {
         }
         if (req.getOrcid() != null) {
             user.setOrcid(req.getOrcid().trim());
+        }
+        if (req.getAvatarUrl() != null) {
+            user.setAvatarUrl(req.getAvatarUrl().trim().isEmpty() ? null : req.getAvatarUrl().trim());
         }
         if (req.getRole() != null && !req.getRole().isBlank()) {
             String formattedRole = req.getRole().toUpperCase().replace('-', '_');

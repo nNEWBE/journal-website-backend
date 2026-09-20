@@ -70,4 +70,33 @@ public class ArticleController {
         String pdfUrl = articleService.trackDownload(slug).getPdfUrl();
         return ResponseEntity.ok(pdfUrl != null ? pdfUrl : "");
     }
+
+    /**
+     * POST /api/v1/articles/{slug}/view
+     * Tracks an article view.
+     */
+    @PostMapping("/{slug}/view")
+    public ResponseEntity<Void> trackView(@PathVariable String slug) {
+        articleService.trackView(slug);
+        return ResponseEntity.ok().build();
+    }
+
+    /**
+     * PUT /api/v1/articles/{slug}/metrics/reset
+     * Resets metrics to 0.
+     */
+    @PutMapping("/{slug}/metrics/reset")
+    public ResponseEntity<ArticleDTO> resetMetrics(@PathVariable String slug) {
+        return ResponseEntity.ok(articleService.resetMetrics(slug));
+    }
+
+    /**
+     * PUT /api/v1/articles/metrics/reset-all
+     * Resets all articles' metrics to 0.
+     */
+    @PutMapping("/metrics/reset-all")
+    public ResponseEntity<Void> resetAllMetrics() {
+        articleService.resetAllMetrics();
+        return ResponseEntity.ok().build();
+    }
 }

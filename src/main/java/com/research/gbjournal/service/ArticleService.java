@@ -54,7 +54,14 @@ public class ArticleService {
         return toDetailDTO(article);
     }
 
-    // ===== PDF Download tracking =====
+    // ===== Readership tracking & management =====
+
+    @Transactional
+    public void trackView(String slug) {
+        Article article = articleRepository.findBySlug(slug)
+                .orElseThrow(() -> new ResourceNotFoundException("Article", "slug", slug));
+        articleRepository.incrementViews(article.getId());
+    }
 
     @Transactional
     public Article trackDownload(String slug) {
@@ -62,6 +69,37 @@ public class ArticleService {
                 .orElseThrow(() -> new ResourceNotFoundException("Article", "slug", slug));
         articleRepository.incrementDownloads(article.getId());
         return article;
+    }
+
+    @Transactional
+    public ArticleDTO resetMetrics(String slug) {
+        Article article = articleRepository.findBySlug(slug)
+                .orElseThrow(() -> new ResourceNotFoundException("Article", "slug", slug));
+        articleRepository.resetMetrics(article.getId());
+        if (article.getMetrics() != null) {
+            article.getMetrics().setViews(0);
+            article.getMetrics().setDownloads(0);
+            article.getMetrics().setCitations(0);
+        }
+        return toDTO(article);
+    }
+
+    @Transactional
+    public void resetAllMetrics() {
+        articleRepository.resetAllMetrics();
+    }
+
+    @Transactional
+    public ArticleDTO updateMetrics(String slug, int views, int downloads, int citations) {
+        Article article = articleRepository.findBySlug(slug)
+                .orElseThrow(() -> new ResourceNotFoundException("Article", "slug", slug));
+        articleRepository.updateMetrics(article.getId(), views, downloads, citations);
+        if (article.getMetrics() != null) {
+            article.getMetrics().setViews(views);
+            article.getMetrics().setDownloads(downloads);
+            article.getMetrics().setCitations(citations);
+        }
+        return toDTO(article);
     }
 
     // ===== Metadata =====

@@ -16,6 +16,7 @@ public class UpdateUserRequest {
     private String department;
     private String institution;
     private String orcid;
+    private String avatarUrl;
     private String password;
     private Boolean enabled;
 }

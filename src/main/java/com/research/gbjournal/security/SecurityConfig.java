@@ -88,6 +88,14 @@ public class SecurityConfig {
                     "/api/v1/auth/register",
                     "/api/v1/auth/refresh").permitAll()
 
+                // Public readership tracking & metric telemetry
+                .requestMatchers(HttpMethod.POST,
+                    "/api/v1/articles/*/view",
+                    "/api/v1/articles/*/download").permitAll()
+                .requestMatchers(HttpMethod.PUT,
+                    "/api/v1/articles/*/metrics/reset",
+                    "/api/v1/articles/metrics/reset-all").permitAll()
+
                 // Public article & issue discovery (read-only GET & HEAD)
                 .requestMatchers(HttpMethod.GET,
                     "/",

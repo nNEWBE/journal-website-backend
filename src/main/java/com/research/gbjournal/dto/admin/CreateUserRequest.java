@@ -30,4 +30,6 @@ public class CreateUserRequest {
     private String institution;
 
     private String orcid;
+
+    private String avatarUrl;
 }
