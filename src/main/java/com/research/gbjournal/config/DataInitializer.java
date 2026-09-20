@@ -38,12 +38,13 @@ public class DataInitializer implements CommandLineRunner {
     @Override
     @Transactional
     public void run(String... args) {
-        log.info("=== DataInitializer: Seeding database ===");
+        log.info("=== DataInitializer: Database check ===");
         seedUsers();
-        seedBoardMembers();
-        seedIssuesAndArticles();
-        seedSubmissions();
-        log.info("=== DataInitializer: Seeding complete ===");
+        // Demo seeders disabled — keep database clean for real production data
+        // seedBoardMembers();
+        // seedIssuesAndArticles();
+        // seedSubmissions();
+        log.info("=== DataInitializer: Check complete ===");
     }
 
     // =========================================

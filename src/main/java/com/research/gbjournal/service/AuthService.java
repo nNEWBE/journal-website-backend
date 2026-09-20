@@ -43,7 +43,9 @@ public class AuthService {
                     new UsernamePasswordAuthenticationToken(
                             request.getEmail().trim().toLowerCase(),
                             request.getPassword()));
-        } catch (BadCredentialsException ex) {
+        } catch (org.springframework.security.authentication.DisabledException ex) {
+            throw new BadRequestException("This account has been disabled. Please contact administration.");
+        } catch (org.springframework.security.core.AuthenticationException ex) {
             throw new BadRequestException("Invalid email or password.");
         }
 

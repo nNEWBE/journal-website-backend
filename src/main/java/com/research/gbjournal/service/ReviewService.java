@@ -59,11 +59,13 @@ public class ReviewService {
     public void submitReview(String reviewerEmail, Long assignmentId, SubmitReviewRequest request) {
         ReviewAssignment assignment = getAssignmentOwnedByReviewer(reviewerEmail, assignmentId);
 
-        if (assignment.getStatus() != ReviewAssignment.ReviewStatus.ACCEPTED) {
+        if (assignment.getStatus() == ReviewAssignment.ReviewStatus.INVITED) {
+            assignment.setStatus(ReviewAssignment.ReviewStatus.ACCEPTED);
+        } else if (assignment.getStatus() != ReviewAssignment.ReviewStatus.ACCEPTED) {
+            if (assignment.getStatus() == ReviewAssignment.ReviewStatus.COMPLETED) {
+                throw new BadRequestException("This review has already been submitted.");
+            }
             throw new BadRequestException("You must accept the review invitation before submitting a review.");
-        }
-        if (assignment.getStatus() == ReviewAssignment.ReviewStatus.COMPLETED) {
-            throw new BadRequestException("This review has already been submitted.");
         }
 
         ReviewAssignment.ReviewRecommendation recommendation;
@@ -81,8 +83,18 @@ public class ReviewService {
         assignment.setReviewSubmittedAt(Instant.now());
         reviewAssignmentRepository.save(assignment);
 
-        // Check if all reviews are complete — update submission status
+        // Check if all reviews are complete and update reviewScore
         Submission submission = assignment.getSubmission();
+        double avgScore = submission.getReviews().stream()
+                .filter(r -> (r.getStatus() == ReviewAssignment.ReviewStatus.COMPLETED || r.getId().equals(assignment.getId())) && r.getScore() != null)
+                .mapToInt(ReviewAssignment::getScore)
+                .average()
+                .orElse(request.getScore() != null ? request.getScore().doubleValue() : 0.0);
+
+        if (avgScore > 0) {
+            submission.setReviewScore((int) Math.round(avgScore));
+        }
+
         boolean allComplete = submission.getReviews().stream()
                 .filter(r -> r.getStatus() == ReviewAssignment.ReviewStatus.ACCEPTED ||
                              r.getStatus() == ReviewAssignment.ReviewStatus.COMPLETED)
@@ -90,8 +102,8 @@ public class ReviewService {
 
         if (allComplete) {
             submission.setStatus(Submission.SubmissionStatus.REVIEWS_COMPLETE);
-            submissionRepository.save(submission);
         }
+        submissionRepository.save(submission);
 
         log.info("Review submitted by {} for submission {}", reviewerEmail, submission.getSubmissionId());
     }

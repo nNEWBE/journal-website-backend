@@ -89,6 +89,8 @@ public class SubmissionResponseDTO {
         private String status;
         private String recommendation;
         private Integer score;
+        private String reviewComments;
+        private String confidentialComments;
         private Instant dueDate;
         private Instant reviewSubmittedAt;
     }
