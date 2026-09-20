@@ -10,12 +10,9 @@ COPY build.gradle settings.gradle ./
 # Fix line endings (CRLF -> LF) and permissions on gradlew
 RUN sed -i 's/\r$//' gradlew && chmod +x gradlew
 
-# Download dependencies
-RUN ./gradlew dependencies --no-daemon || true
-
-# Copy source code and build production jar
+# Copy source code and build production jar in a single pass (skipping tests)
 COPY src src
-RUN ./gradlew bootJar --no-daemon --stacktrace -x test
+RUN ./gradlew bootJar --no-daemon -x test
 
 # Runtime Stage
 FROM eclipse-temurin:21-jre-jammy
@@ -28,4 +25,4 @@ COPY --from=build /app/build/libs/*.jar app.jar
 ENV PORT=8080
 EXPOSE 8080
 
-ENTRYPOINT ["java", "-Dspring.profiles.active=prod", "-jar", "app.jar"]
+ENTRYPOINT ["java", "-Djava.net.preferIPv4Stack=true", "-Dspring.profiles.active=prod", "-Xmx384m", "-Xms128m", "-jar", "app.jar"]
