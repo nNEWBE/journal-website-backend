@@ -95,6 +95,7 @@ public class SecurityConfig {
                     "/api/v1/issues",
                     "/api/v1/issues/**",
                     "/api/v1/editorial-board",
+                    "/api/v1/editorial-board/**",
                     "/api/v1/topics",
                     "/api/v1/article-types",
                     "/api/v1/pages/**",

@@ -40,10 +40,9 @@ public class DataInitializer implements CommandLineRunner {
     public void run(String... args) {
         log.info("=== DataInitializer: Database check ===");
         seedUsers();
-        // Demo seeders disabled — keep database clean for real production data
-        // seedBoardMembers();
-        // seedIssuesAndArticles();
-        // seedSubmissions();
+        seedBoardMembers();
+        seedIssuesAndArticles();
+        // seedSubmissions(); // User submissions are not seeded to keep workspace clean
         log.info("=== DataInitializer: Check complete ===");
     }
 
