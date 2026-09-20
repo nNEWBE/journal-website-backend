@@ -14,8 +14,10 @@ public interface IssueRepository extends JpaRepository<Issue, Long> {
 
     Optional<Issue> findByIssueKey(String issueKey);
 
+    @Query("SELECT DISTINCT i FROM Issue i LEFT JOIN FETCH i.articles a WHERE i.current = true")
     Optional<Issue> findByCurrentTrue();
 
+    @Query("SELECT DISTINCT i FROM Issue i LEFT JOIN FETCH i.articles a ORDER BY i.year DESC, i.issueLabel DESC")
     List<Issue> findAllByOrderByYearDescIssueLabelDesc();
 
     @Modifying

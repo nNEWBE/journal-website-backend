@@ -6,6 +6,7 @@ import com.research.gbjournal.entity.Article;
 import com.research.gbjournal.exception.ResourceNotFoundException;
 import com.research.gbjournal.repository.ArticleRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -22,6 +23,7 @@ public class ArticleService {
 
     // ===== Search / List =====
 
+    @Cacheable(value = "articles", key = "T(java.util.Objects).hash(#query, #type, #topic, #issueLabel, #page, #size, #sort)")
     @Transactional(readOnly = true)
     public Page<ArticleDTO> searchArticles(String query, String type, String topic,
             String issueLabel, int page, int size, String sort) {

@@ -6,6 +6,8 @@ import com.research.gbjournal.entity.Issue;
 import com.research.gbjournal.exception.ResourceNotFoundException;
 import com.research.gbjournal.repository.IssueRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,6 +24,7 @@ public class IssueService {
 
     // ===== Current Issue =====
 
+    @Cacheable(value = "current-issue", unless = "#result == null")
     @Transactional(readOnly = true)
     public IssueDTO getCurrentIssue() {
         Issue issue = issueRepository.findByCurrentTrue()
@@ -31,6 +34,7 @@ public class IssueService {
 
     // ===== Archive =====
 
+    @Cacheable(value = "all-issues", unless = "#result == null")
     @Transactional(readOnly = true)
     public List<IssueDTO> getAllIssues() {
         return issueRepository.findAllByOrderByYearDescIssueLabelDesc()
@@ -41,6 +45,7 @@ public class IssueService {
 
     // ===== Issue by key =====
 
+    @Cacheable(value = "issue-by-key", key = "#issueKey", unless = "#result == null")
     @Transactional(readOnly = true)
     public IssueDTO getIssueByKey(String issueKey) {
         Issue issue = issueRepository.findByIssueKey(issueKey)
@@ -50,6 +55,7 @@ public class IssueService {
 
     // ===== Admin: set current issue =====
 
+    @CacheEvict(value = {"current-issue", "all-issues", "issue-by-key"}, allEntries = true)
     @Transactional
     public IssueDTO setCurrentIssue(Long issueId) {
         issueRepository.clearCurrentIssue();
@@ -60,6 +66,7 @@ public class IssueService {
         return toSummaryDTO(issue);
     }
 
+    @CacheEvict(value = {"current-issue", "all-issues", "issue-by-key"}, allEntries = true)
     @Transactional
     public IssueDTO createIssue(IssueDTO dto) {
         if (dto.isCurrent()) {
@@ -81,6 +88,7 @@ public class IssueService {
         return toSummaryDTO(issue);
     }
 
+    @CacheEvict(value = {"current-issue", "all-issues", "issue-by-key"}, allEntries = true)
     @Transactional
     public IssueDTO updateIssue(Long issueId, IssueDTO dto) {
         Issue issue = issueRepository.findById(issueId)

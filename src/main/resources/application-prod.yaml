@@ -18,6 +18,9 @@ spring:
     hibernate:
       ddl-auto: update        # Automatically create/update tables on cloud deploy
     show-sql: false
+    properties:
+      hibernate:
+        default_batch_fetch_size: 25
 
   docker:
     compose:
