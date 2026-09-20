@@ -4,6 +4,8 @@ import com.research.gbjournal.dto.board.BoardMemberDTO;
 import com.research.gbjournal.entity.BoardMember;
 import com.research.gbjournal.repository.BoardMemberRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,6 +18,7 @@ public class BoardMemberService {
     private final BoardMemberRepository boardMemberRepository;
 
     @Transactional(readOnly = true)
+    @Cacheable(value = "editorial-board")
     public List<BoardMemberDTO> getAllMembers() {
         return boardMemberRepository.findAllByOrderBySortOrderAsc()
                 .stream()
@@ -24,6 +27,7 @@ public class BoardMemberService {
     }
 
     @Transactional
+    @CacheEvict(value = "editorial-board", allEntries = true)
     public BoardMemberDTO createMember(BoardMemberDTO dto) {
         BoardMember member = BoardMember.builder()
                 .name(dto.getName())
@@ -42,6 +46,7 @@ public class BoardMemberService {
     }
 
     @Transactional
+    @CacheEvict(value = "editorial-board", allEntries = true)
     public BoardMemberDTO updateMember(Long id, BoardMemberDTO dto) {
         BoardMember member = boardMemberRepository.findById(id)
                 .orElseThrow(() -> new com.research.gbjournal.exception.ResourceNotFoundException("BoardMember", "id", id));
@@ -60,6 +65,7 @@ public class BoardMemberService {
     }
 
     @Transactional
+    @CacheEvict(value = "editorial-board", allEntries = true)
     public void deleteMember(Long id) {
         boardMemberRepository.deleteById(id);
     }

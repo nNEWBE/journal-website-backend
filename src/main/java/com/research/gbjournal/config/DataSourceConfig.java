@@ -34,11 +34,11 @@ public class DataSourceConfig {
 
         if (databaseUrl == null || databaseUrl.trim().isEmpty()) {
             throw new IllegalStateException(
-                "DATABASE_URL is not configured! Please add 'DATABASE_URL' to your Render Dashboard Environment Variables (e.g. from Neon PostgreSQL or Render PostgreSQL)."
+                "DATABASE_URL is not configured! Please add 'DATABASE_URL' to your environment variables (e.g. from Supabase PostgreSQL or cloud provider)."
             );
         }
 
-        // Support Render / Heroku / Neon format (e.g. postgres://user:pass@host:port/db)
+        // Support cloud database URL format (e.g. postgres://user:pass@host:port/db)
         if (databaseUrl.startsWith("postgres://") || databaseUrl.startsWith("postgresql://")) {
             try {
                 URI dbUri = new URI(databaseUrl);
@@ -72,12 +72,19 @@ public class DataSourceConfig {
             hikariConfig.setPassword(dbPass);
         }
 
-        hikariConfig.setMaximumPoolSize(10);
+        // Optimized pool tuning for Supabase (resilient against high cross-continent latency)
+        hikariConfig.setMaximumPoolSize(15);
         hikariConfig.setMinimumIdle(2);
-        hikariConfig.setConnectionTimeout(30000);
-        hikariConfig.setKeepaliveTime(60000);
-        hikariConfig.setMaxLifetime(600000);
+        hikariConfig.setConnectionTimeout(60000);
+        hikariConfig.setInitializationFailTimeout(60000);
+        hikariConfig.setKeepaliveTime(30000);
+        hikariConfig.setMaxLifetime(1800000);
         hikariConfig.setIdleTimeout(300000);
+
+        hikariConfig.addDataSourceProperty("socketTimeout", "60");
+        hikariConfig.addDataSourceProperty("connectTimeout", "30");
+        hikariConfig.addDataSourceProperty("loginTimeout", "30");
+        hikariConfig.addDataSourceProperty("tcpKeepAlive", "true");
 
         return new HikariDataSource(hikariConfig);
     }

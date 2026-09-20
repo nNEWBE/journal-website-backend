@@ -86,8 +86,8 @@ public class ReviewService {
         // Check if all reviews are complete and update reviewScore
         Submission submission = assignment.getSubmission();
         double avgScore = submission.getReviews().stream()
-                .filter(r -> (r.getStatus() == ReviewAssignment.ReviewStatus.COMPLETED || r.getId().equals(assignment.getId())) && r.getScore() != null)
-                .mapToInt(ReviewAssignment::getScore)
+                .filter(r -> r != null && (r.getStatus() == ReviewAssignment.ReviewStatus.COMPLETED || assignment.getId().equals(r.getId())) && r.getScore() != null)
+                .mapToInt(r -> r.getScore() != null ? r.getScore() : 0)
                 .average()
                 .orElse(request.getScore() != null ? request.getScore().doubleValue() : 0.0);
 

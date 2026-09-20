@@ -66,6 +66,13 @@ public class SubmissionResponseDTO {
         private String orcid;
         private int authorOrder;
         private boolean corresponding;
+
+        // Bank Details for Honorarium / APC Disbursement
+        private String bankName;
+        private String accountNumber;
+        private String accountHolderName;
+        private String branchName;
+        private String routingNumber;
     }
 
     @Data

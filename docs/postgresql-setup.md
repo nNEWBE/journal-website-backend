@@ -9,21 +9,20 @@ This guide provides step-by-step instructions for configuring and connecting a *
 The backend is configured exclusively for **PostgreSQL** (No H2 database is used in any environment).
 
 You can connect to either:
-1. **Neon Cloud PostgreSQL (Recommended)** — Instant setup with no local installation required.
+1. **Supabase Cloud PostgreSQL (Recommended)** — Low latency, managed cloud database with SSL and pooled connections.
 2. **Local PostgreSQL** — Installed via PostgreSQL installer for Windows or Docker.
 
 ---
 
-## Option A: Neon Cloud PostgreSQL (Instant & Cloud-Hosted)
+## Option A: Supabase Cloud PostgreSQL (Recommended)
 
-1. Sign up for free at **[Neon.tech](https://neon.tech)** and create a database named `gbjournal`.
-2. Copy your connection details from the Neon console.
-3. Put them in your `.env` file:
+1. Connect to **[Supabase](https://supabase.com)** project `irftwqhxtojjjdsporgk`.
+2. Connection details are configured in `.env`:
 
 ```env
-DATABASE_URL=jdbc:postgresql://ep-your-project-12345.us-east-2.aws.neon.tech/neondb?sslmode=require
-DATABASE_USERNAME=your-neon-user
-DATABASE_PASSWORD=your-neon-password
+DATABASE_URL=jdbc:postgresql://aws-0-ap-southeast-2.pooler.supabase.com:5432/postgres?sslmode=require
+DATABASE_USERNAME=gbjournal_user.irftwqhxtojjjdsporgk
+DATABASE_PASSWORD=your-secure-password
 ```
 
 ---
@@ -50,7 +49,7 @@ DATABASE_PASSWORD=shuvo1234
 
 ---
 
-## Option B: Install PostgreSQL Locally on Windows
+## Option C: Install PostgreSQL Locally on Windows
 
 ### Step 1 — Download & Install PostgreSQL
 1. Download the installer from **[PostgreSQL Official Site](https://www.postgresql.org/download/windows/)** (Version 15 or 16).
@@ -82,29 +81,6 @@ DATABASE_URL=jdbc:postgresql://localhost:5432/gbjournal
 DATABASE_USERNAME=gbjournal
 DATABASE_PASSWORD=secretpass
 ```
-
----
-
-## Option C: Free Managed Cloud PostgreSQL (Recommended for Staging/Production)
-
-You can use a free cloud PostgreSQL provider like **Neon**, **Supabase**, or **Render**:
-
-### 1. Neon (https://neon.tech)
-1. Sign up for a free account at Neon.tech.
-2. Create a new project named `gbjournal`.
-3. Copy the **Pooled Connection String**, for example:
-   `postgres://alex:pass@ep-cool-name-123456.us-east-2.aws.neon.tech/neondb?sslmode=require`
-4. Convert to JDBC format for your `.env`:
-   ```env
-   DATABASE_URL=jdbc:postgresql://ep-cool-name-123456.us-east-2.aws.neon.tech/neondb?sslmode=require
-   DATABASE_USERNAME=alex
-   DATABASE_PASSWORD=pass
-   ```
-
-### 2. Supabase (https://supabase.com)
-1. Create a project at Supabase.
-2. Under **Project Settings → Database → Connection String → JDBC**, copy the URL.
-3. Update `.env` with the host, user, and password.
 
 ---
 

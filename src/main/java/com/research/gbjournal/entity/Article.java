@@ -2,6 +2,7 @@ package com.research.gbjournal.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -71,17 +72,20 @@ public class Article {
     /** Ordered article sections */
     @OneToMany(mappedBy = "article", cascade = CascadeType.ALL, orphanRemoval = true)
     @OrderBy("sortOrder ASC")
+    @BatchSize(size = 30)
     @Builder.Default
     private List<ArticleSection> sections = new ArrayList<>();
 
     /** Authors listed on the published article */
     @OneToMany(mappedBy = "article", cascade = CascadeType.ALL, orphanRemoval = true)
     @OrderBy("authorOrder ASC")
+    @BatchSize(size = 30)
     @Builder.Default
     private List<ArticleAuthor> authors = new ArrayList<>();
 
     /** Keywords */
     @OneToMany(mappedBy = "article", cascade = CascadeType.ALL, orphanRemoval = true)
+    @BatchSize(size = 30)
     @Builder.Default
     private List<ArticleKeyword> keywords = new ArrayList<>();
 

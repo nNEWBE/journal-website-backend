@@ -8,6 +8,13 @@ spring:
     driver-class-name: org.postgresql.Driver
     username: ${DATABASE_USERNAME:}
     password: ${DATABASE_PASSWORD:}
+    hikari:
+      minimum-idle: 5
+      maximum-pool-size: 15
+      idle-timeout: 300000
+      max-lifetime: 1800000
+      connection-timeout: 20000
+      keepalive-time: 30000
 
   jpa:
     open-in-view: false
@@ -18,7 +25,7 @@ spring:
     properties:
       hibernate:
         format_sql: false
-        default_batch_fetch_size: 25
+        default_batch_fetch_size: 50
 
   # Disable Docker Compose for dev
   docker:

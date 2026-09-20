@@ -7,11 +7,12 @@ import com.research.gbjournal.repository.NavigationItemRepository;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -32,15 +33,25 @@ public class NavigationService {
      * Public endpoint: Get active/published navigation tree.
      */
     @Transactional(readOnly = true)
+    @Cacheable(value = "navigation")
     public List<NavItemDTO> getPublishedNavigation() {
-        List<NavigationItem> topItems = repository.findByParentIdIsNullAndEnabledTrueOrderByDisplayOrderAsc();
-        List<NavItemDTO> dtos = new ArrayList<>();
+        List<NavigationItem> allItems = repository.findByEnabledTrueOrderByDisplayOrderAsc();
+        Map<Long, List<NavSubItemDTO>> childrenByParent = new HashMap<>();
+        List<NavigationItem> topItems = new ArrayList<>();
 
+        for (NavigationItem item : allItems) {
+            if (item.getParentId() == null) {
+                topItems.add(item);
+            } else {
+                childrenByParent.computeIfAbsent(item.getParentId(), k -> new ArrayList<>())
+                        .add(toSubDTO(item));
+            }
+        }
+
+        List<NavItemDTO> dtos = new ArrayList<>();
         for (NavigationItem top : topItems) {
             NavItemDTO dto = toDTO(top);
-            List<NavigationItem> subItems = repository.findByParentIdAndEnabledTrueOrderByDisplayOrderAsc(top.getId());
-            List<NavSubItemDTO> subDTOs = subItems.stream().map(this::toSubDTO).toList();
-            dto.setDropdown(subDTOs);
+            dto.setDropdown(childrenByParent.getOrDefault(top.getId(), Collections.emptyList()));
             dtos.add(dto);
         }
         return dtos;
@@ -50,15 +61,25 @@ public class NavigationService {
      * Admin endpoint: Get full navigation tree including disabled/hidden items.
      */
     @Transactional(readOnly = true)
+    @Cacheable(value = "navigationAdmin")
     public List<NavItemDTO> getAllNavigationAdmin() {
-        List<NavigationItem> topItems = repository.findByParentIdIsNullOrderByDisplayOrderAsc();
-        List<NavItemDTO> dtos = new ArrayList<>();
+        List<NavigationItem> allItems = repository.findAllByOrderByDisplayOrderAsc();
+        Map<Long, List<NavSubItemDTO>> childrenByParent = new HashMap<>();
+        List<NavigationItem> topItems = new ArrayList<>();
 
+        for (NavigationItem item : allItems) {
+            if (item.getParentId() == null) {
+                topItems.add(item);
+            } else {
+                childrenByParent.computeIfAbsent(item.getParentId(), k -> new ArrayList<>())
+                        .add(toSubDTO(item));
+            }
+        }
+
+        List<NavItemDTO> dtos = new ArrayList<>();
         for (NavigationItem top : topItems) {
             NavItemDTO dto = toDTO(top);
-            List<NavigationItem> subItems = repository.findByParentIdOrderByDisplayOrderAsc(top.getId());
-            List<NavSubItemDTO> subDTOs = subItems.stream().map(this::toSubDTO).toList();
-            dto.setDropdown(subDTOs);
+            dto.setDropdown(childrenByParent.getOrDefault(top.getId(), Collections.emptyList()));
             dtos.add(dto);
         }
         return dtos;
@@ -68,6 +89,7 @@ public class NavigationService {
      * Admin endpoint: Save entire hierarchical navigation structure in bulk (reorder, add, edit).
      */
     @Transactional
+    @CacheEvict(value = {"navigation", "navigationAdmin"}, allEntries = true)
     public List<NavItemDTO> saveBulkNavigation(List<NavItemDTO> dtos) {
         // Clear existing navigation records to cleanly rebuild from the updated tree
         repository.deleteAll();
@@ -115,6 +137,7 @@ public class NavigationService {
      * Admin endpoint: Reset navigation back to default GB Journal structure.
      */
     @Transactional
+    @CacheEvict(value = "navigation", allEntries = true)
     public List<NavItemDTO> resetDefaults() {
         repository.deleteAll();
         seedDefaultNavigation();

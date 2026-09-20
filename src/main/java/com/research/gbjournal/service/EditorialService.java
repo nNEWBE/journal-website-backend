@@ -13,6 +13,7 @@ import com.research.gbjournal.repository.SubmissionRepository;
 import com.research.gbjournal.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -65,6 +66,7 @@ public class EditorialService {
 
     // ===== Make editorial decision =====
 
+    @CacheEvict(value = "dashboard-stats", allEntries = true)
     @Transactional
     public SubmissionResponseDTO makeDecision(Long submissionId, EditorialDecisionRequest request) {
         Submission submission = getSubmission(submissionId);

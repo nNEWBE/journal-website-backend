@@ -12,5 +12,7 @@ public interface NavigationItemRepository extends JpaRepository<NavigationItem, 
     List<NavigationItem> findByParentIdOrderByDisplayOrderAsc(Long parentId);
     List<NavigationItem> findByParentIdIsNullAndEnabledTrueOrderByDisplayOrderAsc();
     List<NavigationItem> findByParentIdAndEnabledTrueOrderByDisplayOrderAsc(Long parentId);
+    List<NavigationItem> findByEnabledTrueOrderByDisplayOrderAsc();
+    List<NavigationItem> findAllByOrderByDisplayOrderAsc();
     void deleteByParentId(Long parentId);
 }

@@ -36,4 +36,20 @@ public class SubmissionAuthor {
 
     @Builder.Default
     private boolean corresponding = false;
+
+    // Bank Details for Honorarium / APC Disbursement
+    @Column(length = 150)
+    private String bankName;
+
+    @Column(length = 100)
+    private String accountNumber;
+
+    @Column(length = 150)
+    private String accountHolderName;
+
+    @Column(length = 150)
+    private String branchName;
+
+    @Column(length = 50)
+    private String routingNumber;
 }

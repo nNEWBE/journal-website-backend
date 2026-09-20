@@ -1,6 +1,7 @@
 package com.research.gbjournal.dto.submission;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
@@ -24,6 +25,7 @@ public class SubmissionCreateRequest {
     @Size(max = 5000)
     private String abstractText;
 
+    @NotBlank(message = "Keywords are mandatory (comma-separated)")
     @Size(max = 500)
     private String keywords;
 
@@ -46,12 +48,23 @@ public class SubmissionCreateRequest {
 
     @Data
     public static class CoAuthorRequest {
-        @NotBlank
+        @NotBlank(message = "Author name is required")
         private String name;
+
+        @NotBlank(message = "Author email is required")
+        @Email(message = "Please provide a valid email address")
         private String email;
+
         private String affiliation;
         private String orcid;
         private int authorOrder;
         private boolean corresponding;
+
+        // Bank Details for Honorarium / APC Disbursement
+        private String bankName;
+        private String accountNumber;
+        private String accountHolderName;
+        private String branchName;
+        private String routingNumber;
     }
 }

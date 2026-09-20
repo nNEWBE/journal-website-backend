@@ -23,7 +23,7 @@ A secure, production-ready REST API for the **Gono Bishwabidyalay (GBJ) Journal 
 | Language | Java 25 (Temurin) |
 | Framework | Spring Boot 4.1.0 |
 | Security | Spring Security 6.5 + JJWT 0.12.6 |
-| Database | PostgreSQL / Neon PostgreSQL |
+| Database | PostgreSQL / Supabase PostgreSQL |
 | Build | Gradle 9.5 |
 | Email | Spring Mail + Brevo SMTP |
 | Templates | Thymeleaf |
@@ -35,22 +35,17 @@ A secure, production-ready REST API for the **Gono Bishwabidyalay (GBJ) Journal 
 
 ### Prerequisites
 - **JDK 25** (Temurin)
-- **PostgreSQL Database** (Local PostgreSQL or free cloud [Neon PostgreSQL](https://neon.tech))
+- **PostgreSQL Database** (Local PostgreSQL or [Supabase PostgreSQL](https://supabase.com))
 
 ### 1. Fill in your credentials
 
 Open [`.env`](./.env) and verify your PostgreSQL credentials:
 
 ```env
-# Local PostgreSQL:
-DATABASE_URL=jdbc:postgresql://localhost:5432/gbjournal
-DATABASE_USERNAME=postgres
+# Supabase Cloud PostgreSQL:
+DATABASE_URL=jdbc:postgresql://aws-0-ap-southeast-2.pooler.supabase.com:5432/postgres?sslmode=require
+DATABASE_USERNAME=gbjournal_user.irftwqhxtojjjdsporgk
 DATABASE_PASSWORD=your-password
-
-# Or Neon Cloud PostgreSQL:
-# DATABASE_URL=jdbc:postgresql://ep-xyz.us-east-2.aws.neon.tech/neondb?sslmode=require
-# DATABASE_USERNAME=your-neon-user
-# DATABASE_PASSWORD=your-neon-pass
 ```
 
 ### 2. Start the backend
@@ -156,8 +151,8 @@ src/main/java/com/research/gbjournal/
 src/main/resources/
 ├── templates/email/ # Thymeleaf HTML email templates
 ├── application.yaml
-├── application-dev.yaml    # PostgreSQL (Local / Neon) + Brevo SMTP (dev)
-└── application-prod.yaml   # PostgreSQL (Cloud / Neon) + Brevo SMTP (prod)
+├── application-dev.yaml    # PostgreSQL (Supabase / Local) + Brevo SMTP (dev)
+└── application-prod.yaml   # PostgreSQL (Supabase Cloud) + Brevo SMTP (prod)
 
 docs/
 └── email-setup.md   # Step-by-step Brevo email configuration guide

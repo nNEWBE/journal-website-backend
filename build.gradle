@@ -39,7 +39,7 @@ dependencies {
 	// Dev tools (does not trigger Docker Compose since compose support is disabled)
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 
-	// Database (PostgreSQL / Neon)
+	// Database (PostgreSQL / Supabase)
 	runtimeOnly 'org.postgresql:postgresql'
 
 	// Test

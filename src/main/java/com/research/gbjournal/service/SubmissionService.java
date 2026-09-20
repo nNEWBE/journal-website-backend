@@ -72,6 +72,11 @@ public class SubmissionService {
                         .orcid(coAuthorReq.getOrcid())
                         .authorOrder(coAuthorReq.getAuthorOrder())
                         .corresponding(coAuthorReq.isCorresponding())
+                        .bankName(coAuthorReq.getBankName())
+                        .accountNumber(coAuthorReq.getAccountNumber())
+                        .accountHolderName(coAuthorReq.getAccountHolderName())
+                        .branchName(coAuthorReq.getBranchName())
+                        .routingNumber(coAuthorReq.getRoutingNumber())
                         .build());
             }
             submission.setAuthors(authors);
@@ -118,6 +123,11 @@ public class SubmissionService {
                         .orcid(coAuthorReq.getOrcid())
                         .authorOrder(coAuthorReq.getAuthorOrder())
                         .corresponding(coAuthorReq.isCorresponding())
+                        .bankName(coAuthorReq.getBankName())
+                        .accountNumber(coAuthorReq.getAccountNumber())
+                        .accountHolderName(coAuthorReq.getAccountHolderName())
+                        .branchName(coAuthorReq.getBranchName())
+                        .routingNumber(coAuthorReq.getRoutingNumber())
                         .build());
             }
         }
@@ -325,6 +335,11 @@ public class SubmissionService {
                         .orcid(a.getOrcid())
                         .authorOrder(a.getAuthorOrder())
                         .corresponding(a.isCorresponding())
+                        .bankName(a.getBankName())
+                        .accountNumber(a.getAccountNumber())
+                        .accountHolderName(a.getAccountHolderName())
+                        .branchName(a.getBranchName())
+                        .routingNumber(a.getRoutingNumber())
                         .build()).toList())
                 .files(s.getFiles().stream().map(f -> SubmissionResponseDTO.FileDTO.builder()
                         .id(f.getId())

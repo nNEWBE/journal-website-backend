@@ -66,11 +66,13 @@ public class ArticleService {
 
     // ===== Metadata =====
 
+    @Cacheable(value = "article-types")
     @Transactional(readOnly = true)
     public List<String> getArticleTypes() {
         return articleRepository.findAllArticleTypes();
     }
 
+    @Cacheable(value = "article-topics")
     @Transactional(readOnly = true)
     public List<String> getTopics() {
         return articleRepository.findAllTopics();

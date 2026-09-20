@@ -10,6 +10,8 @@ import com.research.gbjournal.exception.ResourceNotFoundException;
 import com.research.gbjournal.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,6 +31,7 @@ public class DashboardService {
     private final PasswordEncoder passwordEncoder;
     private final EmailService emailService;
 
+    @Cacheable(value = "dashboard-stats")
     @Transactional(readOnly = true)
     public DashboardStatsDTO getStats() {
         return DashboardStatsDTO.builder()
@@ -42,6 +45,7 @@ public class DashboardService {
                 .build();
     }
 
+    @Cacheable(value = "admin-users")
     @Transactional(readOnly = true)
     public List<AuthResponse.UserInfo> getAllUsers() {
         return userRepository.findAll().stream()
@@ -50,6 +54,7 @@ public class DashboardService {
                 .toList();
     }
 
+    @CacheEvict(value = {"admin-users", "dashboard-stats"}, allEntries = true)
     @Transactional
     public AuthResponse.UserInfo createUser(CreateUserRequest req) {
         if (userRepository.existsByEmailIgnoreCase(req.getEmail().trim())) {
@@ -106,6 +111,7 @@ public class DashboardService {
         return toUserInfo(saved);
     }
 
+    @CacheEvict(value = {"admin-users", "dashboard-stats", "userDetails"}, allEntries = true)
     @Transactional
     public void deleteUser(Long userId, String currentAdminEmail) {
         User user = userRepository.findById(userId)
@@ -119,6 +125,7 @@ public class DashboardService {
         log.info("Admin {} deleted user ID {}", currentAdminEmail, userId);
     }
 
+    @CacheEvict(value = {"admin-users", "userDetails"}, allEntries = true)
     @Transactional
     public AuthResponse.UserInfo updateUser(Long userId, com.research.gbjournal.dto.admin.UpdateUserRequest req) {
         User user = userRepository.findById(userId)
@@ -154,6 +161,7 @@ public class DashboardService {
         return toUserInfo(user);
     }
 
+    @CacheEvict(value = {"admin-users", "userDetails"}, allEntries = true)
     @Transactional
     public AuthResponse.UserInfo updateUserRole(Long userId, String roleStr) {
         User user = userRepository.findById(userId)
@@ -164,6 +172,7 @@ public class DashboardService {
         return toUserInfo(user);
     }
 
+    @CacheEvict(value = {"admin-users", "userDetails"}, allEntries = true)
     @Transactional
     public AuthResponse.UserInfo updateUserStatus(Long userId, boolean enabled) {
         User user = userRepository.findById(userId)

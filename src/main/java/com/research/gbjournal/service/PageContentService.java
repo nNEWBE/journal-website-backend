@@ -8,6 +8,8 @@ import com.research.gbjournal.repository.PageContentRepository;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,9 +40,9 @@ public class PageContentService {
     }
 
     /** Public lookup: get published sections for a page */
-    @Transactional
+    @Transactional(readOnly = true)
+    @Cacheable(value = "pageContent", key = "#pageKey")
     public List<PageContentDTO> getPublishedPageContent(String pageKey) {
-        seedPageDefaults(pageKey.toLowerCase());
         List<PageContent> list = pageContentRepository.findByPageKeyAndPublishedTrueOrderByDisplayOrderAsc(pageKey.toLowerCase());
         if (list.isEmpty()) {
             // If nothing in database, return seeded defaults on the fly
@@ -50,15 +52,16 @@ public class PageContentService {
     }
 
     /** Admin lookup: get all sections for a page (including drafts) */
-    @Transactional
+    @Transactional(readOnly = true)
+    @Cacheable(value = "pageContentAdmin", key = "#pageKey != null ? #pageKey.toLowerCase() : ''")
     public List<PageContentDTO> getAdminPageContent(String pageKey) {
-        seedPageDefaults(pageKey.toLowerCase());
         List<PageContent> list = pageContentRepository.findByPageKeyOrderByDisplayOrderAsc(pageKey.toLowerCase());
         return list.stream().map(this::toDTO).toList();
     }
 
     /** Admin lookup: get all content grouped across all pages */
     @Transactional(readOnly = true)
+    @Cacheable(value = "allPageContent")
     public Map<String, List<PageContentDTO>> getAllPagesContent() {
         List<PageContent> all = pageContentRepository.findAllByOrderByPageKeyAscDisplayOrderAsc();
         Map<String, List<PageContentDTO>> result = new LinkedHashMap<>();
@@ -70,6 +73,7 @@ public class PageContentService {
 
     /** Admin update section */
     @Transactional
+    @CacheEvict(value = {"pageContent", "pageContentAdmin", "allPageContent"}, allEntries = true)
     public PageContentDTO updateSection(String pageKey, String sectionKey, PageContentDTO dto, String adminEmail) {
         PageContent section = pageContentRepository.findByPageKeyAndSectionKey(pageKey.toLowerCase(), sectionKey)
                 .orElseGet(() -> PageContent.builder()
@@ -93,6 +97,7 @@ public class PageContentService {
 
     /** Admin create a new section */
     @Transactional
+    @CacheEvict(value = {"pageContent", "pageContentAdmin", "allPageContent"}, allEntries = true)
     public PageContentDTO createSection(PageContentDTO dto, String adminEmail) {
         String pageKey = dto.getPageKey().toLowerCase().trim();
         String sectionKey = dto.getSectionKey().toLowerCase().trim().replaceAll("[^a-z0-9-_]", "-");
@@ -120,6 +125,7 @@ public class PageContentService {
 
     /** Admin delete section */
     @Transactional
+    @CacheEvict(value = {"pageContent", "pageContentAdmin", "allPageContent"}, allEntries = true)
     public void deleteSection(Long id, String adminEmail) {
         PageContent pc = pageContentRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("PageContent", "id", id));
@@ -129,6 +135,7 @@ public class PageContentService {
 
     /** Reset to default academic content */
     @Transactional
+    @CacheEvict(value = {"pageContent", "pageContentAdmin", "allPageContent"}, allEntries = true)
     public void resetDefaults(String pageKey, String adminEmail) {
         if (pageKey != null && !pageKey.isBlank() && !pageKey.equalsIgnoreCase("all")) {
             pageContentRepository.deleteByPageKey(pageKey.toLowerCase());
