@@ -59,6 +59,11 @@ public class NotificationService {
     }
 
     @Transactional
+    public void markAsUnread(Long id) {
+        notificationRepository.markAsUnread(id);
+    }
+
+    @Transactional
     public void markAllAsRead() {
         notificationRepository.markAllAsRead();
     }

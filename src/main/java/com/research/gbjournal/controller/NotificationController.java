@@ -38,6 +38,12 @@ public class NotificationController {
         return ResponseEntity.ok(Map.of("message", "Notification marked as read."));
     }
 
+    @PatchMapping("/{id}/unread")
+    public ResponseEntity<Map<String, String>> markAsUnread(@PathVariable Long id) {
+        notificationService.markAsUnread(id);
+        return ResponseEntity.ok(Map.of("message", "Notification marked as unread."));
+    }
+
     @PostMapping("/mark-all-read")
     public ResponseEntity<Map<String, String>> markAllAsRead() {
         notificationService.markAllAsRead();

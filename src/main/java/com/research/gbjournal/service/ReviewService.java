@@ -292,6 +292,9 @@ public class ReviewService {
                 "/dashboard/pipeline"
         );
 
+        // Dispatch email notification to unassigned referee
+        submissionMailService.sendReviewerUnassignedNotification(submission, reviewer);
+
         log.info("Reviewer {} unassigned from submission {}", reviewer.getEmail(), submission.getSubmissionId());
     }
 

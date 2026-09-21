@@ -171,6 +171,30 @@ public class SubmissionMailService {
         log.debug("Reviewer invitation queued for {} ({})", reviewerEmail, submission.getSubmissionId());
     }
 
+    /**
+     * Sent when an editor unassigns a referee from a manuscript.
+     */
+    public void sendReviewerUnassignedNotification(Submission submission, User reviewer) {
+        String reviewerEmail = reviewer.getEmail();
+        String reviewerName  = reviewer.getFullName();
+
+        Map<String, Object> vars = new HashMap<>();
+        vars.put("reviewerName",   reviewerName);
+        vars.put("submissionId",   submission.getSubmissionId());
+        vars.put("title",          submission.getTitle());
+        vars.put("articleType",    submission.getType() != null ? submission.getType() : "Research Article");
+        vars.put("unassignedDate", DATE_FMT.format(Instant.now()));
+        vars.put("journalUrl",     mailProperties.getJournalUrl());
+
+        emailService.sendHtml(
+                reviewerEmail,
+                "GBJ — Review Assignment Update: " + submission.getSubmissionId(),
+                "email/reviewer-unassigned",
+                vars);
+
+        log.info("Reviewer unassigned notification queued for {} ({})", reviewerEmail, submission.getSubmissionId());
+    }
+
     // =========================================================
     // 4. WITHDRAWAL CONFIRMATION — Author → Paper withdrawn
     // =========================================================
