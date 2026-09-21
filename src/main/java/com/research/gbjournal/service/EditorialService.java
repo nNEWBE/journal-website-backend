@@ -158,6 +158,7 @@ public class EditorialService {
 
     // ===== Publish Submission as Article =====
 
+    @CacheEvict(value = {"dashboard-stats", "articles"}, allEntries = true)
     @Transactional
     public SubmissionResponseDTO publishSubmission(Long submissionId, Long issueId, String doi, String pages) {
         Submission submission = getSubmission(submissionId);
@@ -188,6 +189,13 @@ public class EditorialService {
                 .openAccess(true)
                 .pdfAvailable(true)
                 .build();
+
+        if (submission.getFiles() != null && !submission.getFiles().isEmpty()) {
+            submission.getFiles().stream()
+                    .filter(f -> f.getStoredFilename() != null && !f.getStoredFilename().isBlank())
+                    .findFirst()
+                    .ifPresent(f -> article.setPdfUrl("/api/v1/files/" + f.getStoredFilename()));
+        }
 
         // Authors
         List<com.research.gbjournal.entity.ArticleAuthor> authors = new java.util.ArrayList<>();
