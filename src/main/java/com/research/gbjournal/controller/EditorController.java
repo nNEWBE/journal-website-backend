@@ -69,6 +69,17 @@ public class EditorController {
         return ResponseEntity.ok(Map.of("message", "Reviewer invited successfully."));
     }
 
+    /** POST /api/v1/editor/submissions/{id}/remove-reviewer */
+    @PostMapping("/submissions/{id}/remove-reviewer")
+    public ResponseEntity<Map<String, String>> removeReviewer(
+            @PathVariable Long id,
+            @RequestParam(required = false) Long reviewerId,
+            @RequestParam(required = false) Long assignmentId,
+            @RequestParam(required = false) String reviewerName) {
+        reviewService.removeReviewer(id, reviewerId, assignmentId, reviewerName);
+        return ResponseEntity.ok(Map.of("message", "Reviewer removed successfully."));
+    }
+
     /** POST /api/v1/editor/submissions/{id}/decision */
     @PostMapping("/submissions/{id}/decision")
     public ResponseEntity<SubmissionResponseDTO> makeDecision(

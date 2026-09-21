@@ -105,6 +105,19 @@ public class ReviewService {
             );
         }
 
+        // Async email alert to Super Admins & Admins (and assigned Editor if present)
+        try {
+            List<User> recipients = new ArrayList<>(
+                    userRepository.findByRoleIn(List.of(User.Role.ADMIN, User.Role.SUPER_ADMIN))
+            );
+            if (submission.getAssignedEditor() != null && !recipients.contains(submission.getAssignedEditor())) {
+                recipients.add(submission.getAssignedEditor());
+            }
+            submissionMailService.sendAdminReviewerResponseNotification(submission, assignment, reviewer, accept, recipients);
+        } catch (Exception ex) {
+            log.warn("Could not dispatch admin reviewer response notification emails: {}", ex.getMessage());
+        }
+
         log.info("Reviewer {} {} assignment {}", reviewerEmail, accept ? "accepted" : "declined", assignmentId);
     }
 
@@ -208,6 +221,78 @@ public class ReviewService {
         }
 
         log.info("Reviewer {} invited for submission {}", reviewer.getEmail(), submission.getSubmissionId());
+    }
+
+    // ===== Remove / Unassign Reviewer =====
+
+    @Transactional
+    public void removeReviewer(Long submissionId, Long reviewerId, Long assignmentId, String reviewerName) {
+        Submission submission = submissionRepository.findById(submissionId)
+                .orElseThrow(() -> new ResourceNotFoundException("Submission", "id", submissionId));
+
+        List<ReviewAssignment> assignments = reviewAssignmentRepository.findBySubmissionOrderByInvitedAtDesc(submission);
+        ReviewAssignment targetAssignment = null;
+
+        if (assignmentId != null) {
+            targetAssignment = assignments.stream()
+                    .filter(ra -> ra.getId().equals(assignmentId))
+                    .findFirst().orElse(null);
+        }
+
+        if (targetAssignment == null && reviewerId != null) {
+            targetAssignment = assignments.stream()
+                    .filter(ra -> ra.getReviewer().getId().equals(reviewerId) &&
+                            (ra.getStatus() == ReviewAssignment.ReviewStatus.INVITED ||
+                             ra.getStatus() == ReviewAssignment.ReviewStatus.ACCEPTED))
+                    .findFirst().orElse(null);
+        }
+
+        if (targetAssignment == null && reviewerName != null && !reviewerName.isBlank()) {
+            String targetClean = reviewerName.trim().toLowerCase();
+            targetAssignment = assignments.stream()
+                    .filter(ra -> (ra.getReviewer().getFullName().trim().equalsIgnoreCase(targetClean) ||
+                                   ra.getReviewer().getEmail().trim().equalsIgnoreCase(targetClean)) &&
+                            (ra.getStatus() == ReviewAssignment.ReviewStatus.INVITED ||
+                             ra.getStatus() == ReviewAssignment.ReviewStatus.ACCEPTED))
+                    .findFirst().orElse(null);
+        }
+
+        if (targetAssignment == null) {
+            throw new ResourceNotFoundException("Active review assignment not found for the specified referee.");
+        }
+
+        User reviewer = targetAssignment.getReviewer();
+        final Long removedAssignmentId = targetAssignment.getId();
+
+        // Delete the assignment
+        reviewAssignmentRepository.delete(targetAssignment);
+
+        // Check if other active reviewers remain on the submission
+        boolean hasRemainingActiveReviewers = assignments.stream()
+                .anyMatch(ra -> !ra.getId().equals(removedAssignmentId) &&
+                               (ra.getStatus() == ReviewAssignment.ReviewStatus.INVITED ||
+                                ra.getStatus() == ReviewAssignment.ReviewStatus.ACCEPTED ||
+                                ra.getStatus() == ReviewAssignment.ReviewStatus.COMPLETED));
+
+        if (!hasRemainingActiveReviewers) {
+            if (submission.getStatus() == Submission.SubmissionStatus.UNDER_REVIEW ||
+                submission.getStatus() == Submission.SubmissionStatus.REVIEWER_INVITATION) {
+                submission.setStatus(submission.getAssignedEditor() != null
+                        ? Submission.SubmissionStatus.WITH_EDITOR
+                        : Submission.SubmissionStatus.SUBMITTED);
+                submissionRepository.save(submission);
+            }
+        }
+
+        notificationService.createNotification(
+                "Reviewer Unassigned",
+                reviewer.getFullName() + " was unassigned from manuscript " + submission.getSubmissionId() + " (\"" + submission.getTitle() + "\").",
+                "review",
+                "editor,admin,super_admin",
+                "/dashboard/pipeline"
+        );
+
+        log.info("Reviewer {} unassigned from submission {}", reviewer.getEmail(), submission.getSubmissionId());
     }
 
     // ===== Token-based Invitation Response (from Email) =====

@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title th:text="'GBJ Review Alert — ' + ${statusLabel} + ' — ' + ${submissionId}">GBJ Review Alert</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #f8fafc;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      color: #1e293b;
+      -webkit-font-smoothing: antialiased;
+      line-height: 1.6;
+    }
+    .wrapper {
+      max-width: 600px;
+      margin: 32px auto;
+      background: #ffffff;
+      border-radius: 16px;
+      box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.08), 0 2px 6px -1px rgba(15, 23, 42, 0.04);
+      overflow: hidden;
+      border: 1px solid #e2e8f0;
+    }
+    .header {
+      padding: 36px 32px 28px;
+      text-align: center;
+    }
+    .header-accept {
+      background: linear-gradient(145deg, #091326 0%, #064e3b 55%, #047857 100%);
+    }
+    .header-reject {
+      background: linear-gradient(145deg, #091326 0%, #7f1d1d 55%, #991b1b 100%);
+    }
+    .header-badge {
+      display: inline-block;
+      background: rgba(255, 255, 255, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      padding: 5px 14px;
+      border-radius: 100px;
+      color: #ffffff;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+    .header h1 {
+      margin: 0;
+      color: #ffffff;
+      font-family: Georgia, 'Times New Roman', serif;
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+      line-height: 1.3;
+    }
+    .header p {
+      margin: 6px 0 0;
+      color: #cbd5e1;
+      font-size: 13px;
+    }
+    .content {
+      padding: 32px 32px 28px;
+    }
+    .greeting {
+      font-family: Georgia, 'Times New Roman', serif;
+      font-size: 18px;
+      font-weight: 700;
+      color: #0f172a;
+      margin: 0 0 10px;
+    }
+    .lead-text {
+      font-size: 14.5px;
+      line-height: 1.65;
+      color: #475569;
+      margin: 0 0 20px;
+    }
+    .meta-box {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 20px 22px;
+      margin: 0 0 24px;
+    }
+    .meta-box-header {
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: #64748b;
+      margin-bottom: 14px;
+      border-bottom: 1px solid #e2e8f0;
+      padding-bottom: 8px;
+    }
+    .meta-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      padding: 7px 0;
+      font-size: 13px;
+      border-bottom: 1px solid #f1f5f9;
+    }
+    .meta-row:last-child {
+      border-bottom: none;
+    }
+    .meta-label {
+      font-weight: 600;
+      color: #64748b;
+    }
+    .meta-value {
+      font-weight: 600;
+      color: #0f172a;
+      text-align: right;
+      max-width: 65%;
+    }
+    .id-pill {
+      font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+      font-size: 12px;
+      background: #e2e8f0;
+      color: #0f172a;
+      padding: 3px 8px;
+      border-radius: 6px;
+      font-weight: 700;
+    }
+    .badge-pill {
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      padding: 3px 10px;
+      border-radius: 9999px;
+      display: inline-block;
+    }
+    .badge-pill-accept {
+      background: #d1fae5;
+      color: #065f46;
+      border: 1px solid #6ee7b7;
+    }
+    .badge-pill-reject {
+      background: #ffe4e6;
+      color: #9f1239;
+      border: 1px solid #fda4af;
+    }
+    .btn-container {
+      text-align: center;
+      margin: 28px 0 20px;
+    }
+    .btn-primary {
+      display: inline-block;
+      background: #0f274a;
+      color: #ffffff !important;
+      text-decoration: none;
+      padding: 13px 30px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0.2px;
+      box-shadow: 0 2px 8px -1px rgba(15, 39, 74, 0.4);
+    }
+    .btn-primary:hover {
+      background: #1e3a8a;
+    }
+    .footer {
+      background: #f8fafc;
+      border-top: 1px solid #e2e8f0;
+      padding: 24px 32px;
+      text-align: center;
+      font-size: 12px;
+      color: #94a3b8;
+      line-height: 1.6;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+    <div th:class="'header ' + ${headerClass}">
+      <div class="header-badge">Peer Review Update</div>
+      <h1 th:if="${accepted}">Review Invitation Accepted</h1>
+      <h1 th:unless="${accepted}">Review Invitation Declined</h1>
+      <p th:if="${accepted}">A referee has accepted the peer review assignment</p>
+      <p th:unless="${accepted}">A referee has declined the peer review assignment</p>
+    </div>
+
+    <div class="content">
+      <p class="greeting">Hello <span th:text="${adminName}">Editorial Member</span>,</p>
+      
+      <p class="lead-text" th:if="${accepted}">
+        Referee <strong th:text="${reviewerName}">Dr. Reviewer</strong> has <strong>accepted</strong> the invitation to evaluate manuscript <strong th:text="${submissionId}">GBJ-2026-0001</strong>. The manuscript has advanced to <strong>Under Review</strong> status.
+      </p>
+      <p class="lead-text" th:unless="${accepted}">
+        Referee <strong th:text="${reviewerName}">Dr. Reviewer</strong> has <strong>declined</strong> the invitation to evaluate manuscript <strong th:text="${submissionId}">GBJ-2026-0001</strong>. If there are no other active reviewers assigned, please invite an alternate referee from the pipeline.
+      </p>
+
+      <div class="meta-box">
+        <div class="meta-box-header">Review Assignment Details</div>
+        <div class="meta-row">
+          <span class="meta-label">Submission ID:</span>
+          <span class="meta-value id-pill" th:text="${submissionId}">SUB-2026-0001</span>
+        </div>
+        <div class="meta-row">
+          <span class="meta-label">Manuscript Title:</span>
+          <span class="meta-value" th:text="${title}">Manuscript Title</span>
+        </div>
+        <div class="meta-row">
+          <span class="meta-label">Article Type:</span>
+          <span class="meta-value" th:text="${articleType}">Research Article</span>
+        </div>
+        <div class="meta-row">
+          <span class="meta-label">Invited Reviewer:</span>
+          <span class="meta-value" th:text="${reviewerName} + ' (' + ${reviewerEmail} + ')'">Referee Name</span>
+        </div>
+        <div class="meta-row">
+          <span class="meta-label">Response:</span>
+          <span class="meta-value">
+            <span th:if="${accepted}" class="badge-pill badge-pill-accept">Accepted</span>
+            <span th:unless="${accepted}" class="badge-pill badge-pill-reject">Declined</span>
+          </span>
+        </div>
+        <div class="meta-row" th:if="${accepted}">
+          <span class="meta-label">Target Review Deadline:</span>
+          <span class="meta-value" th:text="${dueDate}">MMM dd, yyyy</span>
+        </div>
+        <div class="meta-row">
+          <span class="meta-label">Response Date:</span>
+          <span class="meta-value" th:text="${respondedAt}">Date</span>
+        </div>
+      </div>
+
+      <div class="btn-container">
+        <a th:href="${pipelineUrl}" class="btn-primary">View in Editorial Pipeline</a>
+      </div>
+
+      <p style="font-size: 12.5px; color: #64748b; margin-top: 24px; text-align: center;" th:if="${accepted}">
+        You can oversee reviewer progress, evaluate submitted reports, and manage revisions from the editorial workspace.
+      </p>
+      <p style="font-size: 12.5px; color: #64748b; margin-top: 24px; text-align: center;" th:unless="${accepted}">
+        To ensure timely evaluation, you can invite new domain-matched referees directly from the manuscript details panel.
+      </p>
+    </div>
+
+    <div class="footer">
+      <p>This automated editorial notification was sent by the <strong>Gono Bishwabidyalay Journal Editorial System</strong>.<br>
+      Faculty of Health Sciences &amp; Academic Affairs &middot; Mirzanagar, Savar, Dhaka-1344</p>
+    </div>
+  </div>
+</body>
+</html>

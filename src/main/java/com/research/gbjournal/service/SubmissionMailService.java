@@ -208,6 +208,64 @@ public class SubmissionMailService {
     }
 
     // =========================================================
+    // 5. REVIEWER RESPONSE ALERT — Super Admins & Admins → Accepted or Declined
+    // =========================================================
+
+    /**
+     * Sent immediately to Super Admins, Admins, and assigned Editor when a peer reviewer
+     * accepts or declines a review assignment invitation.
+     */
+    public void sendAdminReviewerResponseNotification(
+            Submission submission,
+            ReviewAssignment assignment,
+            User reviewer,
+            boolean accepted,
+            List<User> recipients) {
+        if (recipients == null || recipients.isEmpty()) return;
+
+        String reviewerName = (reviewer.getFullName() != null && !reviewer.getFullName().isBlank())
+                ? reviewer.getFullName()
+                : reviewer.getEmail();
+        String reviewerEmail = reviewer.getEmail();
+
+        String dueStr = assignment.getDueDate() != null
+                ? DATE_FMT.format(assignment.getDueDate())
+                : "Standard deadline (14 days)";
+
+        String subject = accepted
+                ? "GBJ Review Alert: Reviewer Accepted Invitation — " + submission.getSubmissionId()
+                : "GBJ Review Alert: Reviewer Declined Invitation — " + submission.getSubmissionId();
+
+        for (User recipient : recipients) {
+            if (recipient.getEmail() == null || recipient.getEmail().isBlank()) continue;
+
+            Map<String, Object> vars = new HashMap<>();
+            vars.put("adminName", recipient.getFullName() != null && !recipient.getFullName().isBlank()
+                    ? recipient.getFullName() : "Editorial Member");
+            vars.put("submissionId", submission.getSubmissionId());
+            vars.put("title", submission.getTitle());
+            vars.put("articleType", submission.getType() != null ? submission.getType() : "Research Article");
+            vars.put("reviewerName", reviewerName);
+            vars.put("reviewerEmail", reviewerEmail);
+            vars.put("accepted", accepted);
+            vars.put("statusLabel", accepted ? "Accepted" : "Declined");
+            vars.put("headerClass", accepted ? "header-accept" : "header-reject");
+            vars.put("dueDate", dueStr);
+            vars.put("respondedAt", DATE_FMT.format(Instant.now()));
+            vars.put("pipelineUrl", mailProperties.getJournalUrl() + "/dashboard/pipeline");
+
+            emailService.sendHtml(
+                    recipient.getEmail(),
+                    subject,
+                    "email/admin-reviewer-response",
+                    vars);
+
+            log.info("Admin reviewer response email ({}) queued for recipient {} ({})",
+                    accepted ? "ACCEPTED" : "DECLINED", recipient.getEmail(), submission.getSubmissionId());
+        }
+    }
+
+    // =========================================================
     // HELPERS
     // =========================================================
 
