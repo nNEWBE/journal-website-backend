@@ -3,6 +3,7 @@ package com.research.gbjournal.service;
 import com.research.gbjournal.config.MailProperties;
 import com.research.gbjournal.entity.ReviewAssignment;
 import com.research.gbjournal.entity.Submission;
+import com.research.gbjournal.entity.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -11,6 +12,7 @@ import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -58,6 +60,41 @@ public class SubmissionMailService {
                 vars);
 
         log.debug("Submission confirmation queued for {} ({})", authorEmail, submission.getSubmissionId());
+    }
+
+    /**
+     * Sent immediately to Super Admins and Admins whenever any author submits a new manuscript.
+     */
+    public void sendAdminNewSubmissionNotification(Submission submission, List<User> admins) {
+        if (admins == null || admins.isEmpty()) return;
+
+        String authorEmail = submission.getSubmittingAuthor().getEmail();
+        String authorName  = submission.getSubmittingAuthor().getFullName();
+        int authorCount    = submission.getAuthors() != null ? submission.getAuthors().size() : 1;
+
+        for (User admin : admins) {
+            if (admin.getEmail() == null || admin.getEmail().isBlank()) continue;
+
+            Map<String, Object> vars = new HashMap<>();
+            vars.put("adminName",    admin.getFullName() != null ? admin.getFullName() : "Administrator");
+            vars.put("submissionId", submission.getSubmissionId());
+            vars.put("title",        submission.getTitle());
+            vars.put("articleType",  submission.getType() != null ? submission.getType() : "Research Article");
+            vars.put("authorName",   authorName);
+            vars.put("authorEmail",  authorEmail);
+            vars.put("authorCount",  authorCount);
+            vars.put("submittedAt",  DATE_FMT.format(
+                    submission.getSubmittedAt() != null ? submission.getSubmittedAt() : Instant.now()));
+            vars.put("pipelineUrl",  mailProperties.getJournalUrl() + "/dashboard/pipeline");
+
+            emailService.sendHtml(
+                    admin.getEmail(),
+                    "GBJ Editorial Alert: New Manuscript Submitted — " + submission.getSubmissionId(),
+                    "email/admin-new-submission",
+                    vars);
+
+            log.info("Admin new submission email queued for admin {} ({})", admin.getEmail(), submission.getSubmissionId());
+        }
     }
 
     // =========================================================

@@ -174,8 +174,18 @@ public class SubmissionService {
         submission.setSubmittedAt(Instant.now());
         submissionRepository.save(submission);
 
-        // Async email — does not block the HTTP response
+        // Async email to Submitting Author
         submissionMailService.sendSubmissionConfirmation(submission);
+
+        // Async email to Super Admins & Admins
+        try {
+            List<User> admins = userRepository.findByRoleIn(List.of(User.Role.ADMIN, User.Role.SUPER_ADMIN));
+            if (admins != null && !admins.isEmpty()) {
+                submissionMailService.sendAdminNewSubmissionNotification(submission, admins);
+            }
+        } catch (Exception ex) {
+            log.warn("Could not dispatch admin submission notification emails: {}", ex.getMessage());
+        }
 
         log.info("Submission {} submitted by {}", submission.getSubmissionId(), authorEmail);
         return toResponseDTO(submission);
