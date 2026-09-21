@@ -17,6 +17,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -150,6 +151,7 @@ public class AuthService {
     // ===== Update Profile =====
 
     @Transactional
+    @CacheEvict(value = "userDetails", allEntries = true)
     public AuthResponse.UserInfo updateProfile(String email, UpdateProfileRequest request) {
         User user = userRepository.findByEmailIgnoreCase(email)
                 .orElseThrow(() -> new ResourceNotFoundException("User", "email", email));
@@ -166,6 +168,8 @@ public class AuthService {
             user.setOrcid(request.getOrcid());
         if (StringUtils.hasText(request.getResearchInterests()))
             user.setResearchInterests(request.getResearchInterests());
+        if (request.getSecondaryEmail() != null)
+            user.setSecondaryEmail(request.getSecondaryEmail().trim());
         if (request.getAvatarUrl() != null) {
             String oldAvatarUrl = user.getAvatarUrl();
             if (StringUtils.hasText(oldAvatarUrl) && !oldAvatarUrl.equals(request.getAvatarUrl())) {
@@ -181,6 +185,7 @@ public class AuthService {
     // ===== Change Password =====
 
     @Transactional
+    @CacheEvict(value = "userDetails", allEntries = true)
     public void changePassword(String email, com.research.gbjournal.dto.auth.ChangePasswordRequest request) {
         User user = userRepository.findByEmailIgnoreCase(email)
                 .orElseThrow(() -> new ResourceNotFoundException("User", "email", email));
@@ -191,6 +196,69 @@ public class AuthService {
 
         user.setPassword(passwordEncoder.encode(request.getNewPassword()));
         userRepository.save(user);
+    }
+
+    // ===== Change Primary Email =====
+
+    @Transactional
+    @CacheEvict(value = "userDetails", allEntries = true)
+    public AuthResponse changeEmail(String currentEmail, ChangeEmailRequest request) {
+        User user = userRepository.findByEmailIgnoreCase(currentEmail)
+                .orElseThrow(() -> new ResourceNotFoundException("User", "email", currentEmail));
+
+        // 1. Verify current password
+        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+            throw new BadRequestException("Current password is incorrect.");
+        }
+
+        String newEmail = request.getNewEmail().trim().toLowerCase();
+
+        // 2. Validate email is different from current
+        if (newEmail.equalsIgnoreCase(user.getEmail())) {
+            throw new BadRequestException("The new email address cannot be the same as your current email.");
+        }
+
+        // 3. Ensure new email is not already taken by another user
+        if (userRepository.existsByEmailIgnoreCase(newEmail)) {
+            throw new BadRequestException("An account with this email address already exists.");
+        }
+
+        String oldEmail = user.getEmail();
+        user.setEmail(newEmail);
+        userRepository.save(user);
+
+        // 4. Revoke old refresh tokens and generate new tokens for the new email
+        refreshTokenService.revokeAllTokensForUser(user);
+
+        String newAccessToken = jwtProvider.generateAccessToken(newEmail);
+        RefreshToken newRefreshToken = refreshTokenService.createRefreshToken(user);
+
+        log.info("User primary email changed from '{}' to '{}'", oldEmail, newEmail);
+
+        // 5. Send notification email to both old and new addresses
+        try {
+            java.util.Map<String, Object> emailVars = new java.util.HashMap<>();
+            emailVars.put("fullName", user.getFullName() != null ? user.getFullName() : "Scholar");
+            emailVars.put("oldEmail", oldEmail);
+            emailVars.put("newEmail", newEmail);
+            emailVars.put("changedAt", java.time.LocalDate.now().toString());
+
+            emailService.sendHtml(
+                    oldEmail,
+                    "Security Notice: Primary Email Address Changed — Gono Bishwabidyalay Journal",
+                    "email/email-changed-notice",
+                    emailVars);
+
+            emailService.sendHtml(
+                    newEmail,
+                    "Primary Email Address Updated — Gono Bishwabidyalay Journal",
+                    "email/email-changed-notice",
+                    emailVars);
+        } catch (Exception ex) {
+            log.warn("Failed to dispatch email change notification: {}", ex.getMessage());
+        }
+
+        return buildAuthResponse(newAccessToken, newRefreshToken.getToken(), user);
     }
 
     // ===== Upload Avatar to Cloudinary =====
@@ -234,6 +302,7 @@ public class AuthService {
                 .id(user.getId())
                 .fullName(user.getFullName())
                 .email(user.getEmail())
+                .secondaryEmail(user.getSecondaryEmail())
                 .role(user.getRole().name().toLowerCase().replace('_', '-'))
                 .title(user.getTitle())
                 .department(user.getDepartment())
@@ -327,6 +396,7 @@ public class AuthService {
     // ===== Reset Password =====
 
     @Transactional
+    @CacheEvict(value = "userDetails", allEntries = true)
     public void resetPassword(ResetPasswordRequest request) {
         PasswordResetToken token = passwordResetTokenRepository.findByToken(request.getToken())
                 .orElseThrow(() -> new BadRequestException("The password reset link is invalid or has expired. Please request a new one."));

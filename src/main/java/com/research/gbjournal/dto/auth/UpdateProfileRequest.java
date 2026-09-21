@@ -26,5 +26,9 @@ public class UpdateProfileRequest {
     @Size(max = 100)
     private String title;
 
+    @jakarta.validation.constraints.Email(message = "Please provide a valid secondary email address")
+    @Size(max = 200)
+    private String secondaryEmail;
+
     private String avatarUrl;
 }

@@ -33,6 +33,11 @@ public class User {
     @Column(nullable = false, unique = true)
     private String email;
 
+    @Email
+    @Size(max = 200)
+    @Column(name = "secondary_email")
+    private String secondaryEmail;
+
     @NotBlank
     @Size(max = 255)
     private String password;

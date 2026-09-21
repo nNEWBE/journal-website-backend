@@ -78,6 +78,14 @@ public class AuthController {
         return ResponseEntity.ok(Map.of("message", "Password changed successfully."));
     }
 
+    /** POST /api/v1/auth/change-email */
+    @PostMapping("/change-email")
+    public ResponseEntity<AuthResponse> changeEmail(
+            @AuthenticationPrincipal UserDetails userDetails,
+            @Valid @RequestBody ChangeEmailRequest request) {
+        return ResponseEntity.ok(authService.changeEmail(userDetails.getUsername(), request));
+    }
+
     /** POST /api/v1/auth/forgot-password */
     @PostMapping("/forgot-password")
     public ResponseEntity<Map<String, String>> forgotPassword(

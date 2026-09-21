@@ -19,6 +19,7 @@ public class AuthResponse {
         private Long id;
         private String fullName;
         private String email;
+        private String secondaryEmail;
         private String role;
         private String title;
         private String department;
