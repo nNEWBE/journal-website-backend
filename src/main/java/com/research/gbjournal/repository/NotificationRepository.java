@@ -15,11 +15,11 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
 
     List<Notification> findTop50ByOrderByCreatedAtDesc();
 
-    @Modifying
+    @Modifying(clearAutomatically = true)
     @Query("UPDATE Notification n SET n.isRead = true WHERE n.id = :id")
     void markAsRead(Long id);
 
-    @Modifying
+    @Modifying(clearAutomatically = true)
     @Query("UPDATE Notification n SET n.isRead = true")
     void markAllAsRead();
 }

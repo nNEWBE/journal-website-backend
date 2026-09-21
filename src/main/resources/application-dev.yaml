@@ -9,12 +9,13 @@ spring:
     username: ${DATABASE_USERNAME:}
     password: ${DATABASE_PASSWORD:}
     hikari:
-      minimum-idle: 5
-      maximum-pool-size: 15
-      idle-timeout: 300000
-      max-lifetime: 1800000
-      connection-timeout: 20000
+      minimum-idle: 1
+      maximum-pool-size: 4
+      idle-timeout: 60000
+      max-lifetime: 300000
+      connection-timeout: 10000
       keepalive-time: 30000
+      validation-timeout: 3000
 
   jpa:
     open-in-view: false
