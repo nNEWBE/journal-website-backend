@@ -148,7 +148,8 @@ public class SubmissionMailService {
         String reviewerName  = assignment.getReviewer().getFullName();
         Submission submission = assignment.getSubmission();
 
-        String portalBase = mailProperties.getJournalUrl() + "/dashboard/reviewer/assignments/" + assignment.getId();
+        String token = assignment.getInvitationToken() != null ? assignment.getInvitationToken() : assignment.getId().toString();
+        String invitationBase = mailProperties.getJournalUrl() + "/review-invitation?token=" + token;
 
         Map<String, Object> vars = new HashMap<>();
         vars.put("reviewerName",  reviewerName);
@@ -156,9 +157,10 @@ public class SubmissionMailService {
         vars.put("title",         submission.getTitle());
         vars.put("articleType",   submission.getType());
         vars.put("dueDate",       assignment.getDueDate() != null
-                ? DATE_FMT.format(assignment.getDueDate()) : "To be confirmed");
-        vars.put("acceptUrl",  portalBase + "/accept");
-        vars.put("declineUrl", portalBase + "/decline");
+                ? DATE_FMT.format(assignment.getDueDate()) : "14 days from invitation");
+        vars.put("acceptUrl",  invitationBase + "&action=accept");
+        vars.put("declineUrl", invitationBase + "&action=decline");
+        vars.put("journalUrl", mailProperties.getJournalUrl());
 
         emailService.sendHtml(
                 reviewerEmail,

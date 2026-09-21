@@ -115,6 +115,7 @@ public class SubmissionResponseDTO {
             return List.of();
         }
         return reviews.stream()
+                .filter(r -> !"DECLINED".equalsIgnoreCase(r.getStatus()))
                 .map(r -> r.getReviewerName() != null ? r.getReviewerName() : "Reviewer")
                 .toList();
     }

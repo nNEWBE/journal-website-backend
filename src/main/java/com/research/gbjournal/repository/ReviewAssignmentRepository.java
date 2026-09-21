@@ -32,4 +32,6 @@ public interface ReviewAssignmentRepository extends JpaRepository<ReviewAssignme
     long countActiveReviewers();
 
     List<ReviewAssignment> findBySubmissionIdAndReviewer(Long submissionId, User reviewer);
+
+    java.util.Optional<ReviewAssignment> findByInvitationToken(String invitationToken);
 }

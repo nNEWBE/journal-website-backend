@@ -54,4 +54,18 @@ public class ReviewerController {
         reviewService.submitReview(userDetails.getUsername(), id, request);
         return ResponseEntity.ok(Map.of("message", "Review submitted successfully."));
     }
+
+    /** GET /api/v1/reviewer/invitations/{token} — Public invitation overview */
+    @GetMapping("/invitations/{token}")
+    public ResponseEntity<Map<String, Object>> getInvitation(@PathVariable String token) {
+        return ResponseEntity.ok(reviewService.getInvitationByToken(token));
+    }
+
+    /** POST /api/v1/reviewer/invitations/{token}/respond — Public token-based accept/decline */
+    @PostMapping("/invitations/{token}/respond")
+    public ResponseEntity<Map<String, Object>> respondToInvitation(
+            @PathVariable String token,
+            @RequestParam(required = false, defaultValue = "true") boolean accept) {
+        return ResponseEntity.ok(reviewService.respondToInvitationByToken(token, accept));
+    }
 }

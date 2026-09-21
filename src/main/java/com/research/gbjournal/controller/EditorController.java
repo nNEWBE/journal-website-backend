@@ -1,6 +1,7 @@
 package com.research.gbjournal.controller;
 
 import com.research.gbjournal.dto.editorial.EditorialDecisionRequest;
+import com.research.gbjournal.dto.review.ReviewerPerformanceDTO;
 import com.research.gbjournal.dto.submission.SubmissionResponseDTO;
 import com.research.gbjournal.service.EditorialService;
 import com.research.gbjournal.service.ReviewService;
@@ -42,6 +43,12 @@ public class EditorController {
     @GetMapping("/reviewers")
     public ResponseEntity<List<com.research.gbjournal.dto.auth.AuthResponse.UserInfo>> getReviewers() {
         return ResponseEntity.ok(editorialService.getAvailableReviewers());
+    }
+
+    /** GET /api/v1/editor/reviewers/{id}/performance — Accurate reviewer performance & workload stats */
+    @GetMapping("/reviewers/{id}/performance")
+    public ResponseEntity<ReviewerPerformanceDTO> getReviewerPerformance(@PathVariable Long id) {
+        return ResponseEntity.ok(reviewService.getReviewerPerformance(id));
     }
 
     /** POST /api/v1/editor/submissions/{id}/assign-editor */

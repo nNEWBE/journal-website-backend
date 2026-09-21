@@ -1,5 +1,6 @@
 package com.research.gbjournal.service;
 
+import com.research.gbjournal.dto.review.ReviewerPerformanceDTO;
 import com.research.gbjournal.dto.review.SubmitReviewRequest;
 import com.research.gbjournal.dto.submission.SubmissionResponseDTO;
 import com.research.gbjournal.entity.*;
@@ -13,8 +14,16 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Duration;
 import java.time.Instant;
+import java.time.YearMonth;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.UUID;
 
 @Slf4j
 @Service
@@ -26,6 +35,7 @@ public class ReviewService {
     private final UserRepository userRepository;
     private final SubmissionService submissionService;
     private final SubmissionMailService submissionMailService;
+    private final NotificationService notificationService;
 
     // ===== Reviewer: Get My Assignments =====
 
@@ -50,6 +60,51 @@ public class ReviewService {
 
         assignment.setStatus(accept ? ReviewAssignment.ReviewStatus.ACCEPTED : ReviewAssignment.ReviewStatus.DECLINED);
         reviewAssignmentRepository.save(assignment);
+
+        Submission submission = assignment.getSubmission();
+        User reviewer = assignment.getReviewer();
+
+        if (accept) {
+            if (submission.getStatus() == Submission.SubmissionStatus.REVIEWER_INVITATION ||
+                submission.getStatus() == Submission.SubmissionStatus.WITH_EDITOR) {
+                submission.setStatus(Submission.SubmissionStatus.UNDER_REVIEW);
+                submissionRepository.save(submission);
+            }
+            String dueStr = assignment.getDueDate() != null
+                    ? DateTimeFormatter.ofPattern("MMM dd, yyyy").withZone(ZoneId.systemDefault()).format(assignment.getDueDate())
+                    : "Standard deadline";
+            notificationService.createNotification(
+                    "Review Invitation Accepted",
+                    reviewer.getFullName() + " accepted the review invitation for manuscript " + submission.getSubmissionId() + " (\"" + submission.getTitle() + "\"). Target deadline: " + dueStr + ".",
+                    "review",
+                    "editor,admin,super_admin",
+                    "/dashboard/pipeline"
+            );
+        } else {
+            // Unassign: if no active reviewer remains, revert status to WITH_EDITOR or SUBMITTED
+            boolean hasOtherActiveReviewers = reviewAssignmentRepository.findBySubmissionOrderByInvitedAtDesc(submission)
+                    .stream()
+                    .anyMatch(ra -> !ra.getId().equals(assignment.getId()) &&
+                                   (ra.getStatus() == ReviewAssignment.ReviewStatus.INVITED ||
+                                    ra.getStatus() == ReviewAssignment.ReviewStatus.ACCEPTED ||
+                                    ra.getStatus() == ReviewAssignment.ReviewStatus.COMPLETED));
+
+            if (!hasOtherActiveReviewers) {
+                submission.setStatus(submission.getAssignedEditor() != null
+                        ? Submission.SubmissionStatus.WITH_EDITOR
+                        : Submission.SubmissionStatus.SUBMITTED);
+                submissionRepository.save(submission);
+            }
+
+            notificationService.createNotification(
+                    "Review Invitation Declined",
+                    reviewer.getFullName() + " declined the review invitation for manuscript " + submission.getSubmissionId() + " (\"" + submission.getTitle() + "\"). The manuscript is now unassigned.",
+                    "review",
+                    "editor,admin,super_admin",
+                    "/dashboard/pipeline"
+            );
+        }
+
         log.info("Reviewer {} {} assignment {}", reviewerEmail, accept ? "accepted" : "declined", assignmentId);
     }
 
@@ -131,11 +186,14 @@ public class ReviewService {
             throw new BadRequestException("This reviewer is already assigned to this manuscript.");
         }
 
+        String token = UUID.randomUUID().toString();
+
         ReviewAssignment assignment = ReviewAssignment.builder()
                 .submission(submission)
                 .reviewer(reviewer)
                 .status(ReviewAssignment.ReviewStatus.INVITED)
                 .dueDate(dueDate)
+                .invitationToken(token)
                 .build();
 
         reviewAssignmentRepository.save(assignment);
@@ -152,6 +210,55 @@ public class ReviewService {
         log.info("Reviewer {} invited for submission {}", reviewer.getEmail(), submission.getSubmissionId());
     }
 
+    // ===== Token-based Invitation Response (from Email) =====
+
+    @Transactional(readOnly = true)
+    public Map<String, Object> getInvitationByToken(String token) {
+        ReviewAssignment assignment = reviewAssignmentRepository.findByInvitationToken(token)
+                .orElseThrow(() -> new ResourceNotFoundException("Review assignment not found or token expired."));
+        Submission sub = assignment.getSubmission();
+        return Map.of(
+                "assignmentId", assignment.getId(),
+                "status", assignment.getStatus().name(),
+                "submissionId", sub.getSubmissionId(),
+                "title", sub.getTitle(),
+                "type", sub.getType() != null ? sub.getType() : "Research Article",
+                "topic", sub.getTopic() != null ? sub.getTopic() : "",
+                "abstractText", sub.getAbstractText() != null ? sub.getAbstractText() : "",
+                "reviewerName", assignment.getReviewer().getFullName(),
+                "reviewerEmail", assignment.getReviewer().getEmail(),
+                "dueDate", assignment.getDueDate() != null ? assignment.getDueDate().toString() : ""
+        );
+    }
+
+    @Transactional
+    public Map<String, Object> respondToInvitationByToken(String token, boolean accept) {
+        ReviewAssignment assignment = reviewAssignmentRepository.findByInvitationToken(token)
+                .orElseThrow(() -> new ResourceNotFoundException("Review assignment not found or token expired."));
+
+        if (assignment.getStatus() != ReviewAssignment.ReviewStatus.INVITED) {
+            return Map.of(
+                    "alreadyResponded", true,
+                    "status", assignment.getStatus().name(),
+                    "submissionId", assignment.getSubmission().getSubmissionId(),
+                    "reviewerName", assignment.getReviewer().getFullName(),
+                    "title", assignment.getSubmission().getTitle()
+            );
+        }
+
+        respondToInvitation(assignment.getReviewer().getEmail(), assignment.getId(), accept);
+
+        return Map.of(
+                "success", true,
+                "action", accept ? "accepted" : "declined",
+                "status", assignment.getStatus().name(),
+                "submissionId", assignment.getSubmission().getSubmissionId(),
+                "reviewerName", assignment.getReviewer().getFullName(),
+                "title", assignment.getSubmission().getTitle(),
+                "dueDate", assignment.getDueDate() != null ? assignment.getDueDate().toString() : ""
+        );
+    }
+
     // ===== Helpers =====
 
     private User getReviewer(String email) {
@@ -165,5 +272,157 @@ public class ReviewService {
                 .filter(ra -> ra.getReviewer().getId().equals(reviewer.getId()))
                 .or(() -> reviewAssignmentRepository.findBySubmissionIdAndReviewer(id, reviewer).stream().findFirst())
                 .orElseThrow(() -> new ResourceNotFoundException("Review assignment not found for reviewer " + reviewerEmail));
+    }
+
+    // ===== Reviewer Performance & Capacity Analytics =====
+
+    @Transactional(readOnly = true)
+    public ReviewerPerformanceDTO getReviewerPerformance(Long reviewerId) {
+        User reviewer = userRepository.findById(reviewerId)
+                .orElseThrow(() -> new ResourceNotFoundException("User", "id", reviewerId));
+
+        List<ReviewAssignment> allAssignments = reviewAssignmentRepository.findByReviewerOrderByInvitedAtDesc(reviewer);
+
+        int maxCapacity = 3;
+        int activeReviews = 0;
+        int completedReviews = 0;
+        int totalInvitations = allAssignments.size();
+        int onTimeCompletedCount = 0;
+        double totalTurnaroundDays = 0;
+        int scoredReviewsCount = 0;
+        double totalScore = 0;
+
+        List<ReviewerPerformanceDTO.TurnaroundItemDTO> turnaroundHistory = new ArrayList<>();
+
+        for (ReviewAssignment ra : allAssignments) {
+            if (ra.getStatus() == ReviewAssignment.ReviewStatus.INVITED ||
+                ra.getStatus() == ReviewAssignment.ReviewStatus.ACCEPTED) {
+                activeReviews++;
+            } else if (ra.getStatus() == ReviewAssignment.ReviewStatus.COMPLETED) {
+                completedReviews++;
+
+                // Calculate turnaround days
+                Instant startTime = ra.getInvitedAt();
+                Instant endTime = ra.getReviewSubmittedAt() != null ? ra.getReviewSubmittedAt() : Instant.now();
+                double days = 0.0;
+                if (startTime != null && ra.getReviewSubmittedAt() != null) {
+                    long diffHours = Duration.between(startTime, endTime).toHours();
+                    days = Math.max(0.5, Math.round((diffHours / 24.0) * 10.0) / 10.0);
+                }
+                totalTurnaroundDays += days;
+
+                // Check on-time compliance
+                boolean isOnTime = true;
+                int targetDays = 14;
+                if (ra.getDueDate() != null && startTime != null) {
+                    targetDays = Math.max(1, (int) Duration.between(startTime, ra.getDueDate()).toDays());
+                }
+                if (ra.getDueDate() != null && ra.getReviewSubmittedAt() != null) {
+                    isOnTime = !ra.getReviewSubmittedAt().isAfter(ra.getDueDate());
+                }
+                if (isOnTime) {
+                    onTimeCompletedCount++;
+                }
+
+                if (ra.getScore() != null) {
+                    totalScore += ra.getScore();
+                    scoredReviewsCount++;
+                }
+
+                // Add up to 5 most recent completed reviews to turnaroundHistory
+                if (turnaroundHistory.size() < 5) {
+                    String paperId = (ra.getSubmission() != null && ra.getSubmission().getSubmissionId() != null)
+                            ? ra.getSubmission().getSubmissionId()
+                            : ("MS-" + ra.getId());
+                    int diff = (int) Math.round(targetDays - days);
+                    String variance = diff > 0 ? (diff + "d ahead") : (diff < 0 ? (Math.abs(diff) + "d overdue") : "On schedule");
+                    turnaroundHistory.add(ReviewerPerformanceDTO.TurnaroundItemDTO.builder()
+                            .paper(paperId)
+                            .days(days)
+                            .target(targetDays)
+                            .variance(variance)
+                            .build());
+                }
+            }
+        }
+
+        Double onTimeTargetRate = completedReviews > 0
+                ? Math.round((onTimeCompletedCount * 100.0) / completedReviews * 10.0) / 10.0
+                : null;
+
+        Double avgTurnaroundDays = completedReviews > 0
+                ? Math.round((totalTurnaroundDays / completedReviews) * 10.0) / 10.0
+                : null;
+
+        Double rating = scoredReviewsCount > 0
+                ? Math.round(((totalScore / scoredReviewsCount) / 20.0) * 10.0) / 10.0
+                : null;
+
+        String stressLevel = "Low Stress";
+        String stressVariant = "emerald";
+        if (activeReviews >= maxCapacity) {
+            stressLevel = "High Load";
+            stressVariant = "rose";
+        } else if (activeReviews == 2) {
+            stressLevel = "Moderate";
+            stressVariant = "amber";
+        }
+
+        String currentActivityText;
+        if (activeReviews == 0) {
+            currentActivityText = "Fully Available \u2022 No active reviews in queue";
+        } else if (activeReviews == 1) {
+            currentActivityText = "1 Active Manuscript in progress (On schedule for deadline)";
+        } else {
+            currentActivityText = activeReviews + " Active Manuscripts in queue (" + stressLevel + ")";
+        }
+
+        // Monthly activity for last 5 months
+        List<ReviewerPerformanceDTO.MonthlyActivityDTO> monthlyActivity = new ArrayList<>();
+        YearMonth currentYearMonth = YearMonth.now();
+        DateTimeFormatter monthFormatter = DateTimeFormatter.ofPattern("MMM", Locale.ENGLISH);
+
+        for (int i = 4; i >= 0; i--) {
+            YearMonth ym = currentYearMonth.minusMonths(i);
+            String monthName = ym.format(monthFormatter);
+            int mCompleted = 0;
+            int mOnTime = 0;
+
+            for (ReviewAssignment ra : allAssignments) {
+                if (ra.getStatus() == ReviewAssignment.ReviewStatus.COMPLETED && ra.getReviewSubmittedAt() != null) {
+                    YearMonth reviewYm = YearMonth.from(ra.getReviewSubmittedAt().atZone(ZoneId.systemDefault()));
+                    if (reviewYm.equals(ym)) {
+                        mCompleted++;
+                        if (ra.getDueDate() == null || !ra.getReviewSubmittedAt().isAfter(ra.getDueDate())) {
+                            mOnTime++;
+                        }
+                    }
+                }
+            }
+
+            monthlyActivity.add(ReviewerPerformanceDTO.MonthlyActivityDTO.builder()
+                    .month(monthName)
+                    .completed(mCompleted)
+                    .onTime(mOnTime)
+                    .build());
+        }
+
+        return ReviewerPerformanceDTO.builder()
+                .reviewerId(reviewer.getId())
+                .reviewerName(reviewer.getFullName())
+                .email(reviewer.getEmail())
+                .activeReviews(activeReviews)
+                .completedReviews(completedReviews)
+                .totalInvitations(totalInvitations)
+                .maxCapacity(maxCapacity)
+                .onTimeTargetRate(onTimeTargetRate)
+                .avgTurnaroundDays(avgTurnaroundDays)
+                .rating(rating)
+                .stressLevel(stressLevel)
+                .stressVariant(stressVariant)
+                .currentActivityText(currentActivityText)
+                .turnaroundHistory(turnaroundHistory)
+                .monthlyActivity(monthlyActivity)
+                .build();
     }
 }

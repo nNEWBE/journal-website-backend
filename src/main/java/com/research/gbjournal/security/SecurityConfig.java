@@ -86,7 +86,12 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.POST,
                     "/api/v1/auth/login",
                     "/api/v1/auth/register",
-                    "/api/v1/auth/refresh").permitAll()
+                    "/api/v1/auth/refresh",
+                    "/api/v1/reviewer/invitations/*/respond").permitAll()
+
+                // Public reviewer invitation view
+                .requestMatchers(HttpMethod.GET,
+                    "/api/v1/reviewer/invitations/*").permitAll()
 
                 // Public readership tracking & metric telemetry
                 .requestMatchers(HttpMethod.POST,

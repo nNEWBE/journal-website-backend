@@ -48,6 +48,9 @@ public class ReviewAssignment {
 
     private Instant dueDate;
 
+    @Column(unique = true, length = 100)
+    private String invitationToken;
+
     private Instant reviewSubmittedAt;
 
     @CreationTimestamp
