@@ -307,8 +307,12 @@ public class AuthService {
                 .title(user.getTitle())
                 .department(user.getDepartment())
                 .institution(user.getInstitution())
+                .country(user.getCountry())
+                .orcid(user.getOrcid())
+                .researchInterests(user.getResearchInterests())
                 .avatarUrl(user.getAvatarUrl())
                 .emailVerified(user.isEmailVerified())
+                .enabled(user.isEnabled())
                 .build();
     }
 

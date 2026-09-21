@@ -146,12 +146,17 @@ public class EditorialService {
                         .id(u.getId())
                         .fullName(u.getFullName())
                         .email(u.getEmail())
+                        .secondaryEmail(u.getSecondaryEmail())
                         .role(u.getRole().name().toLowerCase().replace('_', '-'))
                         .title(u.getTitle())
                         .department(u.getDepartment())
                         .institution(u.getInstitution())
+                        .country(u.getCountry())
+                        .orcid(u.getOrcid())
+                        .researchInterests(u.getResearchInterests())
                         .avatarUrl(u.getAvatarUrl())
                         .emailVerified(u.isEmailVerified())
+                        .enabled(u.isEnabled())
                         .build())
                 .toList();
     }

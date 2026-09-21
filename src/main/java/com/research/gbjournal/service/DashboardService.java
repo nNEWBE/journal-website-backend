@@ -30,6 +30,7 @@ public class DashboardService {
     private final ReviewAssignmentRepository reviewAssignmentRepository;
     private final PasswordEncoder passwordEncoder;
     private final EmailService emailService;
+    private final CloudinaryService cloudinaryService;
 
     @Cacheable(value = "dashboard-stats")
     @Transactional(readOnly = true)
@@ -135,20 +136,43 @@ public class DashboardService {
         if (req.getFullName() != null && !req.getFullName().isBlank()) {
             user.setFullName(req.getFullName().trim());
         }
+        if (req.getEmail() != null && !req.getEmail().isBlank()) {
+            String newEmail = req.getEmail().trim().toLowerCase();
+            if (!newEmail.equalsIgnoreCase(user.getEmail())) {
+                if (userRepository.findByEmailIgnoreCase(newEmail).isPresent()) {
+                    throw new BadRequestException("An account with email '" + newEmail + "' already exists.");
+                }
+                user.setEmail(newEmail);
+            }
+        }
+        if (req.getSecondaryEmail() != null) {
+            user.setSecondaryEmail(req.getSecondaryEmail().trim().isEmpty() ? null : req.getSecondaryEmail().trim().toLowerCase());
+        }
         if (req.getTitle() != null) {
-            user.setTitle(req.getTitle().trim());
+            user.setTitle(req.getTitle().trim().isEmpty() ? null : req.getTitle().trim());
         }
         if (req.getDepartment() != null) {
-            user.setDepartment(req.getDepartment().trim());
+            user.setDepartment(req.getDepartment().trim().isEmpty() ? null : req.getDepartment().trim());
         }
         if (req.getInstitution() != null) {
-            user.setInstitution(req.getInstitution().trim());
+            user.setInstitution(req.getInstitution().trim().isEmpty() ? null : req.getInstitution().trim());
+        }
+        if (req.getCountry() != null) {
+            user.setCountry(req.getCountry().trim().isEmpty() ? null : req.getCountry().trim());
         }
         if (req.getOrcid() != null) {
-            user.setOrcid(req.getOrcid().trim());
+            user.setOrcid(req.getOrcid().trim().isEmpty() ? null : req.getOrcid().trim());
+        }
+        if (req.getResearchInterests() != null) {
+            user.setResearchInterests(req.getResearchInterests().trim().isEmpty() ? null : req.getResearchInterests().trim());
         }
         if (req.getAvatarUrl() != null) {
-            user.setAvatarUrl(req.getAvatarUrl().trim().isEmpty() ? null : req.getAvatarUrl().trim());
+            String newAvatar = req.getAvatarUrl().trim().isEmpty() ? null : req.getAvatarUrl().trim();
+            String oldAvatar = user.getAvatarUrl();
+            if (oldAvatar != null && !oldAvatar.equals(newAvatar)) {
+                cloudinaryService.deleteByUrl(oldAvatar);
+            }
+            user.setAvatarUrl(newAvatar);
         }
         if (req.getRole() != null && !req.getRole().isBlank()) {
             String formattedRole = req.getRole().toUpperCase().replace('-', '_');
@@ -157,11 +181,15 @@ public class DashboardService {
         if (req.getEnabled() != null) {
             user.setEnabled(req.getEnabled());
         }
+        if (req.getEmailVerified() != null) {
+            user.setEmailVerified(req.getEmailVerified());
+        }
         if (req.getPassword() != null && !req.getPassword().isBlank()) {
             user.setPassword(passwordEncoder.encode(req.getPassword().trim()));
         }
 
         userRepository.save(user);
+        log.info("Admin updated user ID {}: email={}, role={}, enabled={}", user.getId(), user.getEmail(), user.getRole(), user.isEnabled());
         return toUserInfo(user);
     }
 
@@ -247,10 +275,14 @@ public class DashboardService {
                 .id(u.getId())
                 .fullName(u.getFullName())
                 .email(u.getEmail())
+                .secondaryEmail(u.getSecondaryEmail())
                 .role(u.getRole().name().toLowerCase().replace('_', '-'))
                 .title(u.getTitle())
                 .department(u.getDepartment())
                 .institution(u.getInstitution())
+                .country(u.getCountry())
+                .orcid(u.getOrcid())
+                .researchInterests(u.getResearchInterests())
                 .avatarUrl(u.getAvatarUrl())
                 .emailVerified(u.isEmailVerified())
                 .enabled(u.isEnabled())

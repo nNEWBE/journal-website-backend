@@ -24,6 +24,9 @@ public class AuthResponse {
         private String title;
         private String department;
         private String institution;
+        private String country;
+        private String orcid;
+        private String researchInterests;
         private String avatarUrl;
         private boolean emailVerified;
         private boolean enabled;

@@ -13,7 +13,8 @@ import java.util.List;
 @Repository
 public interface ReviewAssignmentRepository extends JpaRepository<ReviewAssignment, Long> {
 
-    List<ReviewAssignment> findByReviewerOrderByInvitedAtDesc(User reviewer);
+    @Query("SELECT ra FROM ReviewAssignment ra LEFT JOIN FETCH ra.submission WHERE ra.reviewer = :reviewer ORDER BY ra.invitedAt DESC")
+    List<ReviewAssignment> findByReviewerOrderByInvitedAtDesc(@Param("reviewer") User reviewer);
 
     List<ReviewAssignment> findBySubmissionOrderByInvitedAtDesc(Submission submission);
 
