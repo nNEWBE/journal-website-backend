@@ -87,10 +87,13 @@ public class SecurityConfig {
                     "/api/v1/auth/login",
                     "/api/v1/auth/register",
                     "/api/v1/auth/refresh",
+                    "/api/v1/auth/forgot-password",
+                    "/api/v1/auth/reset-password",
                     "/api/v1/reviewer/invitations/*/respond").permitAll()
 
-                // Public reviewer invitation view
+                // Public reviewer invitation & token validation view
                 .requestMatchers(HttpMethod.GET,
+                    "/api/v1/auth/validate-reset-token",
                     "/api/v1/reviewer/invitations/*").permitAll()
 
                 // Public readership tracking & metric telemetry

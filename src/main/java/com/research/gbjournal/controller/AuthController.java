@@ -77,4 +77,27 @@ public class AuthController {
         authService.changePassword(userDetails.getUsername(), request);
         return ResponseEntity.ok(Map.of("message", "Password changed successfully."));
     }
+
+    /** POST /api/v1/auth/forgot-password */
+    @PostMapping("/forgot-password")
+    public ResponseEntity<Map<String, String>> forgotPassword(
+            @Valid @RequestBody ForgotPasswordRequest request) {
+        authService.requestPasswordReset(request);
+        return ResponseEntity.ok(Map.of("message", "If an account with this email exists, a password reset link has been dispatched to your inbox."));
+    }
+
+    /** GET /api/v1/auth/validate-reset-token */
+    @GetMapping("/validate-reset-token")
+    public ResponseEntity<ResetTokenValidationResponse> validateResetToken(
+            @RequestParam("token") String token) {
+        return ResponseEntity.ok(authService.validatePasswordResetToken(token));
+    }
+
+    /** POST /api/v1/auth/reset-password */
+    @PostMapping("/reset-password")
+    public ResponseEntity<Map<String, String>> resetPassword(
+            @Valid @RequestBody ResetPasswordRequest request) {
+        authService.resetPassword(request);
+        return ResponseEntity.ok(Map.of("message", "Password has been successfully reset. You may now log in with your new password."));
+    }
 }
