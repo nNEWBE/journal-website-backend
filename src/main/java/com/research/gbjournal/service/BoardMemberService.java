@@ -26,6 +26,13 @@ public class BoardMemberService {
                 .toList();
     }
 
+    @Transactional(readOnly = true)
+    public BoardMemberDTO getMemberById(Long id) {
+        BoardMember member = boardMemberRepository.findById(id)
+                .orElseThrow(() -> new com.research.gbjournal.exception.ResourceNotFoundException("BoardMember", "id", id));
+        return toDTO(member);
+    }
+
     @Transactional
     @CacheEvict(value = "editorial-board", allEntries = true)
     public BoardMemberDTO createMember(BoardMemberDTO dto) {

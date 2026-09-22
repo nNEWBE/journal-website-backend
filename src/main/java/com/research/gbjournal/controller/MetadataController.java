@@ -6,6 +6,7 @@ import com.research.gbjournal.service.BoardMemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -33,5 +34,11 @@ public class MetadataController {
     @GetMapping("/api/v1/editorial-board")
     public ResponseEntity<List<BoardMemberDTO>> getEditorialBoard() {
         return ResponseEntity.ok(boardMemberService.getAllMembers());
+    }
+
+    /** GET /api/v1/editorial-board/{id} — Public detail for a single editorial board member */
+    @GetMapping("/api/v1/editorial-board/{id}")
+    public ResponseEntity<BoardMemberDTO> getBoardMember(@PathVariable Long id) {
+        return ResponseEntity.ok(boardMemberService.getMemberById(id));
     }
 }

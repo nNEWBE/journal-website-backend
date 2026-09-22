@@ -299,7 +299,7 @@ public class PageContentService {
                         .title("From Our Research Community")
                         .subtitle("Interviews, spotlights, and academic symposia connecting authors and reviewers.")
                         .content("Explore perspectives, researcher spotlights, and multimedia highlights from our contributing faculty and scholars.")
-                        .metaJson("{\"spotlightAuthor\":\"Dr. Aisha Rahman, PhD\",\"symposium\":\"Annual Research Symposium 2026\"}")
+                        .metaJson("{\"spotlightAuthor\":\"Prof. Dr. Arup Chandra, PhD\",\"symposium\":\"Annual Research Colloquium 2026\"}")
                         .displayOrder(8).published(true).lastUpdatedBy("system").build());
 
                 list.add(PageContent.builder()
