@@ -50,6 +50,9 @@ public class ArticleService {
 
         // Increment view count
         articleRepository.incrementViews(article.getId());
+        if (article.getMetrics() != null) {
+            article.getMetrics().setViews(article.getMetrics().getViews() + 1);
+        }
 
         return toDetailDTO(article);
     }
@@ -68,6 +71,9 @@ public class ArticleService {
         Article article = articleRepository.findBySlug(slug)
                 .orElseThrow(() -> new ResourceNotFoundException("Article", "slug", slug));
         articleRepository.incrementDownloads(article.getId());
+        if (article.getMetrics() != null) {
+            article.getMetrics().setDownloads(article.getMetrics().getDownloads() + 1);
+        }
         return article;
     }
 

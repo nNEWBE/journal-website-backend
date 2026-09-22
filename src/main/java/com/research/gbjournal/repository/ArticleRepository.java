@@ -35,11 +35,11 @@ public interface ArticleRepository extends JpaRepository<Article, Long> {
                         Pageable pageable);
 
         @Modifying
-        @Query("UPDATE Article a SET a.metrics.views = a.metrics.views + 1 WHERE a.id = :id")
+        @Query("UPDATE Article a SET a.metrics.views = COALESCE(a.metrics.views, 0) + 1 WHERE a.id = :id")
         void incrementViews(@Param("id") Long id);
 
         @Modifying
-        @Query("UPDATE Article a SET a.metrics.downloads = a.metrics.downloads + 1 WHERE a.id = :id")
+        @Query("UPDATE Article a SET a.metrics.downloads = COALESCE(a.metrics.downloads, 0) + 1 WHERE a.id = :id")
         void incrementDownloads(@Param("id") Long id);
 
         @Modifying

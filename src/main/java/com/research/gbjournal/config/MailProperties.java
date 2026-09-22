@@ -20,4 +20,7 @@ public class MailProperties {
 
     /** Public URL of the frontend journal website, loaded from JOURNAL_URL */
     private String journalUrl;
+
+    /** Optional Reply-To address shown to recipients, loaded from MAIL_REPLY_TO */
+    private String replyTo;
 }

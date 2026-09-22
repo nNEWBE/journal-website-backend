@@ -58,9 +58,13 @@ spring:
           starttls:
             enable: true
             required: true
-        connection-timeout: 5000
-        timeout: 5000
-        write-timeout: 5000
+          ssl:
+            protocols: TLSv1.2 TLSv1.3
+          from: ${MAIL_FROM:}
+          localhost: ${SMTP_HELO_DOMAIN:gmail.com}
+        connection-timeout: 10000
+        timeout: 10000
+        write-timeout: 10000
 
 # =============================================
 # JWT Configuration
@@ -90,6 +94,7 @@ app:
     from: ${MAIL_FROM:}
     from-name: ${MAIL_FROM_NAME:}
     journal-url: ${JOURNAL_URL:}
+    reply-to: ${MAIL_REPLY_TO:}
 
 logging:
   level:
