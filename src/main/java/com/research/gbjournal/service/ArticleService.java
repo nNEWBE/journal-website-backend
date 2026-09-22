@@ -6,6 +6,7 @@ import com.research.gbjournal.entity.Article;
 import com.research.gbjournal.exception.ResourceNotFoundException;
 import com.research.gbjournal.repository.ArticleRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -43,22 +44,17 @@ public class ArticleService {
 
     // ===== Article Detail =====
 
-    @Transactional
+    @Transactional(readOnly = true)
     public ArticleDetailDTO getArticleBySlug(String slug) {
         Article article = articleRepository.findBySlug(slug)
                 .orElseThrow(() -> new ResourceNotFoundException("Article", "slug", slug));
-
-        // Increment view count
-        articleRepository.incrementViews(article.getId());
-        if (article.getMetrics() != null) {
-            article.getMetrics().setViews(article.getMetrics().getViews() + 1);
-        }
 
         return toDetailDTO(article);
     }
 
     // ===== Readership tracking & management =====
 
+    @CacheEvict(value = "articles", allEntries = true)
     @Transactional
     public void trackView(String slug) {
         Article article = articleRepository.findBySlug(slug)
@@ -66,6 +62,7 @@ public class ArticleService {
         articleRepository.incrementViews(article.getId());
     }
 
+    @CacheEvict(value = "articles", allEntries = true)
     @Transactional
     public Article trackDownload(String slug) {
         Article article = articleRepository.findBySlug(slug)
@@ -77,6 +74,7 @@ public class ArticleService {
         return article;
     }
 
+    @CacheEvict(value = "articles", allEntries = true)
     @Transactional
     public ArticleDTO resetMetrics(String slug) {
         Article article = articleRepository.findBySlug(slug)
@@ -90,11 +88,13 @@ public class ArticleService {
         return toDTO(article);
     }
 
+    @CacheEvict(value = "articles", allEntries = true)
     @Transactional
     public void resetAllMetrics() {
         articleRepository.resetAllMetrics();
     }
 
+    @CacheEvict(value = "articles", allEntries = true)
     @Transactional
     public ArticleDTO updateMetrics(String slug, int views, int downloads, int citations) {
         Article article = articleRepository.findBySlug(slug)
