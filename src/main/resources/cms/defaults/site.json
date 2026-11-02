@@ -6,16 +6,11 @@
   "sections": {
     "header": {
       "label": "Header",
-      "description": "Top institutional bar text and links, header buttons and mobile menu labels (menu items are managed in Menu & Nav Manager)",
-      "title": "Gono Bishwabidyalay Research Publication System",
+      "description": "Top institutional bar text (journal name and ISSN), header buttons and mobile menu labels (menu items are managed in Menu & Nav Manager)",
+      "title": "Gono Bishwabidyalay Journal of Research",
       "subtitle": "GB Journal",
       "meta": {
-        "topLinks": [
-          { "label": "ISSN 2959-1082", "href": "/about" },
-          { "label": "Ethics", "href": "/policies" },
-          { "label": "Reviewers", "href": "/reviewers" },
-          { "label": "Contact", "href": "/contact" }
-        ],
+        "issnLabel": "ISSN (Online) 2959-1082",
         "signedInLabel": "Signed in:",
         "submitLabel": "Submit",
         "submitHref": "/dashboard/submissions/new",
@@ -45,11 +40,26 @@
       "meta": {
         "icon": "BookOpen",
         "links": [
-          { "label": "All Articles", "href": "/articles" },
-          { "label": "Current Issue", "href": "/issues/current" },
-          { "label": "Issue Archives", "href": "/issues" },
-          { "label": "Most Viewed Articles", "href": "/articles?sort=views" },
-          { "label": "Most Downloaded", "href": "/articles?sort=downloads" }
+          {
+            "label": "All Articles",
+            "href": "/articles"
+          },
+          {
+            "label": "Current Issue",
+            "href": "/issues/current"
+          },
+          {
+            "label": "Issue Archives",
+            "href": "/issues"
+          },
+          {
+            "label": "Most Viewed Articles",
+            "href": "/articles?sort=views"
+          },
+          {
+            "label": "Most Downloaded",
+            "href": "/articles?sort=downloads"
+          }
         ]
       }
     },
@@ -60,11 +70,18 @@
       "meta": {
         "icon": "PenLine",
         "links": [
-          { "label": "Submit Manuscript", "href": "/dashboard/submissions/new" },
-          { "label": "Author Guidelines", "href": "/authors" },
-          { "label": "Reviewer Guidelines", "href": "/reviewers" },
-          { "label": "Publication Ethics", "href": "/policies" },
-          { "label": "Publication Fees & Waivers", "href": "/policies" }
+          {
+            "label": "Submit Manuscript",
+            "href": "/dashboard/submissions/new"
+          },
+          {
+            "label": "Author Guidelines",
+            "href": "/authors"
+          },
+          {
+            "label": "Reviewer Guidelines",
+            "href": "/reviewers"
+          }
         ]
       }
     },
@@ -75,11 +92,18 @@
       "meta": {
         "icon": "Landmark",
         "links": [
-          { "label": "About the Journal", "href": "/about" },
-          { "label": "Editorial Board", "href": "/editorial-board" },
-          { "label": "Advisory Council", "href": "/editorial-board" },
-          { "label": "Peer Review Model", "href": "/policies" },
-          { "label": "Contact Editorial Office", "href": "/contact" }
+          {
+            "label": "About the Journal",
+            "href": "/about"
+          },
+          {
+            "label": "Editorial Board",
+            "href": "/editorial-board"
+          },
+          {
+            "label": "Contact Editorial Office",
+            "href": "/contact"
+          }
         ]
       }
     },
@@ -90,21 +114,21 @@
       "meta": {
         "email": "editorial@gonobishwabidyalay.edu.bd",
         "address": "Gono Bishwabidyalay, Nolam, Savar, Dhaka 1344, Bangladesh",
-        "phone": "+880 (2) 779-2220",
-        "phoneHref": "tel:+88027792220"
+        "phone": "+880-2-7740060",
+        "phoneHref": "tel:+88027740060"
       }
     },
     "footer-bottom": {
       "label": "Footer Bottom Bar",
-      "description": "Copyright line (the year is added automatically), rights notice and legal links",
-      "title": "GB Journal of Research · Gono Bishwabidyalay.",
+      "description": "Copyright line (the year is added automatically), rights notice and legal links (one link per page)",
+      "title": "Gono Bishwabidyalay Journal of Research, Gono Bishwabidyalay.",
       "subtitle": "All rights reserved.",
       "meta": {
         "links": [
-          { "label": "Privacy Policy", "href": "/policies" },
-          { "label": "Terms of Use", "href": "/policies" },
-          { "label": "Ethics & Malpractice", "href": "/policies" },
-          { "label": "Accessibility", "href": "/about" }
+          {
+            "label": "Journal Policies",
+            "href": "/policies"
+          }
         ]
       }
     }

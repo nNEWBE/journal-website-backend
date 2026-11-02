@@ -6,59 +6,58 @@
   "sections": {
     "hero": {
       "label": "Hero Banner",
-      "description": "Eyebrow, headline, intro, highlights, buttons and the repository overview card",
+      "description": "Eyebrow, headline, intro, highlights, buttons and the archive overview card (current edition, issue, year and article counts come from the published issues)",
       "title": "Volumes & Published Issues Archive",
       "subtitle": "JOURNAL ARCHIVE & EDITIONS",
       "content": "Browse the complete peer-reviewed publication record of the **Gono Bishwabidyalay Journal of Research**. Every volume unites multidisciplinary scholarship in health, pharmacy, agriculture, law, computing, and social welfare—freely accessible worldwide under Open Access.",
       "meta": {
-        "repositoryNote": "Gono Bishwabidyalay Official Repository",
+        "badgeIcon": "Library",
+        "institution": "Gono Bishwabidyalay Official Repository",
         "highlights": [
-          { "icon": "CalendarDays", "label": "Biannual Schedule (Jan & Jul)" },
-          { "icon": "Globe2", "label": "100% Open Access (CC BY 4.0)" },
-          { "icon": "ShieldCheck", "label": "Double-Blind Evaluated" }
+          { "icon": "CalendarDays", "label": "Biannual — January & July" },
+          { "icon": "Globe2", "label": "Open Access (CC BY 4.0)" },
+          { "icon": "ShieldCheck", "label": "Double-Blind Peer Review" }
         ],
         "ctas": [
-          { "label": "Read Current Issue", "href": "/issues/current" },
-          { "label": "Search All Articles", "href": "/articles" },
-          { "label": "Browse Past Volumes", "href": "#volume-archive" }
+          { "label": "Read Current Issue", "href": "/issues/current", "icon": "ArrowUpRight", "variant": "primary" },
+          { "label": "Search All Articles", "href": "/articles", "icon": "Search", "variant": "secondary" },
+          { "label": "Browse Past Volumes", "href": "#volume-archive", "icon": "Archive", "variant": "tertiary" }
         ],
         "cardMonogram": "GB",
         "cardEyebrow": "ARCHIVAL CATALOG",
         "cardTitle": "Repository Overview",
         "cardBadge": "Active Archive",
         "currentEditionLabel": "Current Edition",
-        "noCurrentEditionText": "Volume Archive",
-        "totalIssuesLabel": "Total Published Issues",
-        "totalIssuesSuffix": "Editions",
-        "historicalSpanLabel": "Historical Span",
-        "historicalSpanSuffix": "Archive Years",
-        "catalogedArticlesLabel": "Cataloged Articles",
-        "catalogedArticlesSuffix": "Papers",
-        "issnLabel": "Official ISSN",
-        "issnValue": "2959-1082 (Online)",
-        "preservationLabel": "Preservation",
-        "preservationValue": "CrossRef DOI Permanent",
-        "guaranteeTitle": "Permanent Access Guarantee:",
-        "guaranteeText": "All retrospective editions remain permanently accessible, indexed under unique CrossRef DOIs with unhindered full-text PDF downloads."
+        "noCurrentEditionText": "—",
+        "totalIssuesLabel": "Published Issues",
+        "historicalSpanLabel": "Archive Years",
+        "catalogedArticlesLabel": "Published Articles",
+        "specs": [
+          { "label": "ISSN (Online)", "value": "2959-1082", "tone": "mono" },
+          { "label": "ISSN (Print)", "value": "2959-1074", "tone": "mono" },
+          { "label": "Frequency", "value": "Biannual — January & July" }
+        ],
+        "noteLabel": "Permanent Access",
+        "noteText": "Every past edition stays freely readable online, with full-text PDF downloads."
       }
     },
     "featured": {
       "label": "Featured Edition",
-      "description": "Latest published issue showcase: heading, badges, description, button and the empty state",
+      "description": "Latest published issue showcase: heading, badges, fallback description (used when the issue has no editor's note), button and the empty state",
       "title": "Latest Published Issue",
       "subtitle": "FEATURED EDITION",
-      "content": "Explore a curated multidisciplinary volume featuring empirical contributions, clinical investigations, and theoretical syntheses in community healthcare access, pharmacy stewardship, resilient agriculture, and public welfare.",
+      "content": "The newest edition of the journal, bringing together peer-reviewed research articles, reviews and short communications across the journal's disciplines.",
       "meta": {
         "coverBadge": "Current Volume",
         "statusBadge": "Now Publishing",
-        "issnBadge": "ISSN 2959-1082",
+        "issnBadge": "ISSN 2959-1082 (Online)",
         "articleCountSuffix": "Peer-Reviewed Articles",
         "selectedArticlesLabel": "Selected Articles in this Issue:",
         "reviewLabel": "Double-blind Reviewed",
         "licenseLabel": "Open Access (CC BY 4.0)",
         "cta": { "label": "Read Full Issue", "href": "/issues/current" },
         "emptyTitle": "No Published Issues Available",
-        "emptyText": "There are currently no published journal editions in the repository. New issues and curated volumes will appear here once compiled and published by the editorial team."
+        "emptyText": "There are currently no published journal editions in the repository. New issues will appear here once they are published by the editorial team."
       }
     },
     "archive": {
@@ -66,12 +65,13 @@
       "description": "Archive directory heading, filter labels, empty state and issue card labels",
       "title": "Browse Archive by Year & Volume",
       "subtitle": "ARCHIVAL DIRECTORY",
-      "content": "Access all historical volumes and past editions. Every publication remains fully indexed, citable, and available without paywalls.",
+      "content": "Access all historical volumes and past editions. Every publication remains citable and available without paywalls.",
       "meta": {
         "allYearsLabel": "All Years",
         "searchPlaceholder": "Filter issues...",
         "emptyTitle": "No issues found",
         "emptyText": "No published editions matched your search query",
+        "noIssuesText": "No editions have been published yet.",
         "clearFiltersLabel": "Clear all filters",
         "yearHeadingSuffix": "Volume Archive",
         "editionSingular": "Published Edition",
@@ -88,7 +88,7 @@
       "description": "Preservation standards heading and the three guarantee cards",
       "title": "Permanent Indexing & Open Access Guarantees",
       "subtitle": "PRESERVATION STANDARDS",
-      "content": "Every volume is safeguarded in international digital archives with permanent metadata resolution and unrestricted author copyright.",
+      "content": "Every volume is kept permanently available with stable citation metadata and author-retained copyright.",
       "meta": {
         "cards": [
           {
@@ -98,26 +98,27 @@
           },
           {
             "icon": "ShieldCheck",
-            "title": "Permanent CrossRef DOI Archiving",
-            "text": "Every published volume and article receives a persistent Crossref Digital Object Identifier for unbreakable scholarly citation."
+            "title": "Persistent DOI Archiving",
+            "text": "Published articles receive a persistent Digital Object Identifier so every citation keeps resolving to the version of record."
           },
           {
             "icon": "Award",
-            "title": "Double-Blind Peer Review Rigor",
-            "text": "All articles undergo rigorous double-blind assessment by independent disciplinary experts before inclusion in a published issue."
+            "title": "Double-Blind Peer Review",
+            "text": "All articles undergo double-blind assessment by independent disciplinary experts before inclusion in a published issue."
           }
         ]
       }
     },
-    "call-for-papers": {
+    "cta": {
       "label": "Call for Papers",
-      "description": "Call for papers banner, feature pills, buttons and the editorial secretariat contact card",
+      "description": "Dark call-for-papers banner with feature pills, buttons and the editorial secretariat contact card",
       "title": "Submit Your Research for the Upcoming Volume",
-      "subtitle": "CALL FOR PAPERS · VOL. 2026/2027",
-      "content": "Submissions are actively invited across health sciences, clinical medicine, pharmacy, agriculture, law, computing, and social welfare for the upcoming biannual volume.",
+      "subtitle": "CALL FOR PAPERS",
+      "content": "Submissions are invited across health sciences, clinical medicine, pharmacy, agriculture, law, computing, and social welfare for the next biannual issue.",
       "meta": {
+        "badgeIcon": "FileText",
         "pills": [
-          { "icon": "Clock", "label": "Rapid 14-Day Initial Review" },
+          { "icon": "Clock", "label": "18-Day Average First Decision" },
           { "icon": "Globe2", "label": "Global Open Access Reach" },
           { "icon": "ShieldCheck", "label": "Free Open Access Publishing" }
         ],
@@ -128,12 +129,12 @@
         "contactEyebrow": "EDITORIAL SECRETARIAT",
         "contactTag": "Volume Desk",
         "contactTitle": "Special Issue & Volume Inquiries",
-        "contactText": "Proposing a thematic special issue or seeking past volume prints? Contact the editorial staff directly.",
+        "contactText": "Proposing a thematic special issue or looking for a past volume? Contact the editorial staff directly.",
         "emailLabel": "Editorial Email",
         "email": "editorial@gonobishwabidyalay.edu.bd",
         "locationLabel": "Campus Location",
         "location": "Gono Bishwabidyalay, Nolam, Savar, Dhaka 1344, Bangladesh",
-        "contactCta": { "label": "Contact Editorial Office", "href": "/contact" }
+        "contactLink": { "label": "Contact Editorial Office", "href": "/contact" }
       }
     }
   }

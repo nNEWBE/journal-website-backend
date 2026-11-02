@@ -11,31 +11,59 @@
       "subtitle": "EDITORIAL SECRETARIAT",
       "content": "Get in direct touch with the **Gono Bishwabidyalay Journal of Research** editorial board, managing desk, and review secretariat. We welcome manuscript submissions, reviewer applications, special issue proposals, and institutional inquiries.",
       "meta": {
-        "tagline": "Gono Bishwabidyalay Official Communications",
+        "badgeIcon": "Building2",
+        "institution": "Gono Bishwabidyalay",
         "highlights": [
-          { "icon": "Clock", "label": "24–48h Response SLA" },
-          { "icon": "ShieldCheck", "label": "Author Tracking Helpline" },
-          { "icon": "Building2", "label": "Official Campus Secretariat" }
+          {
+            "icon": "FileText",
+            "label": "Submission & Revision Support"
+          },
+          {
+            "icon": "Users",
+            "label": "Reviewer Applications"
+          },
+          {
+            "icon": "Building2",
+            "label": "Savar Campus Office"
+          }
         ],
         "ctas": [
-          { "label": "Send Direct Inquiry", "href": "#inquiry-form" },
-          { "label": "Author Guidelines", "href": "/authors" },
-          { "label": "Editorial Board", "href": "/editorial-board" }
+          {
+            "label": "Send an Inquiry",
+            "href": "#inquiry-form"
+          },
+          {
+            "label": "Author Guidelines",
+            "href": "/authors",
+            "icon": "BookOpen"
+          },
+          {
+            "label": "Editorial Board",
+            "href": "/editorial-board",
+            "icon": "Users"
+          }
         ],
         "cardMonogram": "GB",
-        "cardEyebrow": "SECRETARIAT DESK",
-        "cardTitle": "Office Specifications",
-        "cardStatus": "Desk Active",
+        "cardEyebrow": "EDITORIAL OFFICE",
+        "cardTitle": "Before You Write",
+        "cardBadge": "Open",
         "specs": [
-          { "label": "Campus Location", "value": "Nolam, Savar, Dhaka 1344", "tone": "default" },
-          { "label": "Primary Email", "value": "editorial@gonobishwabidyalay.edu.bd", "tone": "email" },
-          { "label": "Telephone Direct", "value": "+880-2-7740060 (Ext: 104)", "tone": "mono" },
-          { "label": "Working Hours", "value": "Sun – Thu: 9:00 AM – 4:00 PM", "tone": "default" },
-          { "label": "Response Window", "value": "Within 24–48 Business Hours", "tone": "success" },
-          { "label": "Manuscript Inquiries", "value": "Include Manuscript ID", "tone": "default" }
-        ],
-        "noteTitle": "Administrative Archiving:",
-        "note": "All communications sent to the editorial secretariat are formally logged under persistent tracking reference codes to ensure accountability."
+          {
+            "label": "Working Days",
+            "value": "Sunday – Thursday",
+            "tone": "default"
+          },
+          {
+            "label": "Office Hours",
+            "value": "9:00 AM – 4:00 PM (GMT+6)",
+            "tone": "mono"
+          },
+          {
+            "label": "Manuscript Inquiries",
+            "value": "Quote your Manuscript ID",
+            "tone": "default"
+          }
+        ]
       }
     },
     "office-details": {
@@ -46,13 +74,15 @@
       "meta": {
         "statusBadge": "Active",
         "addressLabel": "Postal Address",
-        "addressLines": ["Gono Bishwabidyalay, Nolam,", "Savar, Dhaka 1344, Bangladesh"],
+        "addressLines": [
+          "Gono Bishwabidyalay, Nolam,",
+          "Savar, Dhaka 1344, Bangladesh"
+        ],
         "emailLabel": "Electronic Mail",
         "email": "editorial@gonobishwabidyalay.edu.bd",
         "emailNote": "For manuscript status, proofing, and author support",
         "phoneLabel": "Telephone Directory",
         "phone": "+880-2-7740060",
-        "phoneExtension": "(Ext: 104)",
         "phoneHours": "Sun – Thu, 9:00 AM – 4:00 PM (GMT+6)",
         "responseLabel": "Response Window",
         "responseText": "Within 24–48 business hours for all official tickets."
@@ -66,7 +96,7 @@
     },
     "contact-form": {
       "label": "Contact Form",
-      "description": "Form heading, field labels, placeholders, role/topic options and button labels",
+      "description": "Band heading (eyebrow + title), field labels, placeholders, role/topic options and button labels",
       "title": "Transmit an Editorial Message",
       "subtitle": "OFFICIAL CORRESPONDENCE",
       "meta": {
@@ -148,30 +178,49 @@
       }
     },
     "cta": {
-      "label": "Call for Papers",
+      "label": "Closing CTA",
       "description": "Call-for-papers banner with feature pills, buttons and the secretariat helpline card",
       "title": "Ready to Submit Your Manuscript?",
-      "subtitle": "CALL FOR PAPERS · VOL. 2026/2027",
-      "content": "Submit your research across health sciences, pharmacy, agriculture, law, computing, and social welfare. Enjoy rapid 14-day initial review and free Open Access publication.",
+      "subtitle": "CALL FOR PAPERS",
+      "content": "Submit your research across health sciences, pharmacy, agriculture, law, computing, and social welfare. First decisions take 18 days on average, and publication is free and open access.",
       "meta": {
+        "badgeIcon": "FileText",
         "pills": [
-          { "icon": "Clock", "label": "14-Day Initial Review" },
-          { "icon": "Globe2", "label": "Global Open Access Reach" },
-          { "icon": "ShieldCheck", "label": "Double-Blind Verification" }
+          {
+            "icon": "Clock",
+            "label": "Avg. 18-Day First Decision"
+          },
+          {
+            "icon": "Globe2",
+            "label": "Open Access · CC BY 4.0"
+          },
+          {
+            "icon": "ShieldCheck",
+            "label": "Double-Blind Peer Review"
+          }
         ],
         "ctas": [
-          { "label": "Submit Manuscript", "href": "/dashboard/submissions/new" },
-          { "label": "Author Guidelines", "href": "/authors" }
+          {
+            "label": "Submit Manuscript",
+            "href": "/dashboard/submissions/new"
+          },
+          {
+            "label": "Author Guidelines",
+            "href": "/authors"
+          }
         ],
-        "cardEyebrow": "EDITORIAL SECRETARIAT",
-        "cardTag": "Author Desk",
-        "cardTitle": "Direct Inquiry Helpline",
-        "cardText": "Have questions regarding manuscript formatting or track assignments? Contact the editorial staff directly.",
+        "contactEyebrow": "EDITORIAL SECRETARIAT",
+        "contactTag": "Author Desk",
+        "contactTitle": "Direct Inquiry Helpline",
+        "contactText": "Have questions regarding manuscript formatting or track assignments? Contact the editorial staff directly.",
         "emailLabel": "Editorial Email",
         "email": "editorial@gonobishwabidyalay.edu.bd",
         "locationLabel": "Campus Location",
         "location": "Gono Bishwabidyalay, Nolam, Savar, Dhaka 1344, Bangladesh",
-        "cardLink": { "label": "Submit Inquiry Online", "href": "#inquiry-form" }
+        "contactLink": {
+          "label": "Submit Inquiry Online",
+          "href": "#inquiry-form"
+        }
       }
     }
   }

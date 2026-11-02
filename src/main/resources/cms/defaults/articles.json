@@ -6,53 +6,64 @@
   "sections": {
     "hero": {
       "label": "Hero Banner",
-      "description": "Eyebrow, headline, intro, highlights, buttons and repository overview card",
+      "description": "Eyebrow, headline, intro, highlights, buttons and the archive card (article and subject counts come from the database)",
       "title": "Articles & Research Publications Archive",
-      "subtitle": "PEER-REVIEWED CORPUS",
-      "content": "Search and explore the comprehensive multidisciplinary publication record of the **Gono Bishwabidyalay Journal of Research**. Every paper is double-blind peer reviewed, permanently registered with CrossRef DOIs, and distributed under full Open Access (CC BY 4.0).",
+      "subtitle": "PEER-REVIEWED ARCHIVE",
+      "content": "Search and explore the multidisciplinary publication record of the **Gono Bishwabidyalay Journal of Research**. Every paper is double-blind peer reviewed and published open access under CC BY 4.0.",
       "meta": {
-        "tagline": "Gono Bishwabidyalay Scientific Repository",
+        "badgeIcon": "FileSearch",
+        "institution": "Gono Bishwabidyalay, Savar, Dhaka",
         "highlights": [
           { "icon": "ShieldCheck", "label": "Double-Blind Peer Reviewed" },
           { "icon": "Globe2", "label": "Open Access (CC BY 4.0)" },
-          { "icon": "Archive", "label": "CrossRef DOI Persistent" }
+          { "icon": "CalendarDays", "label": "Biannual — January & July" }
         ],
         "ctas": [
-          { "label": "Submit Manuscript", "href": "/dashboard/submissions/new" },
-          { "label": "Browse by Issue", "href": "/issues" },
-          { "label": "Author Guidelines", "href": "/authors" }
+          { "label": "Submit Manuscript", "href": "/dashboard/submissions/new", "icon": "ArrowUpRight", "variant": "primary" },
+          { "label": "Browse by Issue", "href": "/issues", "icon": "BookOpen", "variant": "secondary" },
+          { "label": "Author Guidelines", "href": "/authors", "icon": "FileText", "variant": "tertiary" }
         ],
-        "cardEyebrow": "CATALOG METRICS",
-        "cardTitle": "Repository Overview",
-        "cardBadge": "Peer Reviewed",
-        "articlesLabel": "Cataloged Articles",
-        "articlesSuffix": "Published",
-        "topicsLabel": "Subject Disciplines",
-        "topicsSuffix": "Research Tracks",
+        "cardMonogram": "GB",
+        "cardEyebrow": "ARCHIVE OVERVIEW",
+        "cardTitle": "Gono Bishwabidyalay Journal of Research",
+        "cardBadge": "Open Access",
+        "articlesLabel": "Published articles",
+        "topicsLabel": "Subject areas",
         "specs": [
-          { "label": "Review Model", "value": "Double-Blind Anonymous" },
-          { "label": "Reader Access", "value": "Immediate CC BY 4.0" },
-          { "label": "ISSN Number", "value": "2959-1082 (Online)" },
-          { "label": "DOI Registration", "value": "10.5555/gbjr.*" }
+          { "label": "ISSN (Online)", "value": "2959-1082", "tone": "mono" },
+          { "label": "ISSN (Print)", "value": "2959-1074", "tone": "mono" },
+          { "label": "Frequency", "value": "Biannual — January & July", "tone": "default" },
+          { "label": "Review Model", "value": "Double-Blind", "tone": "default" },
+          { "label": "Licence", "value": "CC BY 4.0", "tone": "success" }
         ],
         "noteLabel": "Author Rights:",
-        "noteText": "Authors retain full copyright of published works. Immediate free PDF downloads and machine-readable metadata are provided for all records."
+        "noteText": "Authors retain copyright of their published work. Full-text PDFs are free to read and download."
       }
     },
     "results": {
       "label": "Search & Results",
-      "description": "Search box labels, results heading labels and the empty state",
+      "description": "Search box labels, sort options, results heading labels and the empty state",
       "title": "ALL PUBLICATIONS",
-      "subtitle": "FILTERED CORPUS",
+      "subtitle": "FILTERED RESULTS",
       "meta": {
         "searchPlaceholder": "Search by title, author surname, DOI, or keyword...",
         "searchButton": "Search",
         "resetButton": "Reset",
+        "countSingular": "article",
+        "countPlural": "articles",
         "filteredByLabel": "Filtered by:",
+        "sortedByLabel": "Sorted by:",
         "clearFiltersLabel": "Clear all filters",
         "browseLink": { "label": "Browse by issue", "href": "/issues" },
+        "sortOptions": [
+          { "value": "newest", "label": "Newest first" },
+          { "value": "oldest", "label": "Oldest first" },
+          { "value": "views", "label": "Most viewed" },
+          { "value": "downloads", "label": "Most downloaded" },
+          { "value": "title", "label": "Title A–Z" }
+        ],
         "emptyTitle": "No matching articles found",
-        "emptyText": "Try broader search keywords, select a different subject track, or reset all filters to explore the complete catalog.",
+        "emptyText": "Try broader search keywords, select a different subject, or reset all filters to explore the complete archive.",
         "emptyCta": { "label": "View All Articles", "href": "/articles" }
       }
     },
@@ -61,50 +72,27 @@
       "description": "Heading of the browse-by-subject sidebar card (topics come from the database)",
       "title": "Browse by Subject"
     },
-    "specifications": {
-      "label": "Specs Sidebar",
-      "description": "Journal specifications sidebar card",
-      "title": "Journal Specifications",
-      "meta": {
-        "specs": [
-          { "label": "ISSN (Online)", "value": "2959-1082" },
-          { "label": "ISSN (Print)", "value": "2959-1074" },
-          { "label": "Review Model", "value": "Double-Blind" },
-          { "label": "Licensing", "value": "CC BY 4.0" },
-          { "label": "DOI Prefix", "value": "10.5555/gbjr" }
-        ]
-      }
-    },
-    "submit-card": {
-      "label": "Submit Sidebar",
-      "description": "Dark call-for-papers card in the sidebar",
-      "title": "Submit Your Original Research",
-      "subtitle": "Call for Papers",
-      "content": "Fast-track double-blind review, permanent CrossRef DOI, and open access publication.",
-      "meta": {
-        "cta": { "label": "Submit Manuscript", "href": "/dashboard/submissions/new" }
-      }
-    },
     "standards": {
       "label": "Standards Band",
-      "description": "Three archival standards cards below the listing (the title is used as the screen-reader label)",
-      "title": "Archival Standards",
+      "description": "Heading and three publication standards cards below the listing",
+      "title": "Publication Standards",
+      "subtitle": "WHAT EVERY ARTICLE MEETS",
       "meta": {
         "items": [
           {
             "icon": "ShieldCheck",
             "title": "Double-Blind Peer Review",
-            "text": "Independent expert appraisal by qualified subject specialists guarantees rigorous scholarly merit and reproducible findings."
+            "text": "Independent appraisal by qualified subject specialists, with author and reviewer identities concealed throughout."
           },
           {
             "icon": "Globe2",
-            "title": "Universal Open Access",
-            "text": "Free and unrestricted worldwide access under Creative Commons CC BY 4.0 with author-retained copyright."
+            "title": "Open Access",
+            "text": "Free and unrestricted access under Creative Commons CC BY 4.0, with copyright retained by the authors."
           },
           {
             "icon": "Archive",
-            "title": "Permanent DOI Resolution",
-            "text": "Persistent digital object identifiers and CrossMark metadata guarantee permanent citations and immutable records."
+            "title": "Permanent Record",
+            "text": "Published articles stay in the archive with their issue, volume and citation details, and corrections are recorded openly."
           }
         ]
       }
@@ -113,14 +101,14 @@
       "label": "Call for Papers",
       "description": "Dark call-for-papers banner with the editorial secretariat contact card",
       "title": "Publish Your Research with GB Journal",
-      "subtitle": "CALL FOR PAPERS · VOL. 2026/2027",
-      "content": "We welcome original research manuscripts, clinical reports, and critical reviews. Experience an author-centric double-blind review process with zero subscription barriers.",
+      "subtitle": "CALL FOR PAPERS",
+      "content": "We welcome original research manuscripts, clinical reports, and critical reviews. Experience an author-centric double-blind review process with no subscription barriers.",
       "meta": {
         "badgeIcon": "FileText",
         "pills": [
-          { "icon": "Clock", "label": "Prompt 14-Day Review Cycle" },
+          { "icon": "Clock", "label": "18 Days Average to First Decision" },
           { "icon": "Globe2", "label": "Global Open Access Reach" },
-          { "icon": "ShieldCheck", "label": "Free Open Access Publishing" }
+          { "icon": "ShieldCheck", "label": "Double-Blind Peer Review" }
         ],
         "ctas": [
           { "label": "Submit Your Manuscript", "href": "/dashboard/submissions/new" },
@@ -129,7 +117,7 @@
         "contactEyebrow": "EDITORIAL SECRETARIAT",
         "contactTag": "Desk",
         "contactTitle": "Editorial Desk & Inquiries",
-        "contactText": "Have questions regarding manuscript formatting, track assignment, or referee nominations? Contact our editorial staff directly.",
+        "contactText": "Have questions regarding manuscript formatting, subject assignment, or referee nominations? Contact our editorial staff directly.",
         "emailLabel": "Editorial Email",
         "email": "editorial@gonobishwabidyalay.edu.bd",
         "locationLabel": "Campus Location",

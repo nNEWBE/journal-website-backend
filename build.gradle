@@ -55,5 +55,7 @@ tasks.named('test') {
 }
 
 bootRun {
-	jvmArgs = ['-Djava.net.preferIPv4Stack=true']
+	if (!org.gradle.internal.os.OperatingSystem.current().isWindows()) {
+		jvmArgs = ['-Djava.net.preferIPv4Stack=true']
+	}
 }

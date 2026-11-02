@@ -9,33 +9,78 @@
       "description": "Badges, headline, intro, highlights, CTAs and the author specifications card",
       "title": "Author Guidelines & Manuscript Submission Framework",
       "subtitle": "AUTHOR GUIDELINES & SUBMISSION",
-      "content": "Publish your original research, review articles, and clinical discoveries with the **Gono Bishwabidyalay Journal of Research**. We offer rigorous double-blind peer review, prompt editorial turnaround, zero author publication charges (No APC), and global open-access reach.",
+      "content": "Publish your original research, review articles, and clinical discoveries with the **Gono Bishwabidyalay Journal of Research**. We offer rigorous double-blind peer review, an average of 18 days to first decision, no article processing charges, and open access under CC BY 4.0.",
       "meta": {
-        "secondaryBadge": "Gono Bishwabidyalay Research Instructions",
+        "badgeIcon": "FileText",
+        "institution": "Gono Bishwabidyalay",
         "highlights": [
-          { "icon": "ShieldCheck", "label": "Double-Blind Peer Review" },
-          { "icon": "Clock", "label": "14-Day Initial Decision" },
-          { "icon": "Globe2", "label": "Free Open Access (Zero APC)" }
+          {
+            "icon": "ShieldCheck",
+            "label": "Double-Blind Peer Review"
+          },
+          {
+            "icon": "Clock",
+            "label": "Avg. 18 Days to First Decision"
+          },
+          {
+            "icon": "Globe2",
+            "label": "Open Access, No APC"
+          }
         ],
         "ctas": [
-          { "label": "Submit Your Manuscript", "href": "/dashboard/submissions/new" },
-          { "label": "Preparation Checklist", "href": "#checklist" },
-          { "label": "Editorial Policies", "href": "/policies" }
+          {
+            "label": "Submit Your Manuscript",
+            "href": "/dashboard/submissions/new"
+          },
+          {
+            "label": "Preparation Checklist",
+            "href": "#checklist",
+            "icon": "FileCheck2"
+          },
+          {
+            "label": "Editorial Policies",
+            "href": "/policies",
+            "icon": "BookOpen"
+          }
         ],
         "cardMonogram": "GB",
-        "cardEyebrow": "SUBMISSION METRICS",
+        "cardEyebrow": "SUBMISSION ESSENTIALS",
         "cardTitle": "Author Specifications",
-        "cardBadge": "Zero APC",
+        "cardBadge": "CC BY 4.0",
         "specs": [
-          { "label": "Publication Charges", "value": "100% Free / No Fees", "tone": "positive" },
-          { "label": "Initial Review Turnaround", "value": "14 Days from Intake", "tone": "accent" },
-          { "label": "Review Protocol", "value": "Double-Blind Anonymous", "tone": "default" },
-          { "label": "Similarity Limit", "value": "< 15% Similarity Check", "tone": "mono" },
-          { "label": "Citation Style", "value": "APA 7th Edition (with DOIs)", "tone": "default" },
-          { "label": "Author Rights", "value": "Author Retains Copyright", "tone": "default" }
+          {
+            "label": "Publication Charges",
+            "value": "None (No APC)",
+            "tone": "success"
+          },
+          {
+            "label": "First Decision",
+            "value": "18 days on average",
+            "tone": "accent"
+          },
+          {
+            "label": "Review Protocol",
+            "value": "Double-blind",
+            "tone": "default"
+          },
+          {
+            "label": "Similarity Limit",
+            "value": "< 15%",
+            "tone": "mono"
+          },
+          {
+            "label": "Citation Style",
+            "value": "APA 7th Edition (with DOIs)",
+            "tone": "default"
+          },
+          {
+            "label": "Author Rights",
+            "value": "Author retains copyright",
+            "tone": "default"
+          }
         ],
-        "requirementLabel": "Submission Requirement:",
-        "requirementText": "Authors must provide an editable manuscript (DOCX/LaTeX), anonymized peer-review version, and signed ethical declaration of originality."
+        "noteLabel": "Submission Requirement:",
+        "noteText": "Authors must provide an editable manuscript (DOCX/LaTeX), anonymized peer-review version, and signed ethical declaration of originality."
       }
     },
     "article-types": {
@@ -120,11 +165,19 @@
       "content": "Ensure every element is prepared before starting the online submission workflow. Submissions with complete metadata and properly formatted anonymized files proceed directly to review without administrative delay.",
       "meta": {
         "benefits": [
-          { "label": "Zero Article Processing Charges (No APC):", "text": "Publishing is fully funded by the university." },
-          { "label": "Author Copyright:", "text": "Authors retain unrestricted copyright under CC BY 4.0." },
-          { "label": "Fast Initial Decision:", "text": "Receive first-round reviewer feedback within 14 days." }
+          {
+            "label": "No Article Processing Charges:",
+            "text": "Publishing is fully funded by the university."
+          },
+          {
+            "label": "Author Copyright:",
+            "text": "Authors retain copyright; articles are published under CC BY 4.0."
+          }
         ],
-        "cta": { "label": "Open Submission Portal", "href": "/dashboard/submissions/new" },
+        "cta": {
+          "label": "Open Submission Portal",
+          "href": "/dashboard/submissions/new"
+        },
         "specLabel": "Standard:",
         "items": [
           {
@@ -168,37 +221,46 @@
     },
     "editorial-pathway": {
       "label": "Editorial Pathway",
-      "description": "Heading, intro and the publication workflow stage cards",
-      "title": "The 4-Stage Peer Review & Publication Journey",
+      "description": "Heading, intro and the five publication workflow stage cards (same lifecycle as the About page)",
+      "title": "The 5-Stage Peer Review & Publication Journey",
       "subtitle": "EDITORIAL PATHWAY",
       "content": "From initial file upload to CrossRef DOI indexation, experience an accountable and transparent editorial pathway.",
       "meta": {
-        "stagePrefix": "Stage",
-        "checkLabel": "Quality Assurance Check",
         "stages": [
           {
-            "step": "01",
-            "title": "Manuscript Intake & Screening",
-            "timeline": "Days 1 – 3",
-            "description": "The Managing Editor screens the submission for scope adherence, formatting compliance, and performs automated similarity check (< 15% threshold via Turnitin/iThenticate)."
+            "icon": "FileText",
+            "stage": "01",
+            "title": "Manuscript Submission",
+            "timeline": "Day 0",
+            "text": "Authors submit files, structured abstracts, author affiliations, conflict of interest declarations, and ethical approval certificates via the online portal."
           },
           {
-            "step": "02",
-            "title": "Section Editor Assignment",
-            "timeline": "Days 4 – 5",
-            "description": "The Editor-in-Chief assigns the manuscript to a specialized Section Editor who confirms disciplinary fit and nominates independent external reviewers."
+            "icon": "ShieldCheck",
+            "stage": "02",
+            "title": "Initial Desk Screening",
+            "timeline": "Days 3–5",
+            "text": "The Editor-in-Chief and Associate Editors check journal scope, academic originality, and similarity (< 15% via automated plagiarism screening)."
           },
           {
-            "step": "03",
+            "icon": "Users",
+            "stage": "03",
             "title": "Double-Blind Peer Review",
-            "timeline": "Days 6 – 20",
-            "description": "Two or more independent reviewers evaluate methodology, statistical validity, reproducibility, and contribution. An editorial decision is rendered."
+            "timeline": "Weeks 2–4",
+            "text": "Manuscripts are assigned to two or more independent external reviewers. Author and reviewer identities remain concealed."
           },
           {
-            "step": "04",
-            "title": "Copyediting & DOI Publication",
-            "timeline": "Days 21 – 28",
-            "description": "Accepted manuscripts undergo professional copyediting, author proof approval, persistent CrossRef DOI registration, and immediate global Open Access publishing."
+            "icon": "Scale",
+            "stage": "04",
+            "title": "Revisions & Editorial Decision",
+            "timeline": "Weeks 4–6",
+            "text": "Authors receive reviewer comments and the editorial decision (Accept, Minor Revision, Major Revision, or Reject). Revisions are re-evaluated promptly."
+          },
+          {
+            "icon": "Globe2",
+            "stage": "05",
+            "title": "Production & Open Access",
+            "timeline": "Within 7 Days",
+            "text": "Accepted papers undergo copyediting, typesetting, CrossRef DOI registration, and open-access publication."
           }
         ]
       }
@@ -232,21 +294,37 @@
         ]
       }
     },
-    "call-for-papers": {
-      "label": "Call for Papers",
+    "cta": {
+      "label": "Closing CTA",
       "description": "Dark CTA banner: badge, headline, intro, feature pills, buttons and the editorial secretariat contact card",
       "title": "Ready to Publish Your Research?",
-      "subtitle": "CALL FOR PAPERS · VOL. 2026/2027",
-      "content": "Join leading international researchers publishing high-impact discoveries in health, pharmacy, agriculture, law, computing, and social welfare. Zero submission or publication fees.",
+      "subtitle": "CALL FOR PAPERS",
+      "content": "We welcome original research in health, pharmacy, agriculture, law, computing, and social welfare. There are no submission or publication fees.",
       "meta": {
+        "badgeIcon": "FileText",
         "pills": [
-          { "icon": "Clock", "label": "14-Day First Decision" },
-          { "icon": "Globe2", "label": "100% Free Open Access" },
-          { "icon": "ShieldCheck", "label": "Double-Blind Peer Review" }
+          {
+            "icon": "Clock",
+            "label": "Avg. 18-Day First Decision"
+          },
+          {
+            "icon": "Globe2",
+            "label": "Open Access · CC BY 4.0"
+          },
+          {
+            "icon": "ShieldCheck",
+            "label": "Double-Blind Peer Review"
+          }
         ],
         "ctas": [
-          { "label": "Submit Your Manuscript", "href": "/dashboard/submissions/new" },
-          { "label": "Editorial Policies", "href": "/policies" }
+          {
+            "label": "Submit Your Manuscript",
+            "href": "/dashboard/submissions/new"
+          },
+          {
+            "label": "Editorial Policies",
+            "href": "/policies"
+          }
         ],
         "contactEyebrow": "EDITORIAL SECRETARIAT",
         "contactTag": "Author Desk",
@@ -256,7 +334,10 @@
         "email": "editorial@gonobishwabidyalay.edu.bd",
         "locationLabel": "Campus Location",
         "location": "Gono Bishwabidyalay, Nolam, Savar, Dhaka 1344, Bangladesh",
-        "contactLink": { "label": "Contact Editorial Office", "href": "/contact" }
+        "contactLink": {
+          "label": "Contact Editorial Office",
+          "href": "/contact"
+        }
       }
     }
   }

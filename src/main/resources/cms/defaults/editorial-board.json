@@ -11,7 +11,8 @@
       "subtitle": "ACADEMIC GOVERNANCE",
       "content": "The **Gono Bishwabidyalay Journal of Research** is governed by an independent academic editorial board composed of senior faculty chairs, clinical experts, and international advisory scholars committed to objective double-blind evaluation and COPE publication ethics.",
       "meta": {
-        "tagline": "Gono Bishwabidyalay Editorial Leadership",
+        "badgeIcon": "Users",
+        "institution": "Gono Bishwabidyalay Editorial Leadership",
         "highlights": [
           { "icon": "ShieldCheck", "label": "Editorial Independence" },
           { "icon": "Scale", "label": "COPE-Aligned Ethics" },

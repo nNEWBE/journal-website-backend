@@ -33,7 +33,18 @@ public class FileStorageService {
     @Value("${app.supabase.bucket:manuscripts}")
     private String supabaseBucket;
 
-    private final java.net.http.HttpClient httpClient = java.net.http.HttpClient.newHttpClient();
+    private volatile java.net.http.HttpClient httpClient;
+
+    private java.net.http.HttpClient getHttpClient() {
+        if (httpClient == null) {
+            synchronized (this) {
+                if (httpClient == null) {
+                    httpClient = java.net.http.HttpClient.newHttpClient();
+                }
+            }
+        }
+        return httpClient;
+    }
 
     /**
      * Safely store an uploaded file. If Supabase is configured, uploads directly
@@ -73,7 +84,7 @@ public class FileStorageService {
                         .POST(java.net.http.HttpRequest.BodyPublishers.ofByteArray(file.getBytes()))
                         .build();
 
-                java.net.http.HttpResponse<String> response = httpClient.send(request, java.net.http.HttpResponse.BodyHandlers.ofString());
+                java.net.http.HttpResponse<String> response = getHttpClient().send(request, java.net.http.HttpResponse.BodyHandlers.ofString());
 
                 if (response.statusCode() == 200 || response.statusCode() == 201) {
                     String publicUrl = supabaseUrl.replaceAll("/+$", "") + "/storage/v1/object/public/" + supabaseBucket + "/" + objectPath;

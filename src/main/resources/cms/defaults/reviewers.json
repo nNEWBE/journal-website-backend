@@ -6,35 +6,78 @@
   "sections": {
     "hero": {
       "label": "Hero Banner",
-      "description": "Eyebrow, headline, intro, feature badges, CTAs and the reviewer specifications card. Spec tone: default, accent or success.",
+      "description": "Eyebrow, headline, intro, highlights, CTAs and the reviewer specifications card. Spec tone: default, mono, accent or success.",
       "title": "Reviewer Responsibilities & Evaluation Framework",
       "subtitle": "PEER REVIEW STANDARDS",
       "content": "Independent peer reviewers are the cornerstone of scholarly integrity at the **Gono Bishwabidyalay Journal of Research**. Our reviewers provide constructive, impartial, and evidence-grounded assessments under strict double-blind confidentiality.",
       "meta": {
-        "institutionLabel": "Gono Bishwabidyalay Research Evaluation",
-        "features": [
-          { "icon": "ShieldCheck", "label": "100% Double-Blind Process" },
-          { "icon": "Clock", "label": "14-Day Review Window" },
-          { "icon": "Scale", "label": "COPE-Aligned Ethics" }
+        "badgeIcon": "Eye",
+        "institution": "Gono Bishwabidyalay Research Evaluation",
+        "highlights": [
+          {
+            "icon": "ShieldCheck",
+            "label": "Double-Blind Review"
+          },
+          {
+            "icon": "Clock",
+            "label": "18 Days Average to First Decision"
+          },
+          {
+            "icon": "Scale",
+            "label": "COPE-Aligned Ethics"
+          }
         ],
         "ctas": [
-          { "label": "Apply as Peer Reviewer", "href": "mailto:editorial@gonobishwabidyalay.edu.bd?subject=Reviewer%20Application" },
-          { "label": "Evaluation Rubric", "href": "#rubric" },
-          { "label": "Author Guidelines", "href": "/authors" }
+          {
+            "label": "Apply as Peer Reviewer",
+            "href": "mailto:editorial@gonobishwabidyalay.edu.bd?subject=Reviewer%20Application"
+          },
+          {
+            "label": "Evaluation Rubric",
+            "href": "#rubric"
+          },
+          {
+            "label": "Author Guidelines",
+            "href": "/authors"
+          }
         ],
-        "specMonogram": "GB",
-        "specEyebrow": "REVIEW PROTOCOL",
-        "specTitle": "Reviewer Specifications",
-        "specBadge": "COPE Standard",
+        "cardMonogram": "GB",
+        "cardEyebrow": "REVIEW PROTOCOL",
+        "cardTitle": "Reviewer Specifications",
+        "cardBadge": "COPE Standard",
         "specs": [
-          { "label": "Review Model", "value": "Double-Blind Anonymous", "tone": "default" },
-          { "label": "Turnaround Target", "value": "14 Days from Access", "tone": "accent" },
-          { "label": "Invitation Response", "value": "Within 48 Hours", "tone": "default" },
-          { "label": "Evaluation Dimensions", "value": "5 Structured Criteria", "tone": "default" },
-          { "label": "Recognition", "value": "Official Certificate", "tone": "success" },
-          { "label": "Confidentiality", "value": "Strict Non-Disclosure", "tone": "default" }
+          {
+            "label": "Review Model",
+            "value": "Double-Blind Anonymous",
+            "tone": "default"
+          },
+          {
+            "label": "First Decision",
+            "value": "18 days average",
+            "tone": "accent"
+          },
+          {
+            "label": "Invitation Response",
+            "value": "Within 48 Hours",
+            "tone": "default"
+          },
+          {
+            "label": "Evaluation Dimensions",
+            "value": "5 Structured Criteria",
+            "tone": "default"
+          },
+          {
+            "label": "Recognition",
+            "value": "Official Certificate",
+            "tone": "success"
+          },
+          {
+            "label": "Confidentiality",
+            "value": "Strict Non-Disclosure",
+            "tone": "default"
+          }
         ],
-        "noteTitle": "Ethical Covenant:",
+        "noteLabel": "Ethical Covenant:",
         "noteText": "Reviewers must declare any potential competing interest prior to accessing manuscript files. Unpublished material cannot be cited or reused."
       }
     },
@@ -51,7 +94,7 @@
             "icon": "UserCheck",
             "title": "Availability & Conflict Check",
             "subtitle": "Pre-Review Declaration",
-            "description": "Reviewers must confirm subject-matter expertise, absence of institutional or personal conflicts of interest, and availability to complete review within 14 days before manuscript files are unlocked."
+            "description": "Reviewers must confirm subject-matter expertise, absence of institutional or personal conflicts of interest, and availability to complete the review by the agreed deadline before manuscript files are unlocked."
           },
           {
             "number": "02",
@@ -88,60 +131,53 @@
             "subtitle": "Integrity Compliance",
             "description": "Assessments strictly comply with Committee on Publication Ethics (COPE) Ethical Guidelines for Peer Reviewers, upholding transparency, rigor, and mutual respect."
           }
-        ],
-        "complianceLabel": "COPE Compliance Enforced"
+        ]
       }
     },
     "lifecycle": {
       "label": "Review Lifecycle",
-      "description": "5-stage review workflow: heading, key metrics, double-blind note and stage cards. Metric tone: default or accent.",
+      "description": "5-stage review workflow: heading, intro, double-blind note and stage cards",
       "title": "The 5-Stage Review Lifecycle",
       "subtitle": "REVIEW WORKFLOW",
       "content": "A structured, timed workflow ensures unbiased peer appraisal while maintaining predictable turnaround times for authors and editors.",
       "meta": {
-        "metrics": [
-          { "icon": "UserCheck", "label": "Invitation Response", "value": "Within 48h", "tone": "default" },
-          { "icon": "Timer", "label": "Standard Review Window", "value": "14 Days", "tone": "accent" },
-          { "icon": "ClipboardList", "label": "Evaluation Criteria", "value": "5 Dimensions", "tone": "default" }
-        ],
         "guaranteeTitle": "Double-Blind Guarantee:",
         "guaranteeText": "Reviewers never see author names, affiliations, or acknowledgements. Author copy excludes all reviewer identities.",
-        "stepLabel": "Step",
         "stages": [
           {
-            "step": "01",
+            "stage": "01",
             "icon": "Mail",
             "title": "Invitation & Abstract Assessment",
-            "timeframe": "Day 0",
-            "description": "The Section Editor sends an invitation with the anonymized title, abstract, and review deadline. The reviewer decides whether the topic fits their core expertise."
+            "timeline": "Day 0",
+            "text": "The Section Editor sends an invitation with the anonymized title, abstract, and review deadline. The reviewer decides whether the topic fits their core expertise."
           },
           {
-            "step": "02",
+            "stage": "02",
             "icon": "UserCheck",
             "title": "Conflict & Commitment Declaration",
-            "timeframe": "Within 48 Hours",
-            "description": "The reviewer accepts the invitation online, certifying zero conflict of interest and committing to the 14-day turnaround."
+            "timeline": "Within 48 Hours",
+            "text": "The reviewer accepts the invitation online, certifying zero conflict of interest and committing to the agreed review deadline."
           },
           {
-            "step": "03",
+            "stage": "03",
             "icon": "Eye",
             "title": "Double-Blind Manuscript Appraisal",
-            "timeframe": "Days 1–10",
-            "description": "The full anonymized manuscript and supplementary datasets become accessible through the secure portal for thorough analysis."
+            "timeline": "Review period",
+            "text": "The full anonymized manuscript and supplementary datasets become accessible through the secure portal for thorough analysis."
           },
           {
-            "step": "04",
+            "stage": "04",
             "icon": "ClipboardList",
             "title": "Structured Rubric & Recommendations",
-            "timeframe": "By Day 14",
-            "description": "The reviewer scores the 5 criteria, provides confidential comments to the editor, and submits itemized constructive feedback for the authors."
+            "timeline": "By the deadline",
+            "text": "The reviewer scores the 5 criteria, provides confidential comments to the editor, and submits itemized constructive feedback for the authors."
           },
           {
-            "step": "05",
+            "stage": "05",
             "icon": "ShieldCheck",
             "title": "Editorial Synthesis & Certificate",
-            "timeframe": "Post-Review",
-            "description": "The Editor-in-Chief synthesizes referee reports to render the editorial verdict (Accept, Minor/Major Revision, or Reject) and issues an official Reviewer Certificate."
+            "timeline": "Post-Review",
+            "text": "The Editor-in-Chief synthesizes referee reports to render the editorial verdict (Accept, Minor/Major Revision, or Reject) and issues an official Reviewer Certificate."
           }
         ]
       }
@@ -212,8 +248,7 @@
             "ethical": false
           }
         ],
-        "footnote": "**Threshold for Recommendation:** Aggregate minimum score of 18/25 points with an unconditional Ethical Clearance.",
-        "footnoteTag": "COPE Guideline Matrix v4.2"
+        "footnote": "**Threshold for Recommendation:** Aggregate minimum score of 18/25 points with an unconditional Ethical Clearance."
       }
     },
     "recognition": {
@@ -221,7 +256,7 @@
       "description": "Reviewer accreditation and community benefits: heading, intro and benefit cards",
       "title": "Reviewer Accreditation & Community Benefits",
       "subtitle": "SCHOLARLY RECOGNITION",
-      "content": "We value the time and expertise of our reviewers with authenticated credentials, annual public recognition, and priority consideration.",
+      "content": "We value the time and expertise of our reviewers with verifiable credentials, annual public acknowledgement, and a path to editorial roles.",
       "meta": {
         "benefits": [
           {
@@ -238,40 +273,56 @@
             "icon": "FileText",
             "title": "Annual Index Acknowledgement",
             "description": "Reviewers are publicly acknowledged in the annual journal index volume and on the journal’s permanent academic registry portal."
-          },
-          {
-            "icon": "ArrowUpRight",
-            "title": "Fast-Track Author Priority",
-            "description": "Active reviewers receive priority processing and fee waivers on their own subsequent research submissions to the journal."
           }
         ]
       }
     },
-    "join-panel": {
-      "label": "Join Panel CTA",
-      "description": "Reviewer recruitment banner (badge, heading, eligibility, CTAs) and the editorial secretariat contact card. Eligibility tone: amber, blue or emerald.",
+    "cta": {
+      "label": "Closing CTA",
+      "description": "Reviewer recruitment band (badge, heading, eligibility pills, two buttons) and the editorial secretariat contact card",
       "title": "Apply to Join Our Expert Referee Network",
       "subtitle": "JOIN THE REVIEWER PANEL",
       "content": "We welcome qualified researchers holding a doctoral degree (PhD), clinical fellowship, or senior academic rank with an active publication record in health, pharmacy, agriculture, law, computing, or social sciences.",
       "meta": {
-        "eligibility": [
-          { "icon": "GraduationCap", "label": "PhD / Senior Academic Rank", "tone": "amber" },
-          { "icon": "FileCheck2", "label": "Active Publishing Record", "tone": "blue" },
-          { "icon": "ShieldCheck", "label": "COPE Ethics Commitment", "tone": "emerald" }
+        "badgeIcon": "Users",
+        "pills": [
+          {
+            "icon": "GraduationCap",
+            "label": "PhD / Senior Academic Rank"
+          },
+          {
+            "icon": "FileCheck2",
+            "label": "Active Publishing Record"
+          },
+          {
+            "icon": "ShieldCheck",
+            "label": "COPE Ethics Commitment"
+          }
         ],
-        "primaryCta": { "label": "Submit Reviewer Application", "href": "mailto:editorial@gonobishwabidyalay.edu.bd?subject=Reviewer%20Application%20GB%20Journal" },
-        "secondaryCta": { "label": "Editorial Board", "href": "/editorial-board" },
+        "ctas": [
+          {
+            "label": "Submit Reviewer Application",
+            "href": "mailto:editorial@gonobishwabidyalay.edu.bd?subject=Reviewer%20Application%20GB%20Journal"
+          },
+          {
+            "label": "Editorial Board",
+            "href": "/editorial-board"
+          }
+        ],
         "contactEyebrow": "EDITORIAL SECRETARIAT",
         "contactTag": "Reviewer Desk",
         "contactTitle": "Reviewer Inquiries & Support",
         "contactText": "Need assistance with manuscript access, rubric scoring, or timeline extension requests? Reach our editorial team directly.",
         "emailLabel": "Direct Email",
         "email": "editorial@gonobishwabidyalay.edu.bd",
-        "officeLabel": "Secretariat Office",
-        "officeAddress": "Gono Bishwabidyalay, Nolam, Savar, Dhaka 1344, Bangladesh",
-        "turnaroundLabel": "Turnaround Standard",
-        "turnaroundText": "Reviewer support desk responds within 24–48 hours",
-        "contactLink": { "label": "Contact Editorial Secretariat", "href": "/contact" }
+        "locationLabel": "Secretariat Office",
+        "location": "Gono Bishwabidyalay, Nolam, Savar, Dhaka 1344, Bangladesh",
+        "responseLabel": "Turnaround Standard",
+        "response": "Reviewer support desk responds within 24–48 hours",
+        "contactLink": {
+          "label": "Contact Editorial Secretariat",
+          "href": "/contact"
+        }
       }
     }
   }

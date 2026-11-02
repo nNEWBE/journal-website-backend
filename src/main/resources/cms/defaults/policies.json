@@ -6,36 +6,82 @@
   "sections": {
     "hero": {
       "label": "Hero Banner",
-      "description": "Badge, headline, intro, highlights, buttons and the policy specifications card",
+      "description": "Badge, headline, intro, highlights, buttons and the policy specifications card. Spec tone: default, mono, accent or success.",
       "title": "Editorial Policies & Publication Ethics",
       "subtitle": "ETHICAL FRAMEWORK & POLICIES",
       "content": "The **Gono Bishwabidyalay Journal of Research** enforces strict COPE-aligned publication ethics, double-blind peer review rigor, complete disclosure standards, and durable open-access stewardship to safeguard scholarly credibility.",
       "meta": {
+        "badgeIcon": "Scale",
         "institution": "Gono Bishwabidyalay Research Governance",
         "highlights": [
-          { "icon": "ShieldCheck", "label": "COPE-Aligned Practice" },
-          { "icon": "Globe2", "label": "CC BY 4.0 Open Access" },
-          { "icon": "Archive", "label": "CrossMark Record Integrity" }
+          {
+            "icon": "ShieldCheck",
+            "label": "COPE-Aligned Practice"
+          },
+          {
+            "icon": "Globe2",
+            "label": "CC BY 4.0 Open Access"
+          },
+          {
+            "icon": "Archive",
+            "label": "CrossMark Record Integrity"
+          }
         ],
         "ctas": [
-          { "label": "Browse Policy Directory", "href": "#policy-directory", "icon": "ArrowUpRight" },
-          { "label": "Author Guidelines", "href": "/authors", "icon": "BookOpen" },
-          { "label": "Editorial Board", "href": "/editorial-board", "icon": "Users" }
+          {
+            "label": "Browse Policy Directory",
+            "href": "#policy-directory",
+            "icon": "ArrowUpRight"
+          },
+          {
+            "label": "Author Guidelines",
+            "href": "/authors",
+            "icon": "BookOpen"
+          },
+          {
+            "label": "Editorial Board",
+            "href": "/editorial-board",
+            "icon": "Users"
+          }
         ],
         "cardMonogram": "GB",
         "cardEyebrow": "INTEGRITY CODE",
         "cardTitle": "Policy Specifications",
         "cardBadge": "Verified",
         "specs": [
-          { "label": "Ethics Foundation", "value": "COPE Core Practices", "tone": "default" },
-          { "label": "Review Protocol", "value": "Double-Blind Anonymous", "tone": "default" },
-          { "label": "Similarity Limit", "value": "< 15% Similarity Check", "tone": "mono" },
-          { "label": "Licensing Model", "value": "Creative Commons CC BY 4.0", "tone": "default" },
-          { "label": "Author Rights", "value": "Author Retains Copyright", "tone": "success" },
-          { "label": "Permanent Record", "value": "CrossRef DOI & CrossMark", "tone": "default" }
+          {
+            "label": "Ethics Foundation",
+            "value": "COPE Core Practices",
+            "tone": "default"
+          },
+          {
+            "label": "Review Protocol",
+            "value": "Double-Blind Anonymous",
+            "tone": "default"
+          },
+          {
+            "label": "Similarity Limit",
+            "value": "< 15% Similarity Check",
+            "tone": "mono"
+          },
+          {
+            "label": "Licensing Model",
+            "value": "Creative Commons CC BY 4.0",
+            "tone": "default"
+          },
+          {
+            "label": "Author Rights",
+            "value": "Author Retains Copyright",
+            "tone": "success"
+          },
+          {
+            "label": "Permanent Record",
+            "value": "CrossRef DOI & CrossMark",
+            "tone": "default"
+          }
         ],
-        "commitmentLabel": "Ethical Commitment:",
-        "commitmentText": "Any suspected research misconduct, fabrication, duplicate submission, or undeclared AI content triggers immediate investigation according to formal COPE flowcharts."
+        "noteLabel": "Ethical Commitment:",
+        "noteText": "Any suspected research misconduct, fabrication, duplicate submission, or undeclared AI content triggers immediate investigation according to formal COPE flowcharts."
       }
     },
     "integrity-framework": {
@@ -160,37 +206,36 @@
       "subtitle": "EDITORIAL SAFEGUARDS",
       "content": "Five sequential checkpoints ensure every published paper meets verified standards of ethics, reproducibility, and originality.",
       "meta": {
-        "stageLabel": "Stage",
         "steps": [
           {
-            "step": "01",
+            "stage": "01",
             "icon": "FileText",
             "title": "Initial Desk Intake & Scope Screening",
-            "description": "Editorial secretariat verifies submission completeness, author declarations, ethics documentation, and journal scope alignment."
+            "text": "Editorial secretariat verifies submission completeness, author declarations, ethics documentation, and journal scope alignment."
           },
           {
-            "step": "02",
+            "stage": "02",
             "icon": "SearchCheck",
             "title": "Automated Plagiarism & Similarity Check",
-            "description": "Crossref Similarity Check verifies originality against billions of published articles and web repositories prior to editor review."
+            "text": "Crossref Similarity Check verifies originality against billions of published articles and web repositories prior to editor review."
           },
           {
-            "step": "03",
+            "stage": "03",
             "icon": "Users",
             "title": "Double-Blind Referee Assignment",
-            "description": "Section Editor appoints independent, non-conflicted reviewers who appraise the anonymized manuscript across 5 criteria."
+            "text": "Section Editor appoints independent, non-conflicted reviewers who appraise the anonymized manuscript across 5 criteria."
           },
           {
-            "step": "04",
+            "stage": "04",
             "icon": "Scale",
             "title": "Merit-Based Editorial Decision",
-            "description": "Editor-in-Chief synthesizes independent referee reports to issue an objective determination: Accept, Revise, or Reject."
+            "text": "Editor-in-Chief synthesizes independent referee reports to issue an objective determination: Accept, Revise, or Reject."
           },
           {
-            "step": "05",
+            "stage": "05",
             "icon": "Archive",
             "title": "Permanent Open Access & CrossMark Indexing",
-            "description": "Final articles receive permanent CrossRef DOIs, CrossMark metadata integrity tracking, and open CC BY 4.0 deposition."
+            "text": "Final articles receive permanent CrossRef DOIs, CrossMark metadata integrity tracking, and open CC BY 4.0 deposition."
           }
         ]
       }
@@ -224,33 +269,52 @@
         ]
       }
     },
-    "consultation-cta": {
-      "label": "Ethics Consultation",
-      "description": "Closing CTA: heading, intro, badges, buttons and the editorial secretariat contact card",
+    "cta": {
+      "label": "Closing CTA",
+      "description": "Closing band: badge, heading, intro, pills, two buttons and the editorial secretariat contact card",
       "title": "Questions Regarding Journal Policies or Ethics?",
       "subtitle": "ETHICS CONSULTATION",
       "content": "If you require clarification on authorship eligibility, copyright permissions, data deposition protocols, or bioethical documentation, our Editorial Secretariat is available to assist.",
       "meta": {
-        "badges": [
-          { "icon": "ShieldCheck", "label": "COPE Compliance Advisory" },
-          { "icon": "Globe2", "label": "Open Access Rights Guidance" },
-          { "icon": "Archive", "label": "DOI & Archiving Support" }
+        "badgeIcon": "Scale",
+        "pills": [
+          {
+            "icon": "ShieldCheck",
+            "label": "COPE Compliance Advisory"
+          },
+          {
+            "icon": "Globe2",
+            "label": "Open Access Rights Guidance"
+          },
+          {
+            "icon": "Archive",
+            "label": "DOI & Archiving Support"
+          }
         ],
         "ctas": [
-          { "label": "Contact Editorial Office", "href": "mailto:editorial@gonobishwabidyalay.edu.bd?subject=Policy%20Inquiry%20GB%20Journal" },
-          { "label": "Editorial Board", "href": "/editorial-board" }
+          {
+            "label": "Contact Editorial Office",
+            "href": "mailto:editorial@gonobishwabidyalay.edu.bd?subject=Policy%20Inquiry%20GB%20Journal"
+          },
+          {
+            "label": "Editorial Board",
+            "href": "/editorial-board"
+          }
         ],
-        "cardEyebrow": "EDITORIAL SECRETARIAT",
-        "cardTag": "Ethics Desk",
-        "cardTitle": "Research Governance Office",
-        "cardDescription": "Direct inquiries regarding research compliance, authorship declarations, or institutional agreements.",
+        "contactEyebrow": "EDITORIAL SECRETARIAT",
+        "contactTag": "Ethics Desk",
+        "contactTitle": "Research Governance Office",
+        "contactText": "Direct inquiries regarding research compliance, authorship declarations, or institutional agreements.",
         "emailLabel": "Official Email",
         "email": "editorial@gonobishwabidyalay.edu.bd",
         "locationLabel": "Campus Location",
         "location": "Gono Bishwabidyalay, Nolam, Savar, Dhaka 1344, Bangladesh",
         "responseLabel": "Response SLA",
         "response": "Official response within 1–2 working business days",
-        "cardLink": { "label": "Visit Contact Directory", "href": "/contact" }
+        "contactLink": {
+          "label": "Visit Contact Directory",
+          "href": "/contact"
+        }
       }
     }
   }

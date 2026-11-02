@@ -7,57 +7,60 @@
     "message": {
       "label": "Not Found Message",
       "description": "Status badge, heading, explanation, search box and recovery buttons",
-      "title": "Manuscript or Page Not Found",
-      "subtitle": "Academic Resource Not Found • Error 404",
-      "content": "The requested academic paper, editorial guideline, volume issue, or administrative URL could not be located. It may have been relocated, archived, or unpublished.",
+      "title": "Page Not Found",
+      "subtitle": "Error 404",
+      "content": "The page you requested could not be found. It may have moved or no longer exist. Search the published articles or use one of the links below.",
       "meta": {
         "code": "404",
-        "searchPlaceholder": "Search manuscripts, DOIs, authors, or topics...",
+        "searchPlaceholder": "Search articles by title, author or keyword",
         "searchButtonLabel": "Search",
-        "backLabel": "Return to Previous Page",
-        "homeLink": { "label": "Journal Homepage", "href": "/" }
+        "backLabel": "Go Back",
+        "homeLink": {
+          "label": "Journal Home",
+          "href": "/"
+        }
       }
     },
     "destinations": {
       "label": "Suggested Links",
       "description": "Recommended destination cards shown below the message",
-      "title": "Recommended Scholarly Destinations",
+      "title": "Where to go next",
       "meta": {
         "links": [
           {
             "icon": "BookOpen",
             "title": "Current Issue",
-            "desc": "Explore active volume papers & open-access editorial notes",
+            "desc": "Read the papers in the latest published issue.",
             "href": "/issues/current",
-            "badge": "Latest Release"
+            "badge": "Latest"
           },
           {
             "icon": "FileText",
             "title": "Articles Archive",
-            "desc": "Search through published peer-reviewed research repository",
+            "desc": "Browse and search every published article.",
             "href": "/articles",
-            "badge": "Indexed"
+            "badge": "Archive"
           },
           {
             "icon": "HelpCircle",
             "title": "Author Guidelines",
-            "desc": "Manuscript preparation, submission portal & ethics guidelines",
+            "desc": "How to prepare and submit a manuscript.",
             "href": "/authors",
-            "badge": "Submissions"
+            "badge": "Submit"
           },
           {
             "icon": "Users",
             "title": "Editorial Board",
-            "desc": "Faculty governance, section editors & international council",
+            "desc": "The editors who run the journal.",
             "href": "/editorial-board",
-            "badge": "Faculty"
+            "badge": "People"
           },
           {
             "icon": "Mail",
             "title": "Contact Desk",
-            "desc": "Get in touch with the managing editorial office for inquiries",
+            "desc": "Reach the editorial office with a question.",
             "href": "/contact",
-            "badge": "Support"
+            "badge": "Help"
           }
         ]
       }
