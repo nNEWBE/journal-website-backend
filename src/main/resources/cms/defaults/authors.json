@@ -3,5 +3,261 @@
   "label": "Author Guidelines",
   "route": "/authors",
   "description": "Author hero, manuscript preparation, submission checklist, templates and fees.",
-  "sections": {}
+  "sections": {
+    "hero": {
+      "label": "Hero Banner",
+      "description": "Badges, headline, intro, highlights, CTAs and the author specifications card",
+      "title": "Author Guidelines & Manuscript Submission Framework",
+      "subtitle": "AUTHOR GUIDELINES & SUBMISSION",
+      "content": "Publish your original research, review articles, and clinical discoveries with the **Gono Bishwabidyalay Journal of Research**. We offer rigorous double-blind peer review, prompt editorial turnaround, zero author publication charges (No APC), and global open-access reach.",
+      "meta": {
+        "secondaryBadge": "Gono Bishwabidyalay Research Instructions",
+        "highlights": [
+          { "icon": "ShieldCheck", "label": "Double-Blind Peer Review" },
+          { "icon": "Clock", "label": "14-Day Initial Decision" },
+          { "icon": "Globe2", "label": "Free Open Access (Zero APC)" }
+        ],
+        "ctas": [
+          { "label": "Submit Your Manuscript", "href": "/dashboard/submissions/new" },
+          { "label": "Preparation Checklist", "href": "#checklist" },
+          { "label": "Editorial Policies", "href": "/policies" }
+        ],
+        "cardMonogram": "GB",
+        "cardEyebrow": "SUBMISSION METRICS",
+        "cardTitle": "Author Specifications",
+        "cardBadge": "Zero APC",
+        "specs": [
+          { "label": "Publication Charges", "value": "100% Free / No Fees", "tone": "positive" },
+          { "label": "Initial Review Turnaround", "value": "14 Days from Intake", "tone": "accent" },
+          { "label": "Review Protocol", "value": "Double-Blind Anonymous", "tone": "default" },
+          { "label": "Similarity Limit", "value": "< 15% Similarity Check", "tone": "mono" },
+          { "label": "Citation Style", "value": "APA 7th Edition (with DOIs)", "tone": "default" },
+          { "label": "Author Rights", "value": "Author Retains Copyright", "tone": "default" }
+        ],
+        "requirementLabel": "Submission Requirement:",
+        "requirementText": "Authors must provide an editable manuscript (DOCX/LaTeX), anonymized peer-review version, and signed ethical declaration of originality."
+      }
+    },
+    "article-types": {
+      "label": "Article Formats",
+      "description": "Heading, intro and per-type details (word limit, description, structure). Card names come from the journal's article type list; details are matched by name.",
+      "title": "Manuscript Categories & Requirements",
+      "subtitle": "ACCEPTED FORMATS",
+      "content": "Select the article format that best represents your study design, evidence base, and intended scholarly contribution.",
+      "meta": {
+        "structureLabel": "Required Structure:",
+        "types": [
+          {
+            "name": "Research Article",
+            "icon": "FlaskConical",
+            "wordLimit": "4,000 – 8,000 words",
+            "description": "Original empirical investigations, laboratory experiments, clinical trials, or field studies presenting novel findings.",
+            "structure": "Abstract · Introduction · Materials & Methods · Results · Discussion · References"
+          },
+          {
+            "name": "Review Article",
+            "icon": "Library",
+            "wordLimit": "5,000 – 10,000 words",
+            "description": "Comprehensive, critical evaluations of published literature identifying current knowledge gaps and future research trends.",
+            "structure": "Abstract · Introduction · Methodological Synthesis · Thematic Sections · Future Directions · References"
+          },
+          {
+            "name": "Case Study",
+            "icon": "ClipboardCheck",
+            "wordLimit": "2,500 – 4,500 words",
+            "description": "In-depth explorations of specific institutional interventions, clinical cases, legal precedents, or community health initiatives.",
+            "structure": "Abstract · Introduction · Case Presentation · Diagnostic / Intervention Assessment · Discussion · References"
+          },
+          {
+            "name": "Short Communication",
+            "icon": "MessageSquareText",
+            "wordLimit": "1,500 – 3,000 words",
+            "description": "Concise preliminary reports of significant findings, methodological innovations, or urgent scientific discoveries.",
+            "structure": "Abstract · Context & Findings · Methods Summary · Results & Implications · References"
+          },
+          {
+            "name": "Perspective",
+            "icon": "Eye",
+            "wordLimit": "2,000 – 4,000 words",
+            "description": "Scholarly, evidence-informed opinions offering fresh interpretations of pressing academic debates or emerging controversies.",
+            "structure": "Abstract · Current Scholarly Context · Critical Perspective · Policy & Research Implications · References"
+          },
+          {
+            "name": "Editorial",
+            "icon": "PenLine",
+            "wordLimit": "1,000 – 2,500 words",
+            "description": "Authoritative commentary from the Editorial Board or guest editors highlighting thematic volumes, policy reforms, or symposium topics.",
+            "structure": "Executive Overview · Thematic Synthesis · Editorial Call to Action · References"
+          },
+          {
+            "name": "Letter",
+            "icon": "Mail",
+            "wordLimit": "800 – 1,500 words",
+            "description": "Scholarly correspondence offering constructive critiques, secondary analyses, or extensions of recently published articles in GB Journal.",
+            "structure": "Specific Article Reference · Methodological Critique · Corroborating Data · References"
+          },
+          {
+            "name": "Policy Brief",
+            "icon": "Scale",
+            "wordLimit": "2,500 – 4,000 words",
+            "description": "Action-oriented analyses translating rigorous scientific evidence into actionable public health, agricultural, or legal policy directives.",
+            "structure": "Executive Summary · Policy Context · Evidence Critique · Concrete Policy Recommendations · References"
+          }
+        ],
+        "fallbackType": {
+          "icon": "FileText",
+          "wordLimit": "3,000 – 6,000 words",
+          "description": "Scholarly research contribution meeting journal standards.",
+          "structure": "Abstract · Introduction · Methods · Results · Discussion · References"
+        }
+      }
+    },
+    "preparation-checklist": {
+      "label": "Prep Checklist",
+      "description": "Submission package heading, intro, benefit notes, portal button and the checklist cards",
+      "title": "Complete Submission Package Checklist",
+      "subtitle": "SUBMISSION PREPARATION",
+      "content": "Ensure every element is prepared before starting the online submission workflow. Submissions with complete metadata and properly formatted anonymized files proceed directly to review without administrative delay.",
+      "meta": {
+        "benefits": [
+          { "label": "Zero Article Processing Charges (No APC):", "text": "Publishing is fully funded by the university." },
+          { "label": "Author Copyright:", "text": "Authors retain unrestricted copyright under CC BY 4.0." },
+          { "label": "Fast Initial Decision:", "text": "Receive first-round reviewer feedback within 14 days." }
+        ],
+        "cta": { "label": "Open Submission Portal", "href": "/dashboard/submissions/new" },
+        "specLabel": "Standard:",
+        "items": [
+          {
+            "icon": "FileText",
+            "title": "Main Editable Manuscript",
+            "desc": "Complete document (DOCX or LaTeX) with title, abstract, keywords, body sections, tables, and references.",
+            "spec": "Double-spaced, 12pt Times New Roman, line numbering enabled."
+          },
+          {
+            "icon": "Eye",
+            "title": "Anonymized Blinded Review Copy",
+            "desc": "A separate version with all author names, institutional affiliations, acknowledgments, and self-identifying citations excised for double-blind review.",
+            "spec": "Required for peer review. No institutional identifiers."
+          },
+          {
+            "icon": "Users",
+            "title": "Title Page & Author Affiliations",
+            "desc": "Standalone document listing full author names, institutional affiliations, ORCID IDs, and corresponding author email address.",
+            "spec": "Includes contributor credit statement (CRediT taxonomy)."
+          },
+          {
+            "icon": "BookOpen",
+            "title": "Structured Abstract & Keywords",
+            "desc": "A 250-word structured abstract (Background, Methods, Results, Conclusions) alongside 4–6 MeSH/thematic index keywords.",
+            "spec": "No undefined abbreviations or uncited references."
+          },
+          {
+            "icon": "ShieldCheck",
+            "title": "Ethics & Compliance Declarations",
+            "desc": "Formal statements declaring Institutional Review Board (IRB) approval, informed patient/subject consent, funding sources, and conflict of interest.",
+            "spec": "Mandatory for all clinical, animal, and human studies."
+          },
+          {
+            "icon": "UploadCloud",
+            "title": "High-Resolution Artwork & Tables",
+            "desc": "Figures submitted as standalone 300+ DPI TIFF/PNG files. Tables provided in editable format with clear captions and footnotes.",
+            "spec": "RGB/CMYK 300 DPI minimum for photographs and micrographs."
+          }
+        ]
+      }
+    },
+    "editorial-pathway": {
+      "label": "Editorial Pathway",
+      "description": "Heading, intro and the publication workflow stage cards",
+      "title": "The 4-Stage Peer Review & Publication Journey",
+      "subtitle": "EDITORIAL PATHWAY",
+      "content": "From initial file upload to CrossRef DOI indexation, experience an accountable and transparent editorial pathway.",
+      "meta": {
+        "stagePrefix": "Stage",
+        "checkLabel": "Quality Assurance Check",
+        "stages": [
+          {
+            "step": "01",
+            "title": "Manuscript Intake & Screening",
+            "timeline": "Days 1 – 3",
+            "description": "The Managing Editor screens the submission for scope adherence, formatting compliance, and performs automated similarity check (< 15% threshold via Turnitin/iThenticate)."
+          },
+          {
+            "step": "02",
+            "title": "Section Editor Assignment",
+            "timeline": "Days 4 – 5",
+            "description": "The Editor-in-Chief assigns the manuscript to a specialized Section Editor who confirms disciplinary fit and nominates independent external reviewers."
+          },
+          {
+            "step": "03",
+            "title": "Double-Blind Peer Review",
+            "timeline": "Days 6 – 20",
+            "description": "Two or more independent reviewers evaluate methodology, statistical validity, reproducibility, and contribution. An editorial decision is rendered."
+          },
+          {
+            "step": "04",
+            "title": "Copyediting & DOI Publication",
+            "timeline": "Days 21 – 28",
+            "description": "Accepted manuscripts undergo professional copyediting, author proof approval, persistent CrossRef DOI registration, and immediate global Open Access publishing."
+          }
+        ]
+      }
+    },
+    "formatting-specs": {
+      "label": "Formatting Specs",
+      "description": "Technical specifications heading, intro and the formatting / citation / data cards",
+      "title": "Formatting, References & Data Protocols",
+      "subtitle": "TECHNICAL SPECIFICATIONS",
+      "content": "Standardized formatting guidelines ensuring seamless copyediting, machine indexability, and cross-disciplinary citation clarity.",
+      "meta": {
+        "cards": [
+          {
+            "icon": "BookOpen",
+            "title": "APA 7th Edition Citations",
+            "description": "All references must follow the American Psychological Association (APA) 7th Edition format. Inclusion of active https://doi.org/... links is mandatory for all digital sources.",
+            "footnote": "Format: Author, A. (Year). Title. Journal, Vol(Issue), Pages. DOI"
+          },
+          {
+            "icon": "UploadCloud",
+            "title": "300+ DPI High-Resolution Figures",
+            "description": "Graphics, charts, and micrographs must be submitted in TIFF, PNG, or vector PDF format at 300 DPI minimum for color and 600 DPI for line drawings.",
+            "footnote": "Vector / 300 DPI raster with clear axis units and legends"
+          },
+          {
+            "icon": "Archive",
+            "title": "Open Data & FAIR Availability",
+            "description": "Authors are strongly encouraged to deposit raw underlying datasets and code in open scholarly repositories (Dryad, Zenodo, Figshare, GitHub) with permanent DOIs.",
+            "footnote": "FAIR Principles (Findable, Accessible, Interoperable, Reusable)"
+          }
+        ]
+      }
+    },
+    "call-for-papers": {
+      "label": "Call for Papers",
+      "description": "Dark CTA banner: badge, headline, intro, feature pills, buttons and the editorial secretariat contact card",
+      "title": "Ready to Publish Your Research?",
+      "subtitle": "CALL FOR PAPERS · VOL. 2026/2027",
+      "content": "Join leading international researchers publishing high-impact discoveries in health, pharmacy, agriculture, law, computing, and social welfare. Zero submission or publication fees.",
+      "meta": {
+        "pills": [
+          { "icon": "Clock", "label": "14-Day First Decision" },
+          { "icon": "Globe2", "label": "100% Free Open Access" },
+          { "icon": "ShieldCheck", "label": "Double-Blind Peer Review" }
+        ],
+        "ctas": [
+          { "label": "Submit Your Manuscript", "href": "/dashboard/submissions/new" },
+          { "label": "Editorial Policies", "href": "/policies" }
+        ],
+        "contactEyebrow": "EDITORIAL SECRETARIAT",
+        "contactTag": "Author Desk",
+        "contactTitle": "Manuscript Inquiries & Support",
+        "contactText": "Need assistance with manuscript preparation or have questions regarding journal scope? Contact our editorial staff directly.",
+        "emailLabel": "Editorial Email",
+        "email": "editorial@gonobishwabidyalay.edu.bd",
+        "locationLabel": "Campus Location",
+        "location": "Gono Bishwabidyalay, Nolam, Savar, Dhaka 1344, Bangladesh",
+        "contactLink": { "label": "Contact Editorial Office", "href": "/contact" }
+      }
+    }
+  }
 }

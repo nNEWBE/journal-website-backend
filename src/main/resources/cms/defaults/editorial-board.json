@@ -3,5 +3,126 @@
   "label": "Editorial Board",
   "route": "/editorial-board",
   "description": "Editorial board hero, leadership and council headings.",
-  "sections": {}
+  "sections": {
+    "hero": {
+      "label": "Hero Banner",
+      "description": "Eyebrow, headline, intro, highlights, buttons and governance card",
+      "title": "Editorial Board & Subject-Matter Leadership",
+      "subtitle": "ACADEMIC GOVERNANCE",
+      "content": "The **Gono Bishwabidyalay Journal of Research** is governed by an independent academic editorial board composed of senior faculty chairs, clinical experts, and international advisory scholars committed to objective double-blind evaluation and COPE publication ethics.",
+      "meta": {
+        "tagline": "Gono Bishwabidyalay Editorial Leadership",
+        "highlights": [
+          { "icon": "ShieldCheck", "label": "Editorial Independence" },
+          { "icon": "Scale", "label": "COPE-Aligned Ethics" },
+          { "icon": "GraduationCap", "label": "Discipline-Led Assessment" }
+        ],
+        "ctas": [
+          { "label": "Submit Manuscript", "href": "/dashboard/submissions/new" },
+          { "label": "Reviewer Guidelines", "href": "/reviewers" },
+          { "label": "Ethics & Policies", "href": "/policies" }
+        ],
+        "cardEyebrow": "GOVERNANCE CHARTER",
+        "cardTitle": "Editorial Standards",
+        "cardBadge": "COPE Member",
+        "specs": [
+          { "label": "Editor-in-Chief", "value": "Prof. Dr. Laila Rahman" },
+          { "label": "Managing Editor", "value": "Prof. Saiful Islam" },
+          { "label": "Secretariat Location", "value": "Savar Campus, Dhaka" },
+          { "label": "Peer Review Model", "value": "Double-Blind Anonymous" },
+          { "label": "Outcome Authority", "value": "Strictly Merit-Based" },
+          { "label": "Conflict Policy", "value": "Mandatory Full Disclosure" }
+        ],
+        "noteLabel": "Editorial Autonomy:",
+        "noteText": "Manuscript decisions are free from commercial, institutional, or political influence and are guided exclusively by independent peer reports."
+      }
+    },
+    "leadership": {
+      "label": "Leadership",
+      "description": "Executive leadership heading, card buttons and empty state (members come from the database)",
+      "title": "Executive Editorial Leadership",
+      "subtitle": "EXECUTIVE LEADERSHIP",
+      "meta": {
+        "viewProfileLabel": "View Full Profile",
+        "contactLink": { "label": "Contact Desk", "href": "/contact" },
+        "emptyTitle": "Editorial Leadership Roster Updating",
+        "emptyText": "The editorial executive committee appointments are currently being updated for the upcoming publication cycle."
+      }
+    },
+    "section-editors": {
+      "label": "Section Editors",
+      "description": "Section editors heading, card labels and empty state (editors come from the database)",
+      "title": "Section Editors & Subject Specialists",
+      "subtitle": "DISCIPLINE CHAIRS",
+      "meta": {
+        "trackLabel": "Track:",
+        "oversightLabel": "COPE Oversight",
+        "viewProfileLabel": "View Profile",
+        "emptyText": "No section editors currently assigned in this category."
+      }
+    },
+    "governance": {
+      "label": "Governance Charter",
+      "description": "Governance charter heading, policies link and the four principle cards",
+      "title": "Ethical Principles & Review Oversight",
+      "subtitle": "GOVERNANCE CHARTER",
+      "meta": {
+        "link": { "label": "View Full Editorial Policies", "href": "/policies" },
+        "pillars": [
+          {
+            "icon": "ShieldCheck",
+            "title": "Editorial Independence",
+            "subtitle": "Merit-Based Outcomes",
+            "description": "All manuscript decisions are made strictly on academic merit, research rigor, and peer review outcomes, without influence from commercial, institutional, or political interests."
+          },
+          {
+            "icon": "Scale",
+            "title": "COPE Code of Conduct",
+            "subtitle": "Ethical Integrity",
+            "description": "Our governance model strictly follows the Committee on Publication Ethics (COPE) guidelines for handling authorship disputes, conflict disclosures, and data integrity verification."
+          },
+          {
+            "icon": "Users",
+            "title": "Double-Blind Review Integrity",
+            "subtitle": "Objective Appraisal",
+            "description": "Author identities and reviewer details remain completely concealed throughout the evaluation cycle, ensuring objective and impartial scholarly assessment."
+          },
+          {
+            "icon": "BookOpen",
+            "title": "Transparent Retractions & Appeals",
+            "subtitle": "Accountable Record",
+            "description": "Defined protocols for post-publication corrections, retractions, expressions of concern, and author appeal procedures maintain the highest standards of the scholarly record."
+          }
+        ]
+      }
+    },
+    "cta": {
+      "label": "Reviewer CTA",
+      "description": "Dark reviewer recruitment banner with the editorial secretariat contact card",
+      "title": "Become a Peer Reviewer for GB Journal",
+      "subtitle": "JOIN OUR ACADEMIC COMMUNITY",
+      "content": "We invite active researchers, faculty members, and clinical specialists across health sciences, pharmacy, agriculture, engineering, and social development to join our verified peer reviewer panel.",
+      "meta": {
+        "badgeIcon": "Users",
+        "pills": [
+          { "icon": "ShieldCheck", "label": "Double-Blind Accreditation" },
+          { "icon": "Award", "label": "Reviewer Certificates" },
+          { "icon": "Clock", "label": "Flexible Review Cycles" }
+        ],
+        "ctas": [
+          { "label": "Apply as Peer Reviewer", "href": "/reviewers" },
+          { "label": "Submit Manuscript", "href": "/dashboard/submissions/new" }
+        ],
+        "contactEyebrow": "EDITORIAL SECRETARIAT",
+        "contactTag": "Office",
+        "contactTitle": "Board Inquiries & Nominations",
+        "contactText": "Have questions regarding editorial nominations, special issues, or board governance? Contact the secretariat office directly.",
+        "emailLabel": "Editorial Email",
+        "email": "editorial@gonobishwabidyalay.edu.bd",
+        "locationLabel": "University Campus",
+        "location": "Gono Bishwabidyalay, Nolam, Savar, Dhaka 1344, Bangladesh",
+        "contactLink": { "label": "Contact Editorial Office", "href": "/contact" }
+      }
+    }
+  }
 }

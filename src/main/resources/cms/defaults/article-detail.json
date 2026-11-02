@@ -3,5 +3,90 @@
   "label": "Article Page",
   "route": "/articles",
   "description": "Shared labels and notices on individual article pages.",
-  "sections": {}
+  "sections": {
+    "labels": {
+      "label": "Reading Labels",
+      "description": "Abstract heading, licence and review badges, keyword and reference headings",
+      "title": "EXECUTIVE ABSTRACT",
+      "subtitle": "Scholarly Summary",
+      "meta": {
+        "openAccessBadge": "Open Access (CC BY 4.0)",
+        "peerReviewBadge": "Double-Blind Peer Reviewed",
+        "keywordsHeading": "INDEX KEYWORDS",
+        "referencesHeading": "REFERENCES & BIBLIOGRAPHY"
+      }
+    },
+    "declarations": {
+      "label": "Declarations",
+      "description": "Ethical declarations shown on every article (one paragraph per blank-line block; **bold** for the lead-in)",
+      "title": "ETHICAL DECLARATIONS & GOVERNANCE",
+      "content": "**Ethical Approval:** Conducted under the ethical oversight and approval protocols of Gono Bishwabidyalay Institutional Review Board.\n\n**Funding Declaration:** This research received institutional faculty grant support. No external commercial sponsorship influenced study outcomes.\n\n**Conflict of Interest:** The authors declare no competing financial or personal interests related to this work."
+    },
+    "sidebar": {
+      "label": "Sidebar",
+      "description": "Sidebar card headings, publication record notices and back link",
+      "title": "ARTICLE ACTIONS",
+      "meta": {
+        "contentsHeading": "ON THIS PAGE",
+        "contentsReferencesLabel": "References",
+        "recordHeading": "PUBLICATION RECORD",
+        "recordLicensing": "CC BY 4.0 Open Access",
+        "recordReview": "Double-Blind Peer Reviewed",
+        "verifiedLabel": "CrossMark Verified Record",
+        "backLink": { "label": "Back to Research Archive", "href": "/articles" }
+      }
+    },
+    "actions": {
+      "label": "Action Buttons",
+      "description": "Download, cite and share button labels (hero and sidebar)",
+      "title": "Download PDF",
+      "meta": {
+        "heroCite": "Cite Article",
+        "heroCiteDone": "Citation Copied",
+        "heroShare": "Share",
+        "heroShareDone": "Link Copied",
+        "sidebarDownload": "Download Full PDF",
+        "sidebarCite": "Cite",
+        "sidebarShare": "Share",
+        "sidebarDone": "Copied"
+      }
+    },
+    "related": {
+      "label": "Related Articles",
+      "description": "Related articles heading (the article topic is appended to the title) and link",
+      "title": "Related Articles in",
+      "subtitle": "FURTHER SCHOLARSHIP",
+      "meta": {
+        "link": { "label": "Browse All Articles", "href": "/articles" }
+      }
+    },
+    "cta": {
+      "label": "Call for Papers",
+      "description": "Dark call-for-papers banner with the editorial secretariat contact card",
+      "title": "Contribute Your Research to GB Journal",
+      "subtitle": "CALL FOR PAPERS · VOL. 2026/2027",
+      "content": "We invite original research articles, review papers, and short communications. Benefit from an impartial double-blind review process and unrestricted global open access.",
+      "meta": {
+        "badgeIcon": "FileText",
+        "pills": [
+          { "icon": "Clock", "label": "14-Day Initial Review" },
+          { "icon": "Globe2", "label": "CC BY 4.0 Open Access" },
+          { "icon": "ShieldCheck", "label": "Double-Blind Verification" }
+        ],
+        "ctas": [
+          { "label": "Submit Manuscript", "href": "/dashboard/submissions/new" },
+          { "label": "Author Guidelines", "href": "/authors" }
+        ],
+        "contactEyebrow": "EDITORIAL SECRETARIAT",
+        "contactTag": "Author Desk",
+        "contactTitle": "Manuscript Inquiries & Support",
+        "contactText": "Have questions regarding scope, track assignment, or submission guidelines? Reach out directly.",
+        "emailLabel": "Editorial Email",
+        "email": "editorial@gonobishwabidyalay.edu.bd",
+        "locationLabel": "Campus Location",
+        "location": "Gono Bishwabidyalay, Nolam, Savar, Dhaka 1344, Bangladesh",
+        "contactLink": { "label": "Contact Editorial Secretariat", "href": "/contact" }
+      }
+    }
+  }
 }

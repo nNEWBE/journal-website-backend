@@ -3,5 +3,114 @@
   "label": "Current Issue",
   "route": "/issues/current",
   "description": "Current issue page headings, labels and calls to action.",
-  "sections": {}
+  "sections": {
+    "hero": {
+      "label": "Issue Header",
+      "description": "Breadcrumb, eyebrow, journal name, cover labels, issue details, default description and buttons. The issue theme, volume and dates come from the published issue.",
+      "title": "Gono Bishwabidyalay Journal of Research",
+      "subtitle": "CURRENT ISSUE",
+      "content": "This issue features peer-reviewed studies examining healthcare access in peri-urban Savar, pharmacy practice readiness for clinical antimicrobial stewardship, and mathematical crop modeling for climate-resilient agriculture.",
+      "meta": {
+        "breadcrumbHomeLabel": "Home",
+        "breadcrumbIssuesLabel": "Issues",
+        "coverLogoImage": "/gb-logo-official.png",
+        "coverJournalName": "GB JOURNAL",
+        "coverJournalTagline": "OF RESEARCH",
+        "coverIssnLine": "ISSN 2959-1082",
+        "coverEissnLine": "eISSN 2959-1074",
+        "coverThemeLabel": "THEME & SPECIAL FOCUS",
+        "publishedPrefix": "Published",
+        "accessLabel": "Universal Open Access",
+        "publicationDateLabel": "Publication Date",
+        "issnLabel": "ISSN Information",
+        "issnValue": "2959-1082 (Online) · 2959-1074 (Print)",
+        "browseArticlesLabel": "Browse Articles",
+        "copyCitationLabel": "Copy Issue Citation",
+        "citationCopiedLabel": "Citation Copied",
+        "submitCta": { "label": "Submit to Next Issue", "href": "/dashboard/submissions/new" }
+      }
+    },
+    "table-of-contents": {
+      "label": "Table of Contents",
+      "description": "Article list heading, search and filter labels, empty state and article card labels. The title follows the article count (plural form).",
+      "title": "Articles Published",
+      "subtitle": "ISSUE TABLE OF CONTENTS",
+      "meta": {
+        "titleSingular": "Article Published",
+        "searchPlaceholder": "Search articles by title, author, or keyword...",
+        "clearSearchLabel": "Clear",
+        "allTopicsLabel": "All",
+        "emptyTitle": "No articles match your search",
+        "emptyText": "Try broader search keywords or reset all filters.",
+        "resetFiltersLabel": "Reset filters",
+        "openAccessLabel": "Open Access",
+        "pagesLabel": "Pages",
+        "authorsPrefix": "By",
+        "viewSingular": "view",
+        "viewPlural": "views",
+        "downloadSingular": "download",
+        "downloadPlural": "downloads",
+        "doiLabel": "DOI:",
+        "readArticleLabel": "Read Full Article"
+      }
+    },
+    "specifications": {
+      "label": "Issue Specs",
+      "description": "Sidebar card with the issue specification rows",
+      "title": "Issue Specifications",
+      "meta": {
+        "volumeIssueLabel": "Volume / Issue",
+        "publicationDateLabel": "Publication Date",
+        "rows": [
+          { "label": "ISSN (Online)", "value": "2959-1082" },
+          { "label": "ISSN (Print)", "value": "2959-1074" },
+          { "label": "Review Model", "value": "Double-Blind" },
+          { "label": "Licensing", "value": "CC BY 4.0 Open Access" },
+          { "label": "Digital DOI Prefix", "value": "10.5555/gbj.2026" }
+        ]
+      }
+    },
+    "leadership": {
+      "label": "Editorial Leadership",
+      "description": "Sidebar card listing the issue's editors and a link to the full board",
+      "title": "Editorial Leadership",
+      "meta": {
+        "people": [
+          { "name": "Prof. Dr. Laila Rahman, PhD", "role": "Editor-in-Chief · Faculty of Health Sciences" },
+          { "name": "Prof. Saiful Islam, MPharm", "role": "Managing Editor · Department of Pharmacy" }
+        ],
+        "cta": { "label": "Full Editorial Board", "href": "/editorial-board" }
+      }
+    },
+    "call-for-papers": {
+      "label": "Call for Papers",
+      "description": "Sidebar call for papers box",
+      "title": "Volume 5, Issue 1 (January 2027)",
+      "subtitle": "CALL FOR PAPERS",
+      "content": "Accepting manuscripts across Health, Pharmacy, Agriculture, and Computing.",
+      "meta": {
+        "cta": { "label": "Submit Manuscript", "href": "/dashboard/submissions/new" }
+      }
+    },
+    "previous-issues": {
+      "label": "Previous Issues",
+      "description": "Sidebar list heading for earlier issues (the issues themselves come from the archive)",
+      "title": "Previous Issues",
+      "meta": {
+        "allIssuesLink": { "label": "All Issues", "href": "/issues" }
+      }
+    },
+    "no-issue": {
+      "label": "No Issue Notice",
+      "description": "Shown instead of the page when no issue has been published yet",
+      "title": "No Current Issue Published",
+      "content": "The editorial board is currently preparing the next journal issue. Please check back soon or explore our past archives and author guidelines.",
+      "meta": {
+        "ctas": [
+          { "label": "Browse Archives", "href": "/issues" },
+          { "label": "Author Guidelines", "href": "/authors" }
+        ]
+      }
+    }
+  }
 }

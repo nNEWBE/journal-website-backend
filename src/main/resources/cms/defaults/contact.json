@@ -2,6 +2,177 @@
   "pageKey": "contact",
   "label": "Contact Office",
   "route": "/contact",
-  "description": "Contact hero, editorial office details, departments and FAQs.",
-  "sections": {}
+  "description": "Contact hero, editorial office details, inquiry form, departments, map and CTA.",
+  "sections": {
+    "hero": {
+      "label": "Hero Banner",
+      "description": "Badge, headline, intro, highlights, buttons and the office specifications card",
+      "title": "Contact Editorial Office & Secretariat",
+      "subtitle": "EDITORIAL SECRETARIAT",
+      "content": "Get in direct touch with the **Gono Bishwabidyalay Journal of Research** editorial board, managing desk, and review secretariat. We welcome manuscript submissions, reviewer applications, special issue proposals, and institutional inquiries.",
+      "meta": {
+        "tagline": "Gono Bishwabidyalay Official Communications",
+        "highlights": [
+          { "icon": "Clock", "label": "24–48h Response SLA" },
+          { "icon": "ShieldCheck", "label": "Author Tracking Helpline" },
+          { "icon": "Building2", "label": "Official Campus Secretariat" }
+        ],
+        "ctas": [
+          { "label": "Send Direct Inquiry", "href": "#inquiry-form" },
+          { "label": "Author Guidelines", "href": "/authors" },
+          { "label": "Editorial Board", "href": "/editorial-board" }
+        ],
+        "cardMonogram": "GB",
+        "cardEyebrow": "SECRETARIAT DESK",
+        "cardTitle": "Office Specifications",
+        "cardStatus": "Desk Active",
+        "specs": [
+          { "label": "Campus Location", "value": "Nolam, Savar, Dhaka 1344", "tone": "default" },
+          { "label": "Primary Email", "value": "editorial@gonobishwabidyalay.edu.bd", "tone": "email" },
+          { "label": "Telephone Direct", "value": "+880-2-7740060 (Ext: 104)", "tone": "mono" },
+          { "label": "Working Hours", "value": "Sun – Thu: 9:00 AM – 4:00 PM", "tone": "default" },
+          { "label": "Response Window", "value": "Within 24–48 Business Hours", "tone": "success" },
+          { "label": "Manuscript Inquiries", "value": "Include Manuscript ID", "tone": "default" }
+        ],
+        "noteTitle": "Administrative Archiving:",
+        "note": "All communications sent to the editorial secretariat are formally logged under persistent tracking reference codes to ensure accountability."
+      }
+    },
+    "office-details": {
+      "label": "Office Details",
+      "description": "Campus directory card: postal address, email, telephone and response window",
+      "title": "Secretariat Office Details",
+      "subtitle": "CAMPUS DIRECTORY",
+      "meta": {
+        "statusBadge": "Active",
+        "addressLabel": "Postal Address",
+        "addressLines": ["Gono Bishwabidyalay, Nolam,", "Savar, Dhaka 1344, Bangladesh"],
+        "emailLabel": "Electronic Mail",
+        "email": "editorial@gonobishwabidyalay.edu.bd",
+        "emailNote": "For manuscript status, proofing, and author support",
+        "phoneLabel": "Telephone Directory",
+        "phone": "+880-2-7740060",
+        "phoneExtension": "(Ext: 104)",
+        "phoneHours": "Sun – Thu, 9:00 AM – 4:00 PM (GMT+6)",
+        "responseLabel": "Response Window",
+        "responseText": "Within 24–48 business hours for all official tickets."
+      }
+    },
+    "inquiry-protocol": {
+      "label": "Inquiry Protocol",
+      "description": "Small card under the office details about citing the manuscript tracking ID",
+      "title": "Manuscript Inquiries Protocol",
+      "content": "When inquiring about an ongoing submission or peer-review report, please cite your official **Manuscript Tracking ID** in all communications to expedite editorial routing."
+    },
+    "contact-form": {
+      "label": "Contact Form",
+      "description": "Form heading, field labels, placeholders, role/topic options and button labels",
+      "title": "Transmit an Editorial Message",
+      "subtitle": "OFFICIAL CORRESPONDENCE",
+      "meta": {
+        "nameLabel": "Your Full Name *",
+        "namePlaceholder": "e.g. Prof. Dr. Farhana Rahman",
+        "emailLabel": "Email Address *",
+        "emailPlaceholder": "author@university.edu.bd",
+        "roleLabel": "Academic Role",
+        "roleOptions": [
+          "Author / Submitter",
+          "Peer Reviewer",
+          "Editorial Board Member",
+          "Institutional Reader / Librarian",
+          "General Inquirer"
+        ],
+        "topicLabel": "Topic Category",
+        "topicOptions": [
+          "General Manuscript Inquiry",
+          "Submission & Revision Assistance",
+          "Reviewer Nomination & Application",
+          "Special Issue Proposal",
+          "Indexing, DOI & Archiving",
+          "Ethical / Copyright Inquiries"
+        ],
+        "messageLabel": "Detailed Inquiry / Message *",
+        "messagePlaceholder": "Enter details of your inquiry, referencing your manuscript ID or institutional affiliation if applicable...",
+        "submitLabel": "Transmit Message",
+        "submittingLabel": "Transmitting Inquiry..."
+      }
+    },
+    "departments": {
+      "label": "Departmental Desks",
+      "description": "Heading, intro and the specialised editorial desk cards",
+      "title": "Departmental Editorial Desks",
+      "subtitle": "SPECIALIZED DIRECTORY",
+      "content": "Connect directly with specialized desks handling governance, copyediting, peer review audits, and archival distribution.",
+      "meta": {
+        "desks": [
+          {
+            "title": "Editor-in-Chief Secretariat",
+            "email": "editorinchief@gonobishwabidyalay.edu.bd",
+            "lead": "Executive Governance & Editorial Strategy",
+            "scope": "Overall editorial governance, final manuscript appeals, ethics complaints, and special issue commissions."
+          },
+          {
+            "title": "Managing Editor & Production Desk",
+            "email": "managing.editor@gonobishwabidyalay.edu.bd",
+            "lead": "Typesetting & Volume Assembly",
+            "scope": "Production scheduling, copyediting queries, DOI registrations, layout proofs, and volume publishing."
+          },
+          {
+            "title": "Peer Review & Ethics Secretariat",
+            "email": "reviewers@gonobishwabidyalay.edu.bd",
+            "lead": "Review Management & COPE Audits",
+            "scope": "Peer reviewer registration, double-blind audit protocols, similarity checks (<15%), and referee credentials."
+          },
+          {
+            "title": "Institutional Subscriptions & Reprints",
+            "email": "secretariat@gonobishwabidyalay.edu.bd",
+            "lead": "Archival Access & Campus Distribution",
+            "scope": "Institutional digital repository archiving, print copy requests, copyright clearance, and indexing inquiries."
+          }
+        ]
+      }
+    },
+    "campus-map": {
+      "label": "Campus Map",
+      "description": "Map heading, address line, Google Maps link and embedded map URL",
+      "title": "Gono Bishwabidyalay Campus Map",
+      "subtitle": "PHYSICAL HEADQUARTERS",
+      "content": "Nolam, Savar, Dhaka 1344, Bangladesh",
+      "meta": {
+        "mapLink": {
+          "label": "Open in Google Maps",
+          "href": "https://maps.google.com/?q=Gono+Bishwabidyalay,+Nolam,+Savar,+Dhaka"
+        },
+        "mapTitle": "Gono Bishwabidyalay Location Map",
+        "mapEmbedUrl": "https://maps.google.com/maps?q=Gono+Bishwabidyalay,+Nolam,+Savar,+Dhaka&t=&z=15&ie=UTF8&iwloc=&output=embed"
+      }
+    },
+    "cta": {
+      "label": "Call for Papers",
+      "description": "Call-for-papers banner with feature pills, buttons and the secretariat helpline card",
+      "title": "Ready to Submit Your Manuscript?",
+      "subtitle": "CALL FOR PAPERS · VOL. 2026/2027",
+      "content": "Submit your research across health sciences, pharmacy, agriculture, law, computing, and social welfare. Enjoy rapid 14-day initial review and free Open Access publication.",
+      "meta": {
+        "pills": [
+          { "icon": "Clock", "label": "14-Day Initial Review" },
+          { "icon": "Globe2", "label": "Global Open Access Reach" },
+          { "icon": "ShieldCheck", "label": "Double-Blind Verification" }
+        ],
+        "ctas": [
+          { "label": "Submit Manuscript", "href": "/dashboard/submissions/new" },
+          { "label": "Author Guidelines", "href": "/authors" }
+        ],
+        "cardEyebrow": "EDITORIAL SECRETARIAT",
+        "cardTag": "Author Desk",
+        "cardTitle": "Direct Inquiry Helpline",
+        "cardText": "Have questions regarding manuscript formatting or track assignments? Contact the editorial staff directly.",
+        "emailLabel": "Editorial Email",
+        "email": "editorial@gonobishwabidyalay.edu.bd",
+        "locationLabel": "Campus Location",
+        "location": "Gono Bishwabidyalay, Nolam, Savar, Dhaka 1344, Bangladesh",
+        "cardLink": { "label": "Submit Inquiry Online", "href": "#inquiry-form" }
+      }
+    }
+  }
 }

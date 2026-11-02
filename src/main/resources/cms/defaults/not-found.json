@@ -3,5 +3,64 @@
   "label": "404 Page",
   "route": "/",
   "description": "Page-not-found message and suggested links.",
-  "sections": {}
+  "sections": {
+    "message": {
+      "label": "Not Found Message",
+      "description": "Status badge, heading, explanation, search box and recovery buttons",
+      "title": "Manuscript or Page Not Found",
+      "subtitle": "Academic Resource Not Found • Error 404",
+      "content": "The requested academic paper, editorial guideline, volume issue, or administrative URL could not be located. It may have been relocated, archived, or unpublished.",
+      "meta": {
+        "code": "404",
+        "searchPlaceholder": "Search manuscripts, DOIs, authors, or topics...",
+        "searchButtonLabel": "Search",
+        "backLabel": "Return to Previous Page",
+        "homeLink": { "label": "Journal Homepage", "href": "/" }
+      }
+    },
+    "destinations": {
+      "label": "Suggested Links",
+      "description": "Recommended destination cards shown below the message",
+      "title": "Recommended Scholarly Destinations",
+      "meta": {
+        "links": [
+          {
+            "icon": "BookOpen",
+            "title": "Current Issue",
+            "desc": "Explore active volume papers & open-access editorial notes",
+            "href": "/issues/current",
+            "badge": "Latest Release"
+          },
+          {
+            "icon": "FileText",
+            "title": "Articles Archive",
+            "desc": "Search through published peer-reviewed research repository",
+            "href": "/articles",
+            "badge": "Indexed"
+          },
+          {
+            "icon": "HelpCircle",
+            "title": "Author Guidelines",
+            "desc": "Manuscript preparation, submission portal & ethics guidelines",
+            "href": "/authors",
+            "badge": "Submissions"
+          },
+          {
+            "icon": "Users",
+            "title": "Editorial Board",
+            "desc": "Faculty governance, section editors & international council",
+            "href": "/editorial-board",
+            "badge": "Faculty"
+          },
+          {
+            "icon": "Mail",
+            "title": "Contact Desk",
+            "desc": "Get in touch with the managing editorial office for inquiries",
+            "href": "/contact",
+            "badge": "Support"
+          }
+        ]
+      }
+    }
+  }
 }

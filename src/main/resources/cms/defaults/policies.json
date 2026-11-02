@@ -3,5 +3,255 @@
   "label": "Policies & Ethics",
   "route": "/policies",
   "description": "Policies hero, peer review, ethics, open access and editorial policies.",
-  "sections": {}
+  "sections": {
+    "hero": {
+      "label": "Hero Banner",
+      "description": "Badge, headline, intro, highlights, buttons and the policy specifications card",
+      "title": "Editorial Policies & Publication Ethics",
+      "subtitle": "ETHICAL FRAMEWORK & POLICIES",
+      "content": "The **Gono Bishwabidyalay Journal of Research** enforces strict COPE-aligned publication ethics, double-blind peer review rigor, complete disclosure standards, and durable open-access stewardship to safeguard scholarly credibility.",
+      "meta": {
+        "institution": "Gono Bishwabidyalay Research Governance",
+        "highlights": [
+          { "icon": "ShieldCheck", "label": "COPE-Aligned Practice" },
+          { "icon": "Globe2", "label": "CC BY 4.0 Open Access" },
+          { "icon": "Archive", "label": "CrossMark Record Integrity" }
+        ],
+        "ctas": [
+          { "label": "Browse Policy Directory", "href": "#policy-directory", "icon": "ArrowUpRight" },
+          { "label": "Author Guidelines", "href": "/authors", "icon": "BookOpen" },
+          { "label": "Editorial Board", "href": "/editorial-board", "icon": "Users" }
+        ],
+        "cardMonogram": "GB",
+        "cardEyebrow": "INTEGRITY CODE",
+        "cardTitle": "Policy Specifications",
+        "cardBadge": "Verified",
+        "specs": [
+          { "label": "Ethics Foundation", "value": "COPE Core Practices", "tone": "default" },
+          { "label": "Review Protocol", "value": "Double-Blind Anonymous", "tone": "default" },
+          { "label": "Similarity Limit", "value": "< 15% Similarity Check", "tone": "mono" },
+          { "label": "Licensing Model", "value": "Creative Commons CC BY 4.0", "tone": "default" },
+          { "label": "Author Rights", "value": "Author Retains Copyright", "tone": "success" },
+          { "label": "Permanent Record", "value": "CrossRef DOI & CrossMark", "tone": "default" }
+        ],
+        "commitmentLabel": "Ethical Commitment:",
+        "commitmentText": "Any suspected research misconduct, fabrication, duplicate submission, or undeclared AI content triggers immediate investigation according to formal COPE flowcharts."
+      }
+    },
+    "integrity-framework": {
+      "label": "Integrity Framework",
+      "description": "Governance architecture intro, highlighted statement and the pre/post-publication cards",
+      "title": "Dual-Stage Research Integrity Framework",
+      "subtitle": "GOVERNANCE ARCHITECTURE",
+      "content": "The journal protects scholarly reliability through rigorous pre-publication assessment and permanent, accountable post-publication stewardship.",
+      "meta": {
+        "statement": "Research integrity is a shared institutional covenant upheld by authors, peer reviewers, handling editors, and university leadership.",
+        "pillars": [
+          {
+            "icon": "ShieldCheck",
+            "label": "Pre-Publication Safeguards",
+            "title": "Screening, Blind Review & Verification",
+            "description": "Every submission undergoes automated similarity checks, IRB ethics validation, and double-blind appraisal by qualified subject experts before editorial acceptance."
+          },
+          {
+            "icon": "Globe2",
+            "label": "Post-Publication Stewardship",
+            "title": "Open Access, CrossMark & Corrections",
+            "description": "Published works are maintained under permanent CrossRef DOIs with active CrossMark status tracking, transparent errata notices, and unhindered CC BY 4.0 access."
+          }
+        ]
+      }
+    },
+    "policy-directory": {
+      "label": "Policy Directory",
+      "description": "Heading, intro and the six core policy cards with compliance checklists",
+      "title": "Core Publication Standards & Mandates",
+      "subtitle": "POLICY DIRECTORY",
+      "content": "Each standard governs specific responsibilities across manuscript preparation, peer assessment, and permanent archiving.",
+      "meta": {
+        "numberLabel": "Policy",
+        "checklistLabel": "Compliance Checklist",
+        "policies": [
+          {
+            "id": "peer-review",
+            "category": "Peer Review Integrity",
+            "number": "01",
+            "icon": "Users",
+            "title": "Double-Blind Peer Review Policy",
+            "statement": "All original research, short communications, and systematic reviews undergo rigorous double-blind evaluation by at least two independent subject specialists.",
+            "compliance": [
+              "Author names, institutions, and acknowledgements are stripped prior to reviewer dispatch.",
+              "Reviewers must declare absence of personal, academic, or financial competing interests.",
+              "Editorial decisions are based exclusively on academic merit, validity, and methodological soundness."
+            ]
+          },
+          {
+            "id": "authorship-ai",
+            "category": "Authorship & AI Use",
+            "number": "02",
+            "icon": "FileText",
+            "title": "Authorship Criteria & AI Transparency",
+            "statement": "Authorship credit must follow ICMJE guidelines. AI and LLM tools cannot be listed as authors and must be transparently disclosed.",
+            "compliance": [
+              "Every listed author must have made substantial contributions to design, data acquisition, or analysis.",
+              "Any generative AI usage in data generation, analysis, or drafting must be explicitly stated in the Methods.",
+              "Corresponding author takes institutional responsibility for all communication and data integrity."
+            ]
+          },
+          {
+            "id": "originality-plagiarism",
+            "category": "Originality & Plagiarism",
+            "number": "03",
+            "icon": "SearchCheck",
+            "title": "Plagiarism & Similarity Screening",
+            "statement": "Every submission is screened via Crossref Similarity Check (iThenticate) before assignment to handling editors.",
+            "compliance": [
+              "Overall similarity index must strictly remain below 15%, with no single source exceeding 3%.",
+              "Self-plagiarism and redundant publication of previously copyrighted material are strictly prohibited.",
+              "Manuscripts showing unreferenced text matching will be rejected immediately at desk screening."
+            ]
+          },
+          {
+            "id": "research-ethics",
+            "category": "Research Ethics & Approvals",
+            "number": "04",
+            "icon": "Scale",
+            "title": "Human & Animal Research Approvals",
+            "statement": "Studies involving human subjects, patient records, or animal models must demonstrate formal institutional ethical clearance.",
+            "compliance": [
+              "Human studies must comply with the Declaration of Helsinki and include IRB/Ethics Committee approval numbers.",
+              "Informed written consent must be documented for all patient-derived clinical data and photographs.",
+              "Animal experiments must adhere to ARRIVE guidelines and national veterinary welfare standards."
+            ]
+          },
+          {
+            "id": "open-access-rights",
+            "category": "Licensing & Copyright",
+            "number": "05",
+            "icon": "Globe2",
+            "title": "Open Access & Creative Commons CC BY 4.0",
+            "statement": "Published scholarship is distributed freely and immediately worldwide under the Creative Commons Attribution 4.0 International License.",
+            "compliance": [
+              "Authors retain unrestricted copyright and intellectual property rights in their work.",
+              "Readers are permitted to share, copy, distribute, and adapt the material with appropriate academic attribution.",
+              "Permanent DOIs are registered via CrossRef with automatic preservation in institutional repositories."
+            ]
+          },
+          {
+            "id": "confidentiality-recusal",
+            "category": "Editorial Governance",
+            "number": "06",
+            "icon": "LockKeyhole",
+            "title": "Confidentiality & Conflict Recusal",
+            "statement": "Manuscript files, data, reviewer reports, and editorial deliberations are strictly confidential academic assets.",
+            "compliance": [
+              "Editors and reviewers are barred from citing, using, or discussing unpublished manuscript contents.",
+              "Board members submitting manuscripts are completely blind to the handling editor and reviewer assignments.",
+              "Editors immediately recuse themselves from handling submissions from their own department or collaborators."
+            ]
+          }
+        ]
+      }
+    },
+    "editorial-safeguards": {
+      "label": "Editorial Safeguards",
+      "description": "Heading, intro and the five enforcement checkpoints",
+      "title": "How Policy is Enforced on Every Manuscript",
+      "subtitle": "EDITORIAL SAFEGUARDS",
+      "content": "Five sequential checkpoints ensure every published paper meets verified standards of ethics, reproducibility, and originality.",
+      "meta": {
+        "stageLabel": "Stage",
+        "steps": [
+          {
+            "step": "01",
+            "icon": "FileText",
+            "title": "Initial Desk Intake & Scope Screening",
+            "description": "Editorial secretariat verifies submission completeness, author declarations, ethics documentation, and journal scope alignment."
+          },
+          {
+            "step": "02",
+            "icon": "SearchCheck",
+            "title": "Automated Plagiarism & Similarity Check",
+            "description": "Crossref Similarity Check verifies originality against billions of published articles and web repositories prior to editor review."
+          },
+          {
+            "step": "03",
+            "icon": "Users",
+            "title": "Double-Blind Referee Assignment",
+            "description": "Section Editor appoints independent, non-conflicted reviewers who appraise the anonymized manuscript across 5 criteria."
+          },
+          {
+            "step": "04",
+            "icon": "Scale",
+            "title": "Merit-Based Editorial Decision",
+            "description": "Editor-in-Chief synthesizes independent referee reports to issue an objective determination: Accept, Revise, or Reject."
+          },
+          {
+            "step": "05",
+            "icon": "Archive",
+            "title": "Permanent Open Access & CrossMark Indexing",
+            "description": "Final articles receive permanent CrossRef DOIs, CrossMark metadata integrity tracking, and open CC BY 4.0 deposition."
+          }
+        ]
+      }
+    },
+    "record-integrity": {
+      "label": "Record Integrity",
+      "description": "Corrections, expressions of concern and retractions cards",
+      "title": "Post-Publication Amendments & Retractions",
+      "subtitle": "RECORD INTEGRITY",
+      "content": "When published evidence requires clarification or withdrawal, transparent notices preserve the historical accuracy of the scholarly record.",
+      "meta": {
+        "actions": [
+          {
+            "icon": "CheckCircle2",
+            "title": "Corrigenda & Addenda (Corrections)",
+            "tag": "Material Accuracy",
+            "description": "Material errors of fact, calculation, or mislabeled figures that do not undermine the central scientific conclusions are corrected via a linked formal Corrigendum notice permanently tied to the DOI."
+          },
+          {
+            "icon": "MessageSquareWarning",
+            "title": "Expressions of Concern",
+            "tag": "Active Investigation",
+            "description": "When serious concerns regarding research integrity, data fabrication, or authorship disputes arise and an investigation is pending, an official Expression of Concern is appended to alert the academic community."
+          },
+          {
+            "icon": "Archive",
+            "title": "Formal Article Retractions",
+            "tag": "Preserving Scholarly Record",
+            "description": "If findings are proven unreliable due to misconduct or honest error, the article is formally retracted in accordance with COPE Retraction Guidelines. The PDF remains in the archive with a prominent retraction watermark."
+          }
+        ]
+      }
+    },
+    "consultation-cta": {
+      "label": "Ethics Consultation",
+      "description": "Closing CTA: heading, intro, badges, buttons and the editorial secretariat contact card",
+      "title": "Questions Regarding Journal Policies or Ethics?",
+      "subtitle": "ETHICS CONSULTATION",
+      "content": "If you require clarification on authorship eligibility, copyright permissions, data deposition protocols, or bioethical documentation, our Editorial Secretariat is available to assist.",
+      "meta": {
+        "badges": [
+          { "icon": "ShieldCheck", "label": "COPE Compliance Advisory" },
+          { "icon": "Globe2", "label": "Open Access Rights Guidance" },
+          { "icon": "Archive", "label": "DOI & Archiving Support" }
+        ],
+        "ctas": [
+          { "label": "Contact Editorial Office", "href": "mailto:editorial@gonobishwabidyalay.edu.bd?subject=Policy%20Inquiry%20GB%20Journal" },
+          { "label": "Editorial Board", "href": "/editorial-board" }
+        ],
+        "cardEyebrow": "EDITORIAL SECRETARIAT",
+        "cardTag": "Ethics Desk",
+        "cardTitle": "Research Governance Office",
+        "cardDescription": "Direct inquiries regarding research compliance, authorship declarations, or institutional agreements.",
+        "emailLabel": "Official Email",
+        "email": "editorial@gonobishwabidyalay.edu.bd",
+        "locationLabel": "Campus Location",
+        "location": "Gono Bishwabidyalay, Nolam, Savar, Dhaka 1344, Bangladesh",
+        "responseLabel": "Response SLA",
+        "response": "Official response within 1–2 working business days",
+        "cardLink": { "label": "Visit Contact Directory", "href": "/contact" }
+      }
+    }
+  }
 }

@@ -3,5 +3,199 @@
   "label": "About Journal",
   "route": "/about",
   "description": "Hero, journal story, scope, governance and indexing sections.",
-  "sections": {}
+  "sections": {
+    "hero": {
+      "label": "Hero Banner",
+      "description": "Eyebrow, headline, intro, highlights, CTAs and the journal specifications card. Specs value style: text, text-right, mono, mono-accent or success. CTA variant: primary, secondary or tertiary.",
+      "title": "Advancing interdisciplinary scholarship through rigorous peer review and open dissemination",
+      "subtitle": "ABOUT THE JOURNAL",
+      "content": "The **Gono Bishwabidyalay Journal of Research** (GB Journal) is the flagship peer-reviewed, open-access scholarly publication of Gono Bishwabidyalay. We publish original research across health sciences, pharmacy, veterinary medicine, biotechnology, agriculture, engineering, and social development.",
+      "meta": {
+        "badge": "Gono Bishwabidyalay Official Publication",
+        "highlights": [
+          { "icon": "ShieldCheck", "label": "Double-Blind Peer Review" },
+          { "icon": "Globe2", "label": "Gold Open Access (CC BY 4.0)" },
+          { "icon": "Calendar", "label": "Biannual (January & July)" },
+          { "icon": "Clock", "label": "Avg. 18 Days to First Decision" }
+        ],
+        "ctas": [
+          { "label": "Submit Manuscript", "href": "/dashboard/submissions/new", "variant": "primary" },
+          { "label": "Read Current Issue", "href": "/issues/current", "variant": "secondary" },
+          { "label": "Editorial Board", "href": "/editorial-board", "variant": "tertiary" }
+        ],
+        "specMonogram": "GB",
+        "specEyebrow": "OFFICIAL RECORD",
+        "specTitle": "Journal Specifications",
+        "specStatus": "Active",
+        "specs": [
+          { "label": "Publisher", "value": "Gono Bishwabidyalay Press", "style": "text-right" },
+          { "label": "Online ISSN", "value": "2959-1082", "style": "mono" },
+          { "label": "Print ISSN", "value": "2959-1074", "style": "mono" },
+          { "label": "DOI Prefix", "value": "10.5555/gbj", "style": "mono-accent" },
+          { "label": "Publication Frequency", "value": "Biannual (2 Issues/Year)", "style": "text" },
+          { "label": "Review Model", "value": "Double-Blind Peer Review", "style": "text" },
+          { "label": "Publishing Model", "value": "Open Access (CC BY 4.0)", "style": "success" }
+        ],
+        "archiveLabel": "Permanent Archiving:",
+        "archiveText": "Articles are indexed in CrossRef, Google Scholar, BanglaJOL, and institutional university repositories."
+      }
+    },
+    "mission": {
+      "label": "Mission & Purpose",
+      "description": "Mission heading, quote, intro paragraphs (separate with a blank line), stats and core value cards.",
+      "title": "A University Journal with Public Purpose",
+      "subtitle": "MISSION & PURPOSE",
+      "content": "Founded under the academic stewardship of **Gono Bishwabidyalay**, the journal serves as an inclusive platform for rigorous empirical inquiry, innovative methodologies, and transformative research that addresses both regional challenges and global scientific frontiers.\n\nOur editorial board maintains uncompromising academic standards while ensuring equitable access for emerging and established researchers worldwide.",
+      "meta": {
+        "link": { "label": "Explore Published Research", "href": "/articles" },
+        "quote": "Helping credible, peer-reviewed research travel from author to global reader through open discovery and scholarly integrity.",
+        "stats": [
+          { "value": "8+", "label": "Academic Fields", "highlight": false },
+          { "value": "2x", "label": "Yearly Issues", "highlight": false },
+          { "value": "100%", "label": "Open Access", "highlight": true }
+        ],
+        "values": [
+          {
+            "icon": "BookOpen",
+            "title": "Publication Scope",
+            "description": "Original research articles, systematic reviews, short communications, and case studies chosen strictly on academic merit."
+          },
+          {
+            "icon": "Landmark",
+            "title": "University Stewardship",
+            "description": "Sustained institutional support from Gono Bishwabidyalay ensuring permanent digital preservation and editorial autonomy."
+          },
+          {
+            "icon": "ShieldCheck",
+            "title": "Peer Review Integrity",
+            "description": "Strict double-blind peer review safeguarding impartial appraisal and constructive feedback for all authors."
+          },
+          {
+            "icon": "Globe",
+            "title": "Global Dissemination",
+            "description": "Immediate worldwide dissemination with full machine-readable metadata, CrossRef DOI indexing, and open citations."
+          }
+        ]
+      }
+    },
+    "benchmarks": {
+      "label": "Benchmarks",
+      "description": "Row of publication benchmark cards (the title is not shown on the page).",
+      "title": "Publication Benchmarks",
+      "meta": {
+        "items": [
+          { "icon": "Clock", "value": "18 Days", "label": "Avg. First Decision", "subtext": "Prompt initial desk screening and reviewer allocation" },
+          { "icon": "Calendar", "value": "42 Days", "label": "Submission to Publish", "subtext": "Efficient double-blind review and layout production" },
+          { "icon": "Link2", "value": "100%", "label": "CrossRef DOI Minting", "subtext": "Permanent digital identifiers and metadata deposition" },
+          { "icon": "Award", "value": "0 BDT", "label": "Submission Fees", "subtext": "Transparent policies with zero hidden author fees" }
+        ]
+      }
+    },
+    "scope": {
+      "label": "Aims & Scope",
+      "description": "Scope heading, side text and subject discipline cards.",
+      "title": "Interdisciplinary Subject Coverage",
+      "subtitle": "AIMS & SCOPE",
+      "content": "GB Journal bridges disciplinary boundaries across healthcare, biotechnology, engineering, and social development.",
+      "meta": {
+        "topicLink": { "label": "View Subject Articles", "href": "/articles" },
+        "topics": [
+          { "icon": "Stethoscope", "name": "Medical & Health Sciences", "description": "Clinical medicine, epidemiology, public health interventions, diagnostic advancements, and community health models.", "count": "48+ Articles" },
+          { "icon": "Pill", "name": "Pharmacy & Pharmacology", "description": "Antimicrobial stewardship, pharmaceutical formulation, drug design, natural product evaluation, and clinical pharmacy.", "count": "36+ Articles" },
+          { "icon": "HeartPulse", "name": "Biological & Life Sciences", "description": "Molecular biology, microbiology, genomics, bioinformatics, and cellular mechanisms in human health.", "count": "32+ Articles" },
+          { "icon": "PawPrint", "name": "Veterinary & Animal Sciences", "description": "Zoonotic disease transmission, veterinary clinical research, animal immunology, and livestock welfare.", "count": "24+ Articles" },
+          { "icon": "Sprout", "name": "Agricultural & Environmental Sciences", "description": "Climate-resilient agriculture, soil health, crop genetics, sustainable agro-ecosystems, and environmental remediation.", "count": "29+ Articles" },
+          { "icon": "Cpu", "name": "Engineering & Applied Technology", "description": "Biomedical instrumentation, machine learning in healthcare, renewable energy systems, and software engineering.", "count": "26+ Articles" },
+          { "icon": "Users", "name": "Social Sciences & Development", "description": "Community development, health economics, educational policy, social equity, and public welfare administration.", "count": "31+ Articles" },
+          { "icon": "Scale", "name": "Law, Bioethics & Governance", "description": "Bioethics, public health law, intellectual property in research, and institutional governance frameworks.", "count": "18+ Articles" }
+        ]
+      }
+    },
+    "leadership": {
+      "label": "Editorial Leadership",
+      "description": "Heading and labels around the editorial board preview (members come from the board data).",
+      "title": "Academic Governance & Editorial Board",
+      "subtitle": "EDITORIAL LEADERSHIP",
+      "meta": {
+        "link": { "label": "Meet Full Editorial Board", "href": "/editorial-board" },
+        "expertiseLabel": "Expertise:",
+        "profileLink": { "label": "View Profile", "href": "/editorial-board" }
+      }
+    },
+    "lifecycle": {
+      "label": "Editorial Workflow",
+      "description": "Peer review and publication lifecycle heading, intro and step cards.",
+      "title": "The Peer Review & Publication Lifecycle",
+      "subtitle": "EDITORIAL WORKFLOW",
+      "content": "Every submission traverses a transparent, documented route from initial desk appraisal to final digital publication.",
+      "meta": {
+        "steps": [
+          { "icon": "FileText", "stage": "01", "title": "Manuscript Submission", "timeline": "Day 0", "description": "Authors submit files, structured abstracts, author affiliations, conflict of interest declarations, and ethical approval certificates via the online portal." },
+          { "icon": "ShieldCheck", "stage": "02", "title": "Initial Desk Screening", "timeline": "Days 3–5", "description": "The Editor-in-Chief and Associate Editors perform initial appraisal for journal scope, academic originality, and automated plagiarism compliance (similarity < 15%)." },
+          { "icon": "Users", "stage": "03", "title": "Double-Blind Peer Review", "timeline": "Weeks 2–4", "description": "Manuscripts are assigned to two or more independent external peer reviewers. Author identities and reviewer details remain strictly concealed." },
+          { "icon": "Scale", "stage": "04", "title": "Revisions & Editorial Decision", "timeline": "Weeks 4–6", "description": "Authors receive detailed reviewer comments and editorial decision (Accept, Minor Revision, Major Revision, or Reject). Revisions are re-evaluated promptly." },
+          { "icon": "Globe2", "stage": "05", "title": "Production & Open Access", "timeline": "Within 7 Days", "description": "Accepted papers undergo copyediting, layout typesetting, DOI registration with CrossRef, and immediate worldwide open-access publication." }
+        ]
+      }
+    },
+    "charter": {
+      "label": "Publishing Charter",
+      "description": "Ethical standards heading, policies link and charter cards.",
+      "title": "Ethical Standards & Author Commitments",
+      "subtitle": "PUBLISHING CHARTER",
+      "meta": {
+        "link": { "label": "View Full Journal Policies", "href": "/policies" },
+        "items": [
+          { "icon": "ShieldCheck", "title": "Rigorous Double-Blind Review", "subtitle": "Objective Academic Assessment", "description": "Every original article is scrutinized by at least two qualified subject specialists without bias, ensuring merit-based publication." },
+          { "icon": "LockOpen", "title": "Universal Open Access", "subtitle": "Zero Paywall Policy", "description": "All accepted papers are published under Creative Commons CC BY 4.0, allowing free reading, downloading, sharing, and citations globally." },
+          { "icon": "Scale", "title": "COPE Ethics Alignment", "subtitle": "High Standard of Integrity", "description": "The journal adheres to the Committee on Publication Ethics (COPE) guidelines for handling authorship disputes, retractions, and data integrity." },
+          { "icon": "Archive", "title": "Permanent DOI & Archiving", "subtitle": "Enduring Scholarly Record", "description": "Every paper receives a persistent CrossRef DOI, preserved in institutional archives and digital indexing services for perpetual availability." }
+        ]
+      }
+    },
+    "indexing": {
+      "label": "Indexing",
+      "description": "Discovery & preservation heading, intro and indexing registry cards.",
+      "title": "Indexing Registries & Open Discovery",
+      "subtitle": "DISCOVERY & PRESERVATION",
+      "content": "GB Journal articles are structured for machine harvesting, global bibliographic indexation, and permanent academic preservation.",
+      "meta": {
+        "registries": [
+          { "icon": "Link2", "name": "CrossRef", "type": "Permanent DOI Indexing", "description": "Every published article is minted with a persistent digital object identifier for global citation tracking.", "badge": "Active DOI Minting" },
+          { "icon": "GraduationCap", "name": "Google Scholar", "type": "Automated Academic Crawling", "description": "Full-text indexing with complete metadata tags for maximum visibility in academic search results.", "badge": "Indexed" },
+          { "icon": "Library", "name": "BanglaJOL", "type": "Regional Journal Repository", "description": "Registered repository participant promoting South Asian scholarly output and regional scientific impact.", "badge": "Listed Journal" },
+          { "icon": "Globe2", "name": "Creative Commons", "type": "Open Access License (CC BY 4.0)", "description": "Permits unrestricted use, distribution, and reproduction in any medium, provided the original work is properly cited.", "badge": "Open License" }
+        ]
+      }
+    },
+    "stewardship": {
+      "label": "Stewardship CTA",
+      "description": "Dark institutional stewardship banner: badge, heading, text, feature pills, CTAs and the editorial desk contact card.",
+      "title": "Published with Academic Integrity by Gono Bishwabidyalay",
+      "subtitle": "INSTITUTIONAL STEWARDSHIP",
+      "content": "The journal operates under the official academic charter of Gono Bishwabidyalay, guided by distinguished faculty, independent peer review panels, and global open-access standards. We welcome original empirical and theoretical contributions from researchers worldwide.",
+      "meta": {
+        "pills": [
+          { "icon": "ShieldCheck", "label": "Double-Blind Review" },
+          { "icon": "Globe2", "label": "CC BY 4.0 Open Access" },
+          { "icon": "Link2", "label": "Permanent CrossRef DOI" }
+        ],
+        "ctas": [
+          { "label": "Submit Your Manuscript", "href": "/dashboard/submissions/new" },
+          { "label": "Meet Editorial Board", "href": "/editorial-board" }
+        ],
+        "deskEyebrow": "EDITORIAL DESK",
+        "deskTag": "Support",
+        "deskTitle": "Manuscript Inquiries & Guidance",
+        "deskText": "Have questions regarding manuscript formatting, special issue proposals, or reviewer nominations? Contact the editorial staff directly.",
+        "emailLabel": "Official Email",
+        "email": "editorial@gonobishwabidyalay.edu.bd",
+        "addressLabel": "Campus Address",
+        "address": "Gono Bishwabidyalay, Nolam, Savar, Dhaka 1344, Bangladesh",
+        "responseLabel": "Response Time",
+        "responseText": "Prompt desk reply within 1–2 business days",
+        "deskLink": { "label": "Visit Contact Page", "href": "/contact" }
+      }
+    }
+  }
 }

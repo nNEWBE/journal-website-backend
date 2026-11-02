@@ -3,5 +3,110 @@
   "label": "Header & Footer",
   "route": "/",
   "description": "Site-wide header navigation, footer description, links and contact.",
-  "sections": {}
+  "sections": {
+    "header": {
+      "label": "Header",
+      "description": "Top institutional bar text and links, header buttons and mobile menu labels (menu items are managed in Menu & Nav Manager)",
+      "title": "Gono Bishwabidyalay Research Publication System",
+      "subtitle": "GB Journal",
+      "meta": {
+        "topLinks": [
+          { "label": "ISSN 2959-1082", "href": "/about" },
+          { "label": "Ethics", "href": "/policies" },
+          { "label": "Reviewers", "href": "/reviewers" },
+          { "label": "Contact", "href": "/contact" }
+        ],
+        "signedInLabel": "Signed in:",
+        "submitLabel": "Submit",
+        "submitHref": "/dashboard/submissions/new",
+        "loginLabel": "Login",
+        "dashboardLabel": "Dashboard",
+        "dropdownTag": "GB Journal",
+        "mobileDashboardLabel": "Go to Dashboard",
+        "mobileLogoutLabel": "Log Out",
+        "mobileLoginLabel": "Login to Workspace"
+      }
+    },
+    "footer-brand": {
+      "label": "Footer Brand",
+      "description": "Footer logo, journal name and description",
+      "title": "GB Journal",
+      "subtitle": "গণ বিশ্ববিদ্যালয়",
+      "content": "Gono Bishwabidyalay Journal of Research — advancing interdisciplinary discovery through rigorous double-blind peer review and open access scholarship.",
+      "meta": {
+        "logoImage": "/gb-logo-official.png",
+        "logoAlt": "Gono Bishwabidyalay emblem"
+      }
+    },
+    "footer-journals": {
+      "label": "Journals Links",
+      "description": "Footer link column: heading, icon and links",
+      "title": "JOURNALS",
+      "meta": {
+        "icon": "BookOpen",
+        "links": [
+          { "label": "All Articles", "href": "/articles" },
+          { "label": "Current Issue", "href": "/issues/current" },
+          { "label": "Issue Archives", "href": "/issues" },
+          { "label": "Most Viewed Articles", "href": "/articles?sort=views" },
+          { "label": "Most Downloaded", "href": "/articles?sort=downloads" }
+        ]
+      }
+    },
+    "footer-authors": {
+      "label": "Authors Links",
+      "description": "Footer link column: heading, icon and links",
+      "title": "FOR AUTHORS",
+      "meta": {
+        "icon": "PenLine",
+        "links": [
+          { "label": "Submit Manuscript", "href": "/dashboard/submissions/new" },
+          { "label": "Author Guidelines", "href": "/authors" },
+          { "label": "Reviewer Guidelines", "href": "/reviewers" },
+          { "label": "Publication Ethics", "href": "/policies" },
+          { "label": "Publication Fees & Waivers", "href": "/policies" }
+        ]
+      }
+    },
+    "footer-about": {
+      "label": "About Links",
+      "description": "Footer link column: heading, icon and links",
+      "title": "ABOUT",
+      "meta": {
+        "icon": "Landmark",
+        "links": [
+          { "label": "About the Journal", "href": "/about" },
+          { "label": "Editorial Board", "href": "/editorial-board" },
+          { "label": "Advisory Council", "href": "/editorial-board" },
+          { "label": "Peer Review Model", "href": "/policies" },
+          { "label": "Contact Editorial Office", "href": "/contact" }
+        ]
+      }
+    },
+    "footer-contact": {
+      "label": "Footer Contact",
+      "description": "Footer contact column: email, address and phone",
+      "title": "CONTACT",
+      "meta": {
+        "email": "editorial@gonobishwabidyalay.edu.bd",
+        "address": "Gono Bishwabidyalay, Nolam, Savar, Dhaka 1344, Bangladesh",
+        "phone": "+880 (2) 779-2220",
+        "phoneHref": "tel:+88027792220"
+      }
+    },
+    "footer-bottom": {
+      "label": "Footer Bottom Bar",
+      "description": "Copyright line (the year is added automatically), rights notice and legal links",
+      "title": "GB Journal of Research · Gono Bishwabidyalay.",
+      "subtitle": "All rights reserved.",
+      "meta": {
+        "links": [
+          { "label": "Privacy Policy", "href": "/policies" },
+          { "label": "Terms of Use", "href": "/policies" },
+          { "label": "Ethics & Malpractice", "href": "/policies" },
+          { "label": "Accessibility", "href": "/about" }
+        ]
+      }
+    }
+  }
 }
