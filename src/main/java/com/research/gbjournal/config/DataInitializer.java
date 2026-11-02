@@ -4,6 +4,7 @@ import com.research.gbjournal.entity.User;
 import com.research.gbjournal.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -19,7 +20,9 @@ public class DataInitializer implements CommandLineRunner {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
-    private static final String DEFAULT_PASSWORD = "demopass";
+    /** Optional bootstrap password for the seeded admin accounts (INITIAL_ADMIN_PASSWORD). */
+    @Value("${INITIAL_ADMIN_PASSWORD:}")
+    private String initialAdminPassword;
 
     @Override
     @Transactional
@@ -39,7 +42,16 @@ public class DataInitializer implements CommandLineRunner {
             return;
         }
 
-        String encoded = passwordEncoder.encode(DEFAULT_PASSWORD);
+        String rawPassword = initialAdminPassword;
+        if (rawPassword == null || rawPassword.length() < 12) {
+            byte[] bytes = new byte[18];
+            new java.security.SecureRandom().nextBytes(bytes);
+            rawPassword = java.util.Base64.getUrlEncoder().withoutPadding().encodeToString(bytes);
+            // Printed once, only when the user table is empty (first boot). Change it after signing in.
+            log.warn("Seeded admin accounts with a generated one-time password: {} "
+                    + "(set INITIAL_ADMIN_PASSWORD to choose your own)", rawPassword);
+        }
+        String encoded = passwordEncoder.encode(rawPassword);
 
         List<User> initialUsers = List.of(
                 User.builder()

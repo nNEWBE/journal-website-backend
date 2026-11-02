@@ -1,0 +1,7 @@
+{
+  "pageKey": "not-found",
+  "label": "404 Page",
+  "route": "/",
+  "description": "Page-not-found message and suggested links.",
+  "sections": {}
+}

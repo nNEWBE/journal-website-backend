@@ -48,32 +48,38 @@ public class AdminController {
 
     /** POST /api/v1/admin/users — Create / invite a user */
     @PostMapping("/users")
-    public ResponseEntity<AuthResponse.UserInfo> createUser(@Valid @RequestBody CreateUserRequest req) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(dashboardService.createUser(req));
+    public ResponseEntity<AuthResponse.UserInfo> createUser(
+            @Valid @RequestBody CreateUserRequest req,
+            @AuthenticationPrincipal UserDetails userDetails) {
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(dashboardService.createUser(req, userDetails.getUsername()));
     }
 
     /** PUT /api/v1/admin/users/{id} — Update user profile & role */
     @PutMapping("/users/{id}")
     public ResponseEntity<AuthResponse.UserInfo> updateUser(
             @PathVariable Long id,
-            @RequestBody com.research.gbjournal.dto.admin.UpdateUserRequest req) {
-        return ResponseEntity.ok(dashboardService.updateUser(id, req));
+            @RequestBody com.research.gbjournal.dto.admin.UpdateUserRequest req,
+            @AuthenticationPrincipal UserDetails userDetails) {
+        return ResponseEntity.ok(dashboardService.updateUser(id, req, userDetails.getUsername()));
     }
 
     /** PUT /api/v1/admin/users/{id}/role — Update user role */
     @PutMapping("/users/{id}/role")
     public ResponseEntity<AuthResponse.UserInfo> updateUserRole(
             @PathVariable Long id,
-            @RequestParam String role) {
-        return ResponseEntity.ok(dashboardService.updateUserRole(id, role));
+            @RequestParam String role,
+            @AuthenticationPrincipal UserDetails userDetails) {
+        return ResponseEntity.ok(dashboardService.updateUserRole(id, role, userDetails.getUsername()));
     }
 
     /** PUT /api/v1/admin/users/{id}/status — Enable or disable user */
     @PutMapping("/users/{id}/status")
     public ResponseEntity<AuthResponse.UserInfo> updateUserStatus(
             @PathVariable Long id,
-            @RequestParam boolean enabled) {
-        return ResponseEntity.ok(dashboardService.updateUserStatus(id, enabled));
+            @RequestParam boolean enabled,
+            @AuthenticationPrincipal UserDetails userDetails) {
+        return ResponseEntity.ok(dashboardService.updateUserStatus(id, enabled, userDetails.getUsername()));
     }
 
     /** DELETE /api/v1/admin/users/{id} — Delete user */

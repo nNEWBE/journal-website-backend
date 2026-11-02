@@ -24,6 +24,8 @@ public interface ReviewAssignmentRepository extends JpaRepository<ReviewAssignme
     @Query("SELECT COUNT(r) FROM ReviewAssignment r WHERE r.reviewer = :reviewer AND r.status = 'ACCEPTED'")
     long countActiveByReviewer(@Param("reviewer") User reviewer);
 
+    boolean existsBySubmissionAndReviewer(Submission submission, User reviewer);
+
     boolean existsBySubmissionAndReviewerAndStatusNot(
             Submission submission,
             User reviewer,

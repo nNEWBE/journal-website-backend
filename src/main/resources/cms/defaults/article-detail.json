@@ -1,0 +1,7 @@
+{
+  "pageKey": "article-detail",
+  "label": "Article Page",
+  "route": "/articles",
+  "description": "Shared labels and notices on individual article pages.",
+  "sections": {}
+}

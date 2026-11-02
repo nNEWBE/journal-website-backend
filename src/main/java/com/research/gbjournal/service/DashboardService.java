@@ -9,6 +9,7 @@ import com.research.gbjournal.exception.BadRequestException;
 import com.research.gbjournal.exception.ResourceNotFoundException;
 import com.research.gbjournal.repository.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.AccessDeniedException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -31,6 +32,11 @@ public class DashboardService {
     private final PasswordEncoder passwordEncoder;
     private final EmailService emailService;
     private final CloudinaryService cloudinaryService;
+    private final RefreshTokenService refreshTokenService;
+
+    private static final java.security.SecureRandom SECURE_RANDOM = new java.security.SecureRandom();
+    private static final String TEMP_PASSWORD_ALPHABET =
+            "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789";
 
     @Cacheable(value = "dashboard-stats")
     @Transactional(readOnly = true)
@@ -57,14 +63,15 @@ public class DashboardService {
 
     @CacheEvict(value = {"admin-users", "dashboard-stats"}, allEntries = true)
     @Transactional
-    public AuthResponse.UserInfo createUser(CreateUserRequest req) {
+    public AuthResponse.UserInfo createUser(CreateUserRequest req, String actorEmail) {
+        User actor = requireActor(actorEmail);
         if (userRepository.existsByEmailIgnoreCase(req.getEmail().trim())) {
             throw new BadRequestException("A user with this email address already exists.");
         }
 
         String rawPassword = req.getPassword() != null && !req.getPassword().isBlank()
                 ? req.getPassword()
-                : "GBJournal@" + (int) (Math.random() * 9000 + 1000);
+                : generateTempPassword();
 
         String roleStr = req.getRole() != null ? req.getRole().toUpperCase().replace('-', '_') : "AUTHOR";
         User.Role role;
@@ -73,6 +80,7 @@ public class DashboardService {
         } catch (IllegalArgumentException e) {
             role = User.Role.AUTHOR;
         }
+        assertCanAssignRole(actor, role);
 
         User user = User.builder()
                 .fullName(req.getFullName().trim())
@@ -122,6 +130,7 @@ public class DashboardService {
         if (user.getEmail().equalsIgnoreCase(currentAdminEmail)) {
             throw new BadRequestException("You cannot delete your own active administrator account.");
         }
+        assertCanManage(requireActor(currentAdminEmail), user);
 
         userRepository.delete(user);
         log.info("Admin {} deleted user ID {}", currentAdminEmail, userId);
@@ -129,9 +138,13 @@ public class DashboardService {
 
     @CacheEvict(value = {"admin-users", "userDetails"}, allEntries = true)
     @Transactional
-    public AuthResponse.UserInfo updateUser(Long userId, com.research.gbjournal.dto.admin.UpdateUserRequest req) {
+    public AuthResponse.UserInfo updateUser(Long userId, com.research.gbjournal.dto.admin.UpdateUserRequest req,
+                                            String actorEmail) {
+        User actor = requireActor(actorEmail);
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User", "id", userId));
+        assertCanManage(actor, user);
+        boolean revokeSessions = false;
 
         if (req.getFullName() != null && !req.getFullName().isBlank()) {
             user.setFullName(req.getFullName().trim());
@@ -175,42 +188,73 @@ public class DashboardService {
             user.setAvatarUrl(newAvatar);
         }
         if (req.getRole() != null && !req.getRole().isBlank()) {
-            String formattedRole = req.getRole().toUpperCase().replace('-', '_');
-            user.setRole(User.Role.valueOf(formattedRole));
+            User.Role newRole = parseRole(req.getRole());
+            if (newRole != user.getRole()) {
+                assertCanAssignRole(actor, newRole);
+                assertNotSelf(actor, user, "change your own role");
+                user.setRole(newRole);
+                revokeSessions = true;
+            }
         }
         if (req.getEnabled() != null) {
+            if (!req.getEnabled()) {
+                assertNotSelf(actor, user, "disable your own account");
+                revokeSessions = true;
+            }
             user.setEnabled(req.getEnabled());
         }
         if (req.getEmailVerified() != null) {
             user.setEmailVerified(req.getEmailVerified());
         }
         if (req.getPassword() != null && !req.getPassword().isBlank()) {
+            if (req.getPassword().trim().length() < 8) {
+                throw new BadRequestException("Password must be at least 8 characters.");
+            }
             user.setPassword(passwordEncoder.encode(req.getPassword().trim()));
+            revokeSessions = true;
         }
 
         userRepository.save(user);
+        if (revokeSessions) {
+            refreshTokenService.revokeAllTokensForUser(user);
+        }
         log.info("Admin updated user ID {}: email={}, role={}, enabled={}", user.getId(), user.getEmail(), user.getRole(), user.isEnabled());
         return toUserInfo(user);
     }
 
     @CacheEvict(value = {"admin-users", "userDetails"}, allEntries = true)
     @Transactional
-    public AuthResponse.UserInfo updateUserRole(Long userId, String roleStr) {
+    public AuthResponse.UserInfo updateUserRole(Long userId, String roleStr, String actorEmail) {
+        User actor = requireActor(actorEmail);
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User", "id", userId));
-        String formattedRole = roleStr.toUpperCase().replace('-', '_');
-        user.setRole(User.Role.valueOf(formattedRole));
-        userRepository.save(user);
+        assertCanManage(actor, user);
+        User.Role newRole = parseRole(roleStr);
+        if (newRole != user.getRole()) {
+            assertCanAssignRole(actor, newRole);
+            assertNotSelf(actor, user, "change your own role");
+            user.setRole(newRole);
+            userRepository.save(user);
+            refreshTokenService.revokeAllTokensForUser(user);
+        }
         return toUserInfo(user);
     }
 
     @CacheEvict(value = {"admin-users", "userDetails"}, allEntries = true)
     @Transactional
-    public AuthResponse.UserInfo updateUserStatus(Long userId, boolean enabled) {
+    public AuthResponse.UserInfo updateUserStatus(Long userId, boolean enabled, String actorEmail) {
+        User actor = requireActor(actorEmail);
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User", "id", userId));
+        assertCanManage(actor, user);
+        if (!enabled) {
+            assertNotSelf(actor, user, "disable your own account");
+        }
         user.setEnabled(enabled);
         userRepository.save(user);
+        if (!enabled) {
+            refreshTokenService.revokeAllTokensForUser(user);
+        }
         return toUserInfo(user);
     }
 
@@ -268,6 +312,49 @@ public class DashboardService {
                 "sentCount", sentCount,
                 "audience", req.getAudience(),
                 "subject", req.getSubject());
+    }
+
+    // ===== Authorization helpers =====
+
+    private User requireActor(String actorEmail) {
+        return userRepository.findByEmailIgnoreCase(actorEmail)
+                .orElseThrow(() -> new AccessDeniedException("Unknown administrator."));
+    }
+
+    /** Only a SUPER_ADMIN may modify or delete another SUPER_ADMIN account. */
+    private void assertCanManage(User actor, User target) {
+        if (target.getRole() == User.Role.SUPER_ADMIN && actor.getRole() != User.Role.SUPER_ADMIN) {
+            throw new AccessDeniedException("Only a super administrator can modify a super administrator account.");
+        }
+    }
+
+    /** Only a SUPER_ADMIN may grant the SUPER_ADMIN role (prevents admin -> super-admin escalation). */
+    private void assertCanAssignRole(User actor, User.Role role) {
+        if (role == User.Role.SUPER_ADMIN && actor.getRole() != User.Role.SUPER_ADMIN) {
+            throw new AccessDeniedException("Only a super administrator can grant the super administrator role.");
+        }
+    }
+
+    private void assertNotSelf(User actor, User target, String action) {
+        if (actor.getId() != null && actor.getId().equals(target.getId())) {
+            throw new BadRequestException("You cannot " + action + ".");
+        }
+    }
+
+    private User.Role parseRole(String roleStr) {
+        try {
+            return User.Role.valueOf(roleStr.trim().toUpperCase().replace('-', '_'));
+        } catch (IllegalArgumentException e) {
+            throw new BadRequestException("Invalid role: " + roleStr);
+        }
+    }
+
+    private String generateTempPassword() {
+        StringBuilder sb = new StringBuilder("Gbj-");
+        for (int i = 0; i < 14; i++) {
+            sb.append(TEMP_PASSWORD_ALPHABET.charAt(SECURE_RANDOM.nextInt(TEMP_PASSWORD_ALPHABET.length())));
+        }
+        return sb.append('9').toString();
     }
 
     private AuthResponse.UserInfo toUserInfo(User u) {

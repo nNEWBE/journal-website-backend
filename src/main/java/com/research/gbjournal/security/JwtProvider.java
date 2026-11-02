@@ -2,6 +2,7 @@ package com.research.gbjournal.security;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
@@ -20,9 +21,24 @@ public class JwtProvider {
 
     private final JwtProperties jwtProperties;
 
+    private SecretKey signingKey;
+
+    /**
+     * Fail fast at startup if the signing secret is missing or too short for HS256,
+     * instead of failing on the first login (or silently running with a weak key).
+     */
+    @PostConstruct
+    void initSigningKey() {
+        String secret = jwtProperties.getSecret();
+        if (secret == null || secret.getBytes(StandardCharsets.UTF_8).length < 32) {
+            throw new IllegalStateException(
+                    "JWT_SECRET must be set and at least 32 bytes (256 bits) long.");
+        }
+        this.signingKey = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
+    }
+
     private SecretKey signingKey() {
-        byte[] keyBytes = jwtProperties.getSecret().getBytes(StandardCharsets.UTF_8);
-        return Keys.hmacShaKeyFor(keyBytes);
+        return signingKey;
     }
 
     /**
@@ -56,6 +72,19 @@ public class JwtProvider {
      */
     public String getEmailFromToken(String token) {
         return parseClaims(token).getSubject();
+    }
+
+    /**
+     * Parse and verify a JWT once, returning its subject (email), or null if the token
+     * is expired, malformed, or tampered.
+     */
+    public String getEmailIfValid(String token) {
+        try {
+            return parseClaims(token).getSubject();
+        } catch (JwtException | IllegalArgumentException ex) {
+            log.debug("JWT rejected: {}", ex.getMessage());
+            return null;
+        }
     }
 
     /**

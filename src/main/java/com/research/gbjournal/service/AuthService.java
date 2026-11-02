@@ -11,6 +11,7 @@ import com.research.gbjournal.repository.PasswordResetTokenRepository;
 import com.research.gbjournal.repository.UserRepository;
 import com.research.gbjournal.security.JwtProperties;
 import com.research.gbjournal.security.JwtProvider;
+import com.research.gbjournal.security.LoginAttemptService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -37,22 +38,30 @@ public class AuthService {
     private final EmailService emailService;
     private final PasswordResetTokenRepository passwordResetTokenRepository;
     private final MailProperties mailProperties;
+    private final LoginAttemptService loginAttemptService;
 
     // ===== Login =====
 
     @Transactional
     public AuthResponse login(LoginRequest request) {
+        String normalizedEmail = request.getEmail().trim().toLowerCase();
+        if (loginAttemptService.isLoginBlocked(normalizedEmail)) {
+            throw new BadRequestException("Too many failed sign-in attempts. Please wait 15 minutes and try again, or reset your password.");
+        }
+
         Authentication authentication;
         try {
             authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
-                            request.getEmail().trim().toLowerCase(),
+                            normalizedEmail,
                             request.getPassword()));
         } catch (org.springframework.security.authentication.DisabledException ex) {
             throw new BadRequestException("This account has been disabled. Please contact administration.");
         } catch (org.springframework.security.core.AuthenticationException ex) {
+            loginAttemptService.recordLoginFailure(normalizedEmail);
             throw new BadRequestException("Invalid email or password.");
         }
+        loginAttemptService.recordLoginSuccess(normalizedEmail);
 
         String accessToken = jwtProvider.generateAccessToken(authentication);
 
@@ -122,6 +131,10 @@ public class AuthService {
     public AuthResponse refresh(TokenRefreshRequest request) {
         RefreshToken oldToken = refreshTokenService.rotateRefreshToken(request.getRefreshToken());
         User user = oldToken.getUser();
+        if (!user.isEnabled()) {
+            refreshTokenService.revokeAllTokensForUser(user);
+            throw new BadRequestException("This account has been disabled. Please contact administration.");
+        }
 
         String newAccessToken = jwtProvider.generateAccessToken(user.getEmail());
         RefreshToken newRefreshToken = refreshTokenService.createRefreshToken(user);
@@ -171,11 +184,14 @@ public class AuthService {
         if (request.getSecondaryEmail() != null)
             user.setSecondaryEmail(request.getSecondaryEmail().trim());
         if (request.getAvatarUrl() != null) {
-            String oldAvatarUrl = user.getAvatarUrl();
-            if (StringUtils.hasText(oldAvatarUrl) && !oldAvatarUrl.equals(request.getAvatarUrl())) {
-                cloudinaryService.deleteByUrl(oldAvatarUrl);
+            String avatarUrl = request.getAvatarUrl().trim();
+            if (!avatarUrl.isEmpty() && !avatarUrl.startsWith("https://")) {
+                throw new BadRequestException("Avatar URL must be an https:// address.");
             }
-            user.setAvatarUrl(request.getAvatarUrl());
+            // The old image is not deleted here: this URL is client-supplied, so a user could point
+            // it at someone else's Cloudinary asset and have it deleted on the next change.
+            // Server-side uploads (POST /auth/avatar) still clean up the previous image.
+            user.setAvatarUrl(avatarUrl.isEmpty() ? null : avatarUrl);
         }
 
         userRepository.save(user);
@@ -196,6 +212,9 @@ public class AuthService {
 
         user.setPassword(passwordEncoder.encode(request.getNewPassword()));
         userRepository.save(user);
+
+        // Sign out other devices: their refresh tokens can no longer mint access tokens
+        refreshTokenService.revokeAllTokensForUser(user);
     }
 
     // ===== Change Primary Email =====
@@ -325,17 +344,25 @@ public class AuthService {
 
         if (userOpt.isEmpty()) {
             // Anti-enumeration: return silently without disclosing whether account exists
-            log.info("Password reset requested for non-existent email: {}", email);
+            log.info("Password reset requested for an unknown email");
             return;
         }
 
         User user = userOpt.get();
 
+        if (!loginAttemptService.tryPasswordReset(email)) {
+            // Same silent response as the not-found branch, so the limit does not leak account existence
+            log.info("Password reset rate limit reached for user id {}", user.getId());
+            return;
+        }
+
         // Invalidate/delete any previous active reset tokens for this user
         passwordResetTokenRepository.deleteByUser(user);
 
-        // Generate secure UUID token
-        String token = java.util.UUID.randomUUID().toString();
+        // Generate an unguessable token (256 bits from a CSPRNG)
+        byte[] tokenBytes = new byte[32];
+        new java.security.SecureRandom().nextBytes(tokenBytes);
+        String token = java.util.Base64.getUrlEncoder().withoutPadding().encodeToString(tokenBytes);
         PasswordResetToken resetToken = PasswordResetToken.builder()
                 .token(token)
                 .user(user)
@@ -350,7 +377,8 @@ public class AuthService {
                 : "http://localhost:3000";
         String resetUrl = frontendUrl + "/reset-password?token=" + token;
 
-        log.info("Generated password reset link for {}: {}", email, resetUrl);
+        // Never log the link itself: anyone with log access could take over the account
+        log.info("Generated password reset link for user id {}", user.getId());
 
         try {
             java.util.Map<String, Object> emailVars = new java.util.HashMap<>();

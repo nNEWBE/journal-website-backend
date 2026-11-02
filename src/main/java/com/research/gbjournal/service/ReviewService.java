@@ -44,7 +44,7 @@ public class ReviewService {
         User reviewer = getReviewer(reviewerEmail);
         return reviewAssignmentRepository.findByReviewerOrderByInvitedAtDesc(reviewer)
                 .stream()
-                .map(ra -> submissionService.toResponseDTO(ra.getSubmission()))
+                .map(ra -> submissionService.toReviewerResponseDTO(ra.getSubmission(), reviewer))
                 .toList();
     }
 
@@ -190,6 +190,10 @@ public class ReviewService {
                 && reviewer.getRole() != User.Role.ADMIN
                 && reviewer.getRole() != User.Role.SUPER_ADMIN) {
             throw new BadRequestException("User cannot be assigned as a reviewer.");
+        }
+        if (submission.getSubmittingAuthor() != null
+                && submission.getSubmittingAuthor().getId().equals(reviewer.getId())) {
+            throw new BadRequestException("The submitting author cannot review their own manuscript.");
         }
 
         // Prevent duplicate active assignments

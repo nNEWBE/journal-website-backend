@@ -1,0 +1,7 @@
+{
+  "pageKey": "issues",
+  "label": "Issues Archive",
+  "route": "/issues",
+  "description": "Issues archive hero and archive page copy.",
+  "sections": {}
+}

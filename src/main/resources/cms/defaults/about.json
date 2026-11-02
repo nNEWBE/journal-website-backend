@@ -1,0 +1,7 @@
+{
+  "pageKey": "about",
+  "label": "About Journal",
+  "route": "/about",
+  "description": "Hero, journal story, scope, governance and indexing sections.",
+  "sections": {}
+}

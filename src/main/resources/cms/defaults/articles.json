@@ -1,0 +1,7 @@
+{
+  "pageKey": "articles",
+  "label": "Articles & Papers",
+  "route": "/articles",
+  "description": "Articles directory hero and listing copy.",
+  "sections": {}
+}

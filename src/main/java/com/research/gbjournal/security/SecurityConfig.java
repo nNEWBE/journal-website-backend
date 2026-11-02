@@ -72,8 +72,8 @@ public class SecurityConfig {
             // Stateless sessions — never create HttpSession
             .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 
-            // Allow inline frames/previews
-            .headers(headers -> headers.frameOptions(frame -> frame.disable()))
+            // Allow inline previews from the same origin only (blocks clickjacking)
+            .headers(headers -> headers.frameOptions(frame -> frame.sameOrigin()))
 
             // Custom JSON error responses
             .exceptionHandling(ex -> ex
@@ -100,9 +100,11 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.POST,
                     "/api/v1/articles/*/view",
                     "/api/v1/articles/*/download").permitAll()
+
+                // Metric resets are destructive — administrators only
                 .requestMatchers(HttpMethod.PUT,
                     "/api/v1/articles/*/metrics/reset",
-                    "/api/v1/articles/metrics/reset-all").permitAll()
+                    "/api/v1/articles/metrics/reset-all").hasAnyRole("ADMIN", "SUPER_ADMIN")
 
                 // Public article & issue discovery (read-only GET & HEAD)
                 .requestMatchers(HttpMethod.GET,

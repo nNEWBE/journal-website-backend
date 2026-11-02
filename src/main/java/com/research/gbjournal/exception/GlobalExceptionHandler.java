@@ -55,7 +55,10 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<Map<String, Object>> handleAccessDenied(
             AccessDeniedException ex, HttpServletRequest request) {
-        return buildError(HttpStatus.FORBIDDEN, "You do not have permission to access this resource.", request.getRequestURI());
+        String message = ex.getMessage() != null && !ex.getMessage().isBlank() && !"Access Denied".equals(ex.getMessage())
+                ? ex.getMessage()
+                : "You do not have permission to access this resource.";
+        return buildError(HttpStatus.FORBIDDEN, message, request.getRequestURI());
     }
 
     // ===== 404 Not Found =====

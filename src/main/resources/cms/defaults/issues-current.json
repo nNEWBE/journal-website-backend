@@ -1,0 +1,7 @@
+{
+  "pageKey": "issues-current",
+  "label": "Current Issue",
+  "route": "/issues/current",
+  "description": "Current issue page headings, labels and calls to action.",
+  "sections": {}
+}

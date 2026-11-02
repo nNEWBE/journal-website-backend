@@ -1,0 +1,7 @@
+{
+  "pageKey": "reviewers",
+  "label": "Reviewer Guidelines",
+  "route": "/reviewers",
+  "description": "Reviewer hero, review protocol, ethics, rubrics and recognition.",
+  "sections": {}
+}

@@ -49,7 +49,7 @@ public class NotificationService {
                     .map(String::trim)
                     .anyMatch(r -> r.equalsIgnoreCase(normalizedRole) ||
                                    r.equalsIgnoreCase(role) ||
-                                   (role.equalsIgnoreCase("super-admin") && (r.equalsIgnoreCase("admin") || r.equalsIgnoreCase("editor"))));
+                                   (normalizedRole.equals("super_admin") && (r.equalsIgnoreCase("admin") || r.equalsIgnoreCase("editor"))));
         }).toList();
     }
 

@@ -5,14 +5,19 @@ import com.research.gbjournal.entity.PageContent;
 import com.research.gbjournal.exception.BadRequestException;
 import com.research.gbjournal.exception.ResourceNotFoundException;
 import com.research.gbjournal.repository.PageContentRepository;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.ObjectMapper;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.InputStream;
 import java.util.*;
 
 @Slf4j
@@ -22,20 +27,66 @@ public class PageContentService {
 
     private final PageContentRepository pageContentRepository;
 
+    /**
+     * Default sections for every JSON-defined public page. The files are copied from the
+     * frontend (src/lib/cms/defaults) by `npm run cms:sync`; the frontend renders the same
+     * copy as its fallback, so seeded content matches the live page until an admin edits it.
+     */
+    private static final String JSON_DEFAULTS_PATTERN = "classpath*:cms/defaults/*.json";
+    private static final ObjectMapper JSON = new ObjectMapper();
+
+    /**
+     * Placeholder sections seeded by earlier versions that no public page rendered. They are
+     * removed on startup only while untouched (system-authored with the original title).
+     */
+    private static final Map<String, String> LEGACY_SYSTEM_SEED_TITLES = Map.ofEntries(
+            Map.entry("about/overview", "About Gono Bishwabidyalay Journal"),
+            Map.entry("about/aims-scope", "Aims and Scope"),
+            Map.entry("about/indexing-metrics", "Indexing & Abstracting Standards"),
+            Map.entry("authors/guidelines", "Author Guidelines & Manuscript Preparation"),
+            Map.entry("authors/checklist", "Submission Preparation Checklist"),
+            Map.entry("authors/apc-waiver", "Article Processing Charges (APC) & Fee Policy"),
+            Map.entry("policies/peer-review", "Double-Blind Peer Review Framework"),
+            Map.entry("policies/ethics-plagiarism", "Publication Ethics & Anti-Plagiarism Policy"),
+            Map.entry("policies/open-access", "Open Access & Copyright Licensing"),
+            Map.entry("contact/office-info", "Editorial Secretariat & Publishing Office"),
+            Map.entry("editorial-board/governance-charter", "Editorial Governance & Academic Independence"),
+            Map.entry("editorial-board/advisory-council", "International Advisory Council & Section Chairs"),
+            Map.entry("reviewers/peer-review-protocol", "Double-Blind Evaluation Protocol & Rubric"),
+            Map.entry("reviewers/reviewer-benefits", "Reviewer Recognition & Academic Acknowledgement"),
+            Map.entry("issues/publication-schedule", "Biannual Publication Cadence & Special Volumes"),
+            Map.entry("issues/digital-archiving", "Permanent Digital Preservation & Archiving"),
+            Map.entry("articles/repository-scope", "Peer-Reviewed Research Repository & Discovery"),
+            Map.entry("articles/citation-metrics", "Real-Time Reader Metrics & Impact Analytics")
+    );
+
+    private volatile Map<String, List<PageContent>> jsonDefaultsCache;
+
     @PostConstruct
     public void init() {
-        if (pageContentRepository.count() == 0) {
-            seedDefaultAcademicContent();
-        } else {
-            // Detect and heal legacy numeric OIDs saved by previous @Lob Hibernate mapping
-            boolean hasLegacyOids = pageContentRepository.findAll().stream()
-                    .anyMatch(pc -> pc.getContent() != null && pc.getContent().matches("^\\d{4,8}$"));
-            if (hasLegacyOids) {
-                log.info("Detected legacy OID references in page_contents. Re-seeding clean default content...");
-                pageContentRepository.deleteAll();
-                seedDefaultAcademicContent();
-                log.info("Re-seeding complete.");
-            }
+        // Detect and heal legacy numeric OIDs saved by previous @Lob Hibernate mapping
+        boolean hasLegacyOids = pageContentRepository.findAll().stream()
+                .anyMatch(pc -> pc.getContent() != null && pc.getContent().matches("^\\d{4,8}$"));
+        if (hasLegacyOids) {
+            log.info("Detected legacy OID references in page_contents. Re-seeding clean default content...");
+            pageContentRepository.deleteAll();
+        }
+        purgeUntouchedLegacySeeds();
+        // Inserts only sections that are missing, so admin edits are never overwritten.
+        seedDefaultAcademicContent();
+    }
+
+    private void purgeUntouchedLegacySeeds() {
+        List<PageContent> stale = pageContentRepository.findAll().stream()
+                .filter(pc -> "system".equals(pc.getLastUpdatedBy()))
+                .filter(pc -> {
+                    String legacyTitle = LEGACY_SYSTEM_SEED_TITLES.get(pc.getPageKey() + "/" + pc.getSectionKey());
+                    return legacyTitle != null && legacyTitle.equals(pc.getTitle());
+                })
+                .toList();
+        if (!stale.isEmpty()) {
+            pageContentRepository.deleteAll(stale);
+            log.info("Removed {} unused legacy placeholder page sections.", stale.size());
         }
     }
 
@@ -151,14 +202,67 @@ public class PageContentService {
     // ===== Seed Data Helpers =====
 
     private void seedDefaultAcademicContent() {
-        log.info("Seeding default academic page contents...");
         seedPageDefaults("home");
-        seedPageDefaults("about");
-        seedPageDefaults("authors");
-        seedPageDefaults("policies");
         seedPageDefaults("announcements");
-        seedPageDefaults("contact");
-        log.info("Academic page content seed complete.");
+        for (String pageKey : getJsonDefaults().keySet()) {
+            seedPageDefaults(pageKey);
+        }
+    }
+
+    private Map<String, List<PageContent>> getJsonDefaults() {
+        Map<String, List<PageContent>> cached = jsonDefaultsCache;
+        if (cached != null) return cached;
+        Map<String, List<PageContent>> loaded = new LinkedHashMap<>();
+        try {
+            Resource[] resources = new PathMatchingResourcePatternResolver().getResources(JSON_DEFAULTS_PATTERN);
+            for (Resource resource : resources) {
+                try (InputStream in = resource.getInputStream()) {
+                    JsonNode root = JSON.readTree(in);
+                    String pageKey = root.path("pageKey").asString("").toLowerCase().trim();
+                    JsonNode sections = root.path("sections");
+                    if (pageKey.isEmpty() || !sections.isObject() || sections.isEmpty()) continue;
+                    List<PageContent> list = new ArrayList<>();
+                    int order = 1;
+                    for (Map.Entry<String, JsonNode> entry : sections.properties()) {
+                        JsonNode sec = entry.getValue();
+                        JsonNode meta = sec.path("meta");
+                        list.add(PageContent.builder()
+                                .pageKey(pageKey)
+                                .sectionKey(entry.getKey())
+                                .title(sec.path("title").asString(entry.getKey()))
+                                .subtitle(sec.hasNonNull("subtitle") ? sec.get("subtitle").asString() : null)
+                                .content(sec.hasNonNull("content") ? sec.get("content").asString() : null)
+                                .metaJson(meta.isObject() && !meta.isEmpty() ? JSON.writeValueAsString(meta) : null)
+                                .displayOrder(order++)
+                                .published(true)
+                                .lastUpdatedBy("system")
+                                .build());
+                    }
+                    loaded.put(pageKey, list);
+                }
+            }
+        } catch (Exception e) {
+            log.error("Failed to load CMS page defaults from {}", JSON_DEFAULTS_PATTERN, e);
+        }
+        jsonDefaultsCache = loaded;
+        return loaded;
+    }
+
+    /** Fresh, unsaved copies of a JSON page's default sections. */
+    private List<PageContent> copyJsonDefaults(String pageKey) {
+        return getJsonDefaults().getOrDefault(pageKey, List.of()).stream()
+                .map(pc -> PageContent.builder()
+                        .pageKey(pc.getPageKey())
+                        .sectionKey(pc.getSectionKey())
+                        .title(pc.getTitle())
+                        .subtitle(pc.getSubtitle())
+                        .content(pc.getContent())
+                        .metaJson(pc.getMetaJson())
+                        .displayOrder(pc.getDisplayOrder())
+                        .published(true)
+                        .lastUpdatedBy("system")
+                        .build())
+                .collect(java.util.stream.Collectors.toCollection(ArrayList::new));
     }
 
     private void seedPageDefaults(String pageKey) {
@@ -171,72 +275,11 @@ public class PageContentService {
     }
 
     private List<PageContent> getSeedEntitiesForPage(String pageKey) {
+        if (getJsonDefaults().containsKey(pageKey.toLowerCase())) {
+            return copyJsonDefaults(pageKey.toLowerCase());
+        }
         List<PageContent> list = new ArrayList<>();
         switch (pageKey.toLowerCase()) {
-            case "about":
-                list.add(PageContent.builder()
-                        .pageKey("about").sectionKey("overview")
-                        .title("About Gono Bishwabidyalay Journal")
-                        .subtitle("A premier multidisciplinary peer-reviewed research forum founded at Gono Bishwabidyalay.")
-                        .content("The Gono Bishwabidyalay Journal of Science and Technology is an official biannual, double-blind peer-reviewed academic journal dedicated to disseminating high-impact discoveries across basic sciences, allied health, pharmacy, engineering, and social development.")
-                        .displayOrder(1).published(true).lastUpdatedBy("system").build());
-                list.add(PageContent.builder()
-                        .pageKey("about").sectionKey("aims-scope")
-                        .title("Aims and Scope")
-                        .subtitle("Fostering innovative scientific enquiry and evidence-based solutions.")
-                        .content("GB Journal publishes original research articles, comprehensive review papers, short communications, and technical notes covering multidisciplinary sciences, clinical pharmacy, biomedical technology, computer science, and public health innovation.")
-                        .displayOrder(2).published(true).lastUpdatedBy("system").build());
-                list.add(PageContent.builder()
-                        .pageKey("about").sectionKey("indexing-metrics")
-                        .title("Indexing & Abstracting Standards")
-                        .subtitle("Committed to global citation tracking, open access visibility, and metadata preservation.")
-                        .content("ISSN (Print): 2073-8447 | ISSN (Online): 2790-2188. Indexed in Google Scholar, CrossRef, DOI Foundation, Banglajol, ResearchGate, and Index Copernicus.")
-                        .metaJson("{\"issnPrint\":\"2073-8447\",\"issnOnline\":\"2790-2188\",\"frequency\":\"Biannual (June & December)\",\"reviewModel\":\"Double-Blind Peer Review\"}")
-                        .displayOrder(3).published(true).lastUpdatedBy("system").build());
-                break;
-
-            case "authors":
-                list.add(PageContent.builder()
-                        .pageKey("authors").sectionKey("guidelines")
-                        .title("Author Guidelines & Manuscript Preparation")
-                        .subtitle("Instructions for preparing and formatting submissions for rapid editorial evaluation.")
-                        .content("Manuscripts must be written in clear, grammatical English in Microsoft Word (.docx) or LaTeX format. Submissions must include Title, Structured Abstract (250 words max), 4-6 Keywords, Introduction, Materials & Methods, Results, Discussion, and References formatted in Vancouver/IEEE style.")
-                        .displayOrder(1).published(true).lastUpdatedBy("system").build());
-                list.add(PageContent.builder()
-                        .pageKey("authors").sectionKey("checklist")
-                        .title("Submission Preparation Checklist")
-                        .subtitle("Verify all prerequisites before uploading to the manuscript pipeline.")
-                        .content("1. The submission has not been previously published nor is it before another journal for consideration.\n2. The manuscript file is in OpenOffice or Microsoft Word document file format.\n3. All co-authors have reviewed and approved the final submitted draft.\n4. Ethical approval and consent certificates are included for clinical/human subject research.")
-                        .displayOrder(2).published(true).lastUpdatedBy("system").build());
-                list.add(PageContent.builder()
-                        .pageKey("authors").sectionKey("apc-waiver")
-                        .title("Article Processing Charges (APC) & Fee Policy")
-                        .subtitle("Transparent publication policy supporting academic dissemination.")
-                        .content("GB Journal operates as an open-access platform. Submissions are free of submission charges. Modest processing fees apply upon acceptance to cover DOI registration, metadata indexing, and XML typesetting. Automatic fee waivers are granted to researchers from low-income developing institutions upon formal request.")
-                        .displayOrder(3).published(true).lastUpdatedBy("system").build());
-                break;
-
-            case "policies":
-                list.add(PageContent.builder()
-                        .pageKey("policies").sectionKey("peer-review")
-                        .title("Double-Blind Peer Review Framework")
-                        .subtitle("Rigorous, unbiased, and transparent scientific evaluation.")
-                        .content("All submitted manuscripts undergo double-blind peer review where both reviewer and author identities remain anonymous. Each paper is evaluated independently by at least two domain specialists. Editorial decisions are based strictly on scientific merit, methodology rigor, and original contribution.")
-                        .displayOrder(1).published(true).lastUpdatedBy("system").build());
-                list.add(PageContent.builder()
-                        .pageKey("policies").sectionKey("ethics-plagiarism")
-                        .title("Publication Ethics & Anti-Plagiarism Policy")
-                        .subtitle("Adherence to COPE (Committee on Publication Ethics) international standards.")
-                        .content("GB Journal strictly prohibits plagiarism, redundant publication, fabrication, and unauthorized image manipulation. All incoming submissions are screened using CrossCheck/Turnitin similarity software. Similarity index exceeding 15% (excluding references) is subject to immediate rejection.")
-                        .displayOrder(2).published(true).lastUpdatedBy("system").build());
-                list.add(PageContent.builder()
-                        .pageKey("policies").sectionKey("open-access")
-                        .title("Open Access & Copyright Licensing")
-                        .subtitle("CC BY 4.0 Creative Commons Attribution License.")
-                        .content("Articles are published under the Creative Commons Attribution 4.0 International License (CC BY 4.0), permitting unrestricted use, distribution, and reproduction in any medium, provided the original work is properly cited. Authors retain full copyright ownership of their articles.")
-                        .displayOrder(3).published(true).lastUpdatedBy("system").build());
-                break;
-
             case "home":
                 list.add(PageContent.builder()
                         .pageKey("home").sectionKey("hero-main")
@@ -329,83 +372,6 @@ public class PageContentService {
                         .displayOrder(1).published(true).lastUpdatedBy("system").build());
                 break;
 
-            case "contact":
-                list.add(PageContent.builder()
-                        .pageKey("contact").sectionKey("office-info")
-                        .title("Editorial Secretariat & Publishing Office")
-                        .subtitle("Direct contact channels for authors, reviewers, and academic institutions.")
-                        .content("Gono Bishwabidyalay Journal Editorial Office\nAdministrative Building, 2nd Floor\nMirzanagar, Savar, Dhaka 1344, Bangladesh\nEmail: journal@gonouniversity.edu.bd | Phone: +880-2-7792225\nWorking Hours: Sunday – Thursday (09:00 AM – 05:00 PM BST)")
-                        .metaJson("{\"email\":\"journal@gonouniversity.edu.bd\",\"phone\":\"+880-2-7792225\",\"location\":\"Mirzanagar, Savar, Dhaka 1344\",\"office\":\"Administrative Building, Room 204\"}")
-                        .displayOrder(1).published(true).lastUpdatedBy("system").build());
-                break;
-
-            case "editorial-board":
-                list.add(PageContent.builder()
-                        .pageKey("editorial-board").sectionKey("governance-charter")
-                        .title("Editorial Governance & Academic Independence")
-                        .subtitle("COPE-aligned editorial leadership and merit-driven decision framework.")
-                        .content("The Editorial Board of Gono Bishwabidyalay Journal operates under strict academic independence. Acceptance or rejection of scholarly manuscripts is determined exclusively by rigorous peer review assessment and scientific merit, completely free from commercial, institutional, or political influence.")
-                        .metaJson("{\"standards\":\"COPE Compliant\",\"oversight\":\"Double-Blind\",\"tenure\":\"3 Years\"}")
-                        .displayOrder(1).published(true).lastUpdatedBy("system").build());
-                list.add(PageContent.builder()
-                        .pageKey("editorial-board").sectionKey("advisory-council")
-                        .title("International Advisory Council & Section Chairs")
-                        .subtitle("Distinguished senior scientists and academic mentors across key faculties.")
-                        .content("Our advisory council provides strategic orientation on journal indexing, ethical frameworks, and emerging interdisciplinary research domains spanning Pharmacy, Public Health, Physical Sciences, and Computing Technologies.")
-                        .metaJson("{\"disciplines\":[\"Pharmacy & Pharmacology\",\"Biomedical Sciences\",\"Computer Science & AI\",\"Physical Sciences\",\"Community Health\"]}")
-                        .displayOrder(2).published(true).lastUpdatedBy("system").build());
-                break;
-
-            case "reviewers":
-                list.add(PageContent.builder()
-                        .pageKey("reviewers").sectionKey("peer-review-protocol")
-                        .title("Double-Blind Evaluation Protocol & Rubric")
-                        .subtitle("Standardized evaluation guidelines for invited domain specialists.")
-                        .content("Reviewers evaluate submissions based on methodological rigor, novelty, ethical compliance, literature integration, and clarity of findings. GB Journal maintains structured 4-week review turnaround windows to ensure timely decisions.")
-                        .metaJson("{\"turnaround\":\"28 Days\",\"rubricStages\":[\"Originality\",\"Methodology\",\"Data Validity\",\"Ethics & Clarity\"],\"blindMode\":\"Double-Blind\"}")
-                        .displayOrder(1).published(true).lastUpdatedBy("system").build());
-                list.add(PageContent.builder()
-                        .pageKey("reviewers").sectionKey("reviewer-benefits")
-                        .title("Reviewer Recognition & Academic Acknowledgement")
-                        .subtitle("Honoring the vital contribution of our peer review community.")
-                        .content("Every reviewer who completes timely evaluations receives verified digital review certificates, annual recognition in the journal volume index, and fast-track submission privileges for their own future manuscripts.")
-                        .metaJson("{\"certificate\":\"Official Digital Certificate\",\"indexing\":\"Annual Volume Acknowledgement\",\"priority\":\"Fast-Track Handling\"}")
-                        .displayOrder(2).published(true).lastUpdatedBy("system").build());
-                break;
-
-            case "issues":
-                list.add(PageContent.builder()
-                        .pageKey("issues").sectionKey("publication-schedule")
-                        .title("Biannual Publication Cadence & Special Volumes")
-                        .subtitle("Regular releases scheduled every June and December.")
-                        .content("GB Journal publishes two formal issues per annual volume. In addition, the editorial board coordinates special thematic issues addressing breakthrough regional and global scientific developments.")
-                        .metaJson("{\"frequency\":\"Biannual (June & December)\",\"format\":\"Open Access Full-Text PDF & Online HTML\",\"indexingDeposit\":\"CrossRef & Repositories\"}")
-                        .displayOrder(1).published(true).lastUpdatedBy("system").build());
-                list.add(PageContent.builder()
-                        .pageKey("issues").sectionKey("digital-archiving")
-                        .title("Permanent Digital Preservation & Archiving")
-                        .subtitle("Long-term scholarly preservation across national and institutional repositories.")
-                        .content("All issues are permanently preserved with registered DOIs and deposited in institutional digital archives and national scientific databases to ensure uninterrupted scholarly access for global researchers.")
-                        .metaJson("{\"doiProvider\":\"CrossRef\",\"license\":\"CC BY 4.0\",\"preservation\":\"Institutional Digital Clock\"}")
-                        .displayOrder(2).published(true).lastUpdatedBy("system").build());
-                break;
-
-            case "articles":
-                list.add(PageContent.builder()
-                        .pageKey("articles").sectionKey("repository-scope")
-                        .title("Peer-Reviewed Research Repository & Discovery")
-                        .subtitle("Immediate full-text open access to high-impact scholarly discoveries.")
-                        .content("Browse, search, and download original research manuscripts, comprehensive reviews, and short communications published in the Gono Bishwabidyalay Journal of Science and Technology with zero paywalls.")
-                        .metaJson("{\"access\":\"Diamond Open Access\",\"downloadFormat\":\"High-Res PDF\",\"citationFormats\":[\"RIS\",\"BibTeX\",\"APA\"]}")
-                        .displayOrder(1).published(true).lastUpdatedBy("system").build());
-                list.add(PageContent.builder()
-                        .pageKey("articles").sectionKey("citation-metrics")
-                        .title("Real-Time Reader Metrics & Impact Analytics")
-                        .subtitle("Transparent tracking of article downloads, views, and academic citations.")
-                        .content("Each published manuscript features live download counters, view metrics, and CrossRef citation tracking to measure real-world academic impact and dissemination velocity.")
-                        .metaJson("{\"metrics\":[\"Abstract Views\",\"PDF Downloads\",\"Citation Counts\",\"Altmetric Velocity\"]}")
-                        .displayOrder(2).published(true).lastUpdatedBy("system").build());
-                break;
         }
         return list;
     }

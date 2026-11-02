@@ -22,13 +22,15 @@ public class NotificationController {
     public ResponseEntity<List<Notification>> getNotifications(
             @RequestParam(required = false) String role,
             @AuthenticationPrincipal UserDetails userDetails) {
-        String queryRole = role;
-        if ((queryRole == null || queryRole.isBlank()) && userDetails != null) {
-            queryRole = userDetails.getAuthorities().stream()
-                    .map(a -> a.getAuthority().replace("ROLE_", "").toLowerCase())
-                    .findFirst()
-                    .orElse(null);
-        }
+        String ownRole = userDetails.getAuthorities().stream()
+                .map(a -> a.getAuthority().replace("ROLE_", "").toLowerCase())
+                .findFirst()
+                .orElse("author");
+        boolean isAdmin = ownRole.equals("admin") || ownRole.equals("super_admin");
+
+        // Only administrators may view another role's feed; everyone else always gets their own,
+        // otherwise any author could read editor/admin notifications by passing ?role=admin.
+        String queryRole = isAdmin && role != null && !role.isBlank() ? role : ownRole;
         return ResponseEntity.ok(notificationService.getNotificationsForRole(queryRole));
     }
 

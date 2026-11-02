@@ -1,0 +1,7 @@
+{
+  "pageKey": "site",
+  "label": "Header & Footer",
+  "route": "/",
+  "description": "Site-wide header navigation, footer description, links and contact.",
+  "sections": {}
+}

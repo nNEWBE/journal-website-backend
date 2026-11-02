@@ -8,6 +8,7 @@ import com.research.gbjournal.exception.ResourceNotFoundException;
 import com.research.gbjournal.repository.SubmissionRepository;
 import com.research.gbjournal.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.AccessDeniedException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -84,7 +85,7 @@ public class SubmissionService {
 
         submissionRepository.save(submission);
         log.info("Draft created: {} by {}", submission.getSubmissionId(), authorEmail);
-        return toResponseDTO(submission);
+        return toAuthorResponseDTO(submission);
     }
 
     // ===== Update Existing Draft =====
@@ -134,7 +135,7 @@ public class SubmissionService {
 
         submissionRepository.save(submission);
         log.info("Draft updated: {} by {}", submission.getSubmissionId(), authorEmail);
-        return toResponseDTO(submission);
+        return toAuthorResponseDTO(submission);
     }
 
     // ===== Submit Revision =====
@@ -157,7 +158,7 @@ public class SubmissionService {
         submissionRepository.save(submission);
 
         log.info("Revision submitted: {} by {}", submission.getSubmissionId(), authorEmail);
-        return toResponseDTO(submission);
+        return toAuthorResponseDTO(submission);
     }
 
     // ===== Submit (move from DRAFT -> SUBMITTED) =====
@@ -188,7 +189,7 @@ public class SubmissionService {
         }
 
         log.info("Submission {} submitted by {}", submission.getSubmissionId(), authorEmail);
-        return toResponseDTO(submission);
+        return toAuthorResponseDTO(submission);
     }
 
     // ===== Upload File =====
@@ -219,7 +220,7 @@ public class SubmissionService {
         submission.getFiles().add(submissionFile);
         submissionRepository.save(submission);
 
-        return toResponseDTO(submission);
+        return toAuthorResponseDTO(submission);
     }
 
     // ===== Withdraw =====
@@ -239,7 +240,7 @@ public class SubmissionService {
         // Async email — withdrawal confirmation
         submissionMailService.sendWithdrawalConfirmation(submission);
 
-        return toResponseDTO(submission);
+        return toAuthorResponseDTO(submission);
     }
 
     // ===== Author: Get My Submissions =====
@@ -249,7 +250,7 @@ public class SubmissionService {
         User author = userRepository.findByEmailIgnoreCase(authorEmail)
                 .orElseThrow(() -> new ResourceNotFoundException("User", "email", authorEmail));
         return submissionRepository.findBySubmittingAuthorOrderByUpdatedAtDesc(author)
-                .stream().map(sub -> toResponseDTO(sub)).toList();
+                .stream().map(sub -> toAuthorResponseDTO(sub)).toList();
     }
 
     // ===== Get Single Submission =====
@@ -268,10 +269,10 @@ public class SubmissionService {
         boolean isOwner = submission.getSubmittingAuthor().getId().equals(user.getId());
 
         if (!isEditor && !isOwner) {
-            throw new BadRequestException("You are not authorized to view this submission.");
+            throw new AccessDeniedException("You are not authorized to view this submission.");
         }
 
-        return toResponseDTO(submission);
+        return isEditor ? toResponseDTO(submission) : toAuthorResponseDTO(submission);
     }
 
     // ===== All submissions (Editor/Admin) =====
@@ -299,7 +300,7 @@ public class SubmissionService {
         Submission submission = submissionRepository.findById(submissionId)
                 .orElseThrow(() -> new ResourceNotFoundException("Submission", "id", submissionId));
         if (!submission.getSubmittingAuthor().getId().equals(author.getId())) {
-            throw new BadRequestException("You are not the owner of this submission.");
+            throw new AccessDeniedException("You are not the owner of this submission.");
         }
         return submission;
     }
@@ -310,7 +311,45 @@ public class SubmissionService {
         return "GBJ-%d-%03d".formatted(year, count);
     }
 
-    // ===== DTO Mapper =====
+    // ===== DTO Mappers =====
+
+    /**
+     * View for the submitting author. Double-blind review: reviewer names/emails and
+     * comments meant only for the editor are removed.
+     */
+    public SubmissionResponseDTO toAuthorResponseDTO(Submission s) {
+        SubmissionResponseDTO dto = toResponseDTO(s);
+        int[] counter = {0};
+        dto.getReviews().forEach(r -> {
+            r.setReviewerName("Reviewer " + (++counter[0]));
+            r.setReviewerEmail(null);
+            r.setConfidentialComments(null);
+        });
+        return dto;
+    }
+
+    /**
+     * View for an invited reviewer. Double-blind review: the author's identity, co-author
+     * details (including bank details) and other reviewers' reports are removed.
+     */
+    public SubmissionResponseDTO toReviewerResponseDTO(Submission s, User reviewer) {
+        SubmissionResponseDTO dto = toResponseDTO(s);
+        dto.setSubmittingAuthor(SubmissionResponseDTO.AuthorInfo.builder()
+                .fullName("Blinded for review")
+                .build());
+        dto.setAuthors(List.of());
+        dto.setCoverLetter(null);
+        dto.setEditorDecisionNote(null);
+        dto.setReviews(dto.getReviews().stream()
+                .filter(r -> reviewer.getEmail().equalsIgnoreCase(r.getReviewerEmail()))
+                .toList());
+        dto.setFiles(dto.getFiles().stream()
+                .filter(f -> !SubmissionFile.FileType.valueOf(f.getFileType()).revealsAuthorIdentity())
+                .toList());
+        return dto;
+    }
+
+    /** Full view for editors and administrators. */
 
     public SubmissionResponseDTO toResponseDTO(Submission s) {
         return SubmissionResponseDTO.builder()

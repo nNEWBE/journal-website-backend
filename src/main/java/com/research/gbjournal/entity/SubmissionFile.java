@@ -52,6 +52,11 @@ public class SubmissionFile {
         TABLE,
         SUPPLEMENTARY,
         ETHICS_APPROVAL,
-        CHECKLIST
+        CHECKLIST;
+
+        /** Files that name the authors and must be withheld from reviewers (double-blind review). */
+        public boolean revealsAuthorIdentity() {
+            return this == TITLE_PAGE || this == COVER_LETTER;
+        }
     }
 }

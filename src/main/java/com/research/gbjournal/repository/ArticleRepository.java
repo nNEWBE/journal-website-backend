@@ -18,6 +18,8 @@ public interface ArticleRepository extends JpaRepository<Article, Long> {
 
         Optional<Article> findByArticleId(String articleId);
 
+        boolean existsByPdfUrl(String pdfUrl);
+
         @Query("""
                         SELECT a FROM Article a
                         WHERE (:pattern IS NULL OR
